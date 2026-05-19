@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarot Duplas Místicas</title>
+    <style>
+        :root {
+            --bg-color: #0d0813;
+            --card-bg: #1a1226;
+            --accent: #ffd700;
+            --text-color: #f5f2f9;
+            --muted-text: #b3a7c4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px 20px 80px 20px; /* Espacio abajo para el banner */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--muted-text);
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .screen {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .theme-selector {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: transparent;
+            color: var(--text-color);
+            border: 2px solid var(--accent);
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .tarot-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .duple-box {
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .duple-title {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .card-placeholder {
+            background: #251a36;
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 6px;
+            font-weight: 600;
+            border-left: 4px solid var(--accent);
+            text-align: left;
+        }
+
+        .reading-output {
+            text-align: left;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .reading-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .reading-section h3 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* ESPACIO FIJO PARA EL BANNER */
+        .ad-banner-space {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #050308;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .ad-placeholder-text {
+            color: var(--muted-text);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Tarot Sagrado</h1>
+    <div class="subtitle">Sistema de Lectura por Duplas</div>
+
+    <!-- PANTALLA 1: SELECCIÓN DE TEMA -->
+    <div id="screen-selector" class="screen">
+        <h3>Selecciona el eje de tu consulta:</h3>
+        <div class="theme-selector">
+            <button onclick="iniciarLectura('Amor')">❤️ Amor y Relaciones</button>
+            <button onclick="iniciarLectura('Negocios')">💼 Negocios y Dinero</button>
+            <button onclick="iniciarLectura('General')">🔮 Vida General</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: RESULTADOS -->
+    <div id="screen-result" class="screen hidden">
+        <h3 id="reading-theme-title" style="color: var(--accent);"></h3>
+        
+        <div class="tarot-table">
+            <div class="duple-box">
+                <div class="duple-title">Dupla A + B</div>
+                <div id="card-a" class="card-placeholder"></div>
+                <div id="card-b" class="card-placeholder"></div>
+            </div>
+            
+            <div class="duple-box">
+                <div class="duple-title">Dupla C + D</div>
+                <div id="card-c" class="card-placeholder"></div>
+                <div id="card-d" class="card-placeholder"></div>
+            </div>
+        </div>
+
+        <div class="reading-output" id="interpretation-text">
+            <!-- Aquí se inyecta la interpretación -->
+        </div>
+
+        <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
+    </div>
+</div>
+
+<!-- CONTENEDOR VISUAL DEL BANNER -->
+<div class="ad-banner-space">
+    <div class="ad-placeholder-text">[ Espacio reservado para Publicidad Banner ]</div>
+</div>
+
+<script>
+    const mazoTarot = [
+        "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador", 
+        "El Papa", "Los Enamorados", "El Carro", "La Fuerza", "El Ermitaño", 
+        "La Rueda de la Fortuna", "La Justicia", "El Colgado", "La Muerte", 
+        "La Templanza", "El Diablo", "La Torre", "La Estrella", "La Luna", 
+        "El Sol", "El Juicio", "El Mundo",
+        "As de Bastos", "2 de Bastos", "3 de Bastos", "4 de Bastos", "5 de Bastos", 
+        "6 de Bastos", "7 de Bastos", "8 de Bastos", "9 de Bastos", "10 de Bastos", 
+        "Sota de Bastos", "Caballero de Bastos", "Reina de Bastos", "Rey de Bastos",
+        "As de Copas", "2 de Copas", "3 de Copas", "4 de Copas", "5 de Copas", 
+        "6 de Copas", "7 de Copas", "8 de Copas", "9 de Copas", "10 de Copas", 
+        "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
+        "As de Espadas", "2 de Espadas", "3 de Espadas", "4 de Espadas", "5 de Espadas", 
+        "6 de Espadas", "7 de Espadas", "8 de Espadas", "9 de Espadas", "10 de Espadas", 
+        "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
+        "As de Oros", "2 de Oros", "3 de Oros", "4 de Oros", "5 de Oros", 
+        "6 de Oros", "7 de Oros", "8 de Oros", "9 de Oros", "10 de Oros", 
+        "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
+    ];
+
+    // TU PROPIO SERVIDOR DE RENDER (100% SEGURO)
+    const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
+
+    let contadorLecturas = 0;
+
+    function iniciarLectura(tema) {
+        contadorLecturas++;
+        console.log("Lecturas hechas en la sesión: " + contadorLecturas);
+
+        if (contadorLecturas >= 10) {
+            alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
+            contadorLecturas = 0; 
+        }
+
+        document.getElementById('screen-selector').classList.add('hidden');
+        document.getElementById('screen-result').classList.remove('hidden');
+        document.getElementById('reading-theme-title').innerText = `Lectura de ${tema}`;
+        document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
+
+        let mazoMezclado = [...mazoTarot].sort(() => 0.5 - Math.random());
+        let cartesElegidas = mazoMezclado.slice(0, 4);
+        let [a, b, c, d] = cartesElegidas;
+
+        document.getElementById('card-a').innerText = `${a}`;
+        document.getElementById('card-b').innerText = `${b}`;
+        document.getElementById('card-c').innerText = `${c}`;
+        document.getElementById('card-d').innerText = `${d}`;
+
+        llamarAlServidorPropio(tema, a, b, c, d);
+    }
+
+    async function llamarAlServidorPropio(tema, a, b, c, d) {
+        const output = document.getElementById('interpretation-text');
+
+        try {
+            // Llamada directa a tu Render sin intermediarios
+            const response = await fetch(SERVIDOR_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ tema, a, b, c, d })
+            });
+
+            if (!response.ok) throw new Error("Error en el servidor místico.");
+
+            const data = await response.json();
+            output.innerHTML = data.lectura;
+
+        } catch (error) {
+            console.error(error);
+            output.innerHTML = `<p style='color: #ff4a4a; text-align:center;'>Ocurrió un error en la conexión cósmica. Reintentá en unos segundos.</p>`;
+        }
+    }
+
+    function volverInicio() {
+        document.getElementById('screen-result').classList.add('hidden');
+        document.getElementById('screen-selector').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>

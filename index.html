@@ -121,19 +121,31 @@
             line-height: 1.6;
         }
 
-        .reading-section {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .voice-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
         }
 
-        .reading-section h3 {
-            color: var(--accent);
-            margin-top: 0;
+        .btn-voice {
+            font-size: 0.9rem;
+            padding: 10px;
+            border-color: #b3a7c4;
+            color: #b3a7c4;
+        }
+
+        .btn-voice:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
         }
 
         .back-btn {
-            margin-top: 20px;
+            margin-top: 10px;
             width: 100%;
         }
 
@@ -166,7 +178,6 @@
     <h1>Tarot Sagrado</h1>
     <div class="subtitle">Sistema de Lectura por Duplas</div>
 
-    <!-- PANTALLA 1: SELECCIÓN DE TEMA -->
     <div id="screen-selector" class="screen">
         <h3>Selecciona el eje de tu consulta:</h3>
         <div class="theme-selector">
@@ -176,7 +187,6 @@
         </div>
     </div>
 
-    <!-- PANTALLA 2: RESULTADOS -->
     <div id="screen-result" class="screen hidden">
         <h3 id="reading-theme-title" style="color: var(--accent);"></h3>
         
@@ -194,15 +204,18 @@
             </div>
         </div>
 
-        <div class="reading-output" id="interpretation-text">
-            <!-- Aquí se inyecta la interpretación -->
+        <div id="voice-controls" class="voice-panel hidden">
+            <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
+            <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
         </div>
+
+        <div class="reading-output" id="interpretation-text">
+            </div>
 
         <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
     </div>
 </div>
 
-<!-- CONTENEDOR VISUAL DEL BANNER -->
 <div class="ad-banner-space">
     <div class="ad-placeholder-text">[ Espacio reservado para Publicidad Banner ]</div>
 </div>
@@ -228,15 +241,17 @@
         "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
     ];
 
-    // TU PROPIO SERVIDOR DE RENDER (100% SEGURO)
+    // TU PROPIO SERVIDOR DE RENDER
     const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
 
     let contadorLecturas = 0;
 
     function iniciarLectura(tema) {
-        contadorLecturas++;
-        console.log("Lecturas hechas en la sesión: " + contadorLecturas);
+        // Frenar cualquier voz que esté hablando de antes
+        window.speechSynthesis.cancel();
+        document.getElementById('voice-controls').classList.add('hidden');
 
+        contadorLecturas++;
         if (contadorLecturas >= 10) {
             alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
             contadorLecturas = 0; 
@@ -263,12 +278,9 @@
         const output = document.getElementById('interpretation-text');
 
         try {
-            // Llamada directa a tu Render sin intermediarios
             const response = await fetch(SERVIDOR_URL, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ tema, a, b, c, d })
             });
 
@@ -276,6 +288,9 @@
 
             const data = await response.json();
             output.innerHTML = data.lectura;
+            
+            // Si la lectura cargó bien, mostramos los botones de voz
+            document.getElementById('voice-controls').classList.remove('hidden');
 
         } catch (error) {
             console.error(error);
@@ -283,7 +298,45 @@
         }
     }
 
+    function reproducirVoz(tipo) {
+        // Si estaba hablando, lo pausamos/cancelamos primero para que no se pisen
+        window.speechSynthesis.cancel();
+
+        let textoALeer = "";
+
+        if (tipo === 'todo') {
+            // Lee todo el texto completo visible
+            textoALeer = document.getElementById('interpretation-text').innerText;
+        } else if (tipo === 'conclusion') {
+            // Intenta buscar el elemento con id="conclusion" dentro de la lectura
+            const elementoConclusion = document.getElementById('conclusion');
+            if (elementoConclusion) {
+                textoALeer = elementoConclusion.innerText;
+            } else {
+                // Si el servidor viejo no mandó la etiqueta, lee el último párrafo como respaldo
+                const parrafos = document.getElementById('interpretation-text').getElementsByTagName('p');
+                if (parrafos.length > 0) {
+                    textoALeer = parrafos[parrafos.length - 1].innerText;
+                } else {
+                    textoALeer = document.getElementById('interpretation-text').innerText;
+                }
+            }
+        }
+
+        if (!textoALeer.trim()) return;
+
+        // Configuración de la voz mística
+        const mensaje = new SpeechSynthesisUtterance(textoALeer);
+        mensaje.lang = 'es-ES'; // Idioma español
+        mensaje.rate = 0.88;    // Velocidad un poquitito pausada para dar misticismo
+        mensaje.pitch = 0.95;   // Tono levemente más grave y serio
+
+        window.speechSynthesis.speak(mensaje);
+    }
+
     function volverInicio() {
+        // Frenar la voz si el usuario decide volver al inicio
+        window.speechSynthesis.cancel();
         document.getElementById('screen-result').classList.add('hidden');
         document.getElementById('screen-selector').classList.remove('hidden');
     }

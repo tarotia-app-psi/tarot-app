@@ -384,10 +384,15 @@
         nameElement.innerText = nombreCarta;
         imgElement.classList.remove('back');
 
-        // LÓGICA DE IMÁGENES FUTURAS:
-        // Por ahora dejamos un fondo de color. Cuando tengas las imágenes, se vincularán aquí automáticamente.
-        imgElement.style.backgroundImage = "none";
-        imgElement.style.backgroundColor = "#372554";
+        // Convierte el nombre de la carta a minúsculas, saca los acentos y cambia espacios por guiones bajos
+        const nombreArchivo = nombreCarta
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "") // Esto elimina tildes por si se escapa alguna
+            .replace(/ /g, "_");
+
+        // Le dice a la app que busque la imagen en tu carpeta de GitHub
+        imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
     }
 
     function reproducirVoz(tipo) {

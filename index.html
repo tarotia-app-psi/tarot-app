@@ -595,6 +595,20 @@ function irAlEjeConsulta(estilo) {
             const parrafos = document.getElementById('interpretation-text').getElementsByTagName('p');
             if (parrafos.length > 0) textoALeer = parrafos[parrafos.length - 1].innerText;
         }
+    } else if (tipo === 'predicciones') {
+        // 🔮 NUEVO: Busca específicamente el bloque de Predicciones del Oráculo
+        const secciones = document.getElementById('interpretation-text').getElementsByClassName('reading-section');
+        for (let sec of secciones) {
+            if (sec.innerText.includes('Predicciones')) {
+                textoALeer = sec.innerText;
+                break;
+            }
+        }
+        // Si por alguna razón no encuentra la sección, lee la conclusión como respaldo
+        if (!textoALeer) {
+            const elementoConclusion = document.getElementById('conclusion');
+            if (elementoConclusion) textoALeer = elementoConclusion.innerText;
+        }
     }
 
     if (!textoALeer.trim()) return;
@@ -606,29 +620,23 @@ function irAlEjeConsulta(estilo) {
 
     // 🎙️ CAMBIO DE VOZ SEGÚN EL ESTILO (Morgana o Filósofo)
     const voces = window.speechSynthesis.getVoices();
-    // Filtramos solo las voces que hablen español ('es')
     const vocesEspanol = voces.filter(v => v.lang.startsWith('es'));
 
     if (vocesEspanol.length > 0) {
         if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') {
-            // Buscamos una voz femenina para Morgana
-            // Los celulares suelen incluir la palabra 'female', 'google' (la de mujer), 'microsoft', etc.
             const vozFemenina = vocesEspanol.find(v => 
                 v.name.toLowerCase().includes('female') || 
                 v.name.toLowerCase().includes('mujer') || 
                 v.name.toLowerCase().includes('sabina') || 
                 v.name.toLowerCase().includes('helena') || 
                 v.name.toLowerCase().includes('zira') ||
-                v.name.toLowerCase().includes('google') // La voz por defecto de Google suele ser femenina
+                v.name.toLowerCase().includes('google')
             );
-            
-            // Si la encuentra, se la asigna a Morgana
             if (vozFemenina) {
                 mensaje.voice = vozFemenina;
-                mensaje.pitch = 1.05; // Le subimos un pelín el tono para que suene más femenina
+                mensaje.pitch = 1.05;
             }
         } else {
-            // Estilo Filosófico: Buscamos una voz masculina o dejamos la del sistema
             const vozMasculina = vocesEspanol.find(v => 
                 v.name.toLowerCase().includes('male') || 
                 v.name.toLowerCase().includes('hombre') || 
@@ -637,14 +645,15 @@ function irAlEjeConsulta(estilo) {
             );
             if (vozMasculina) {
                 mensaje.voice = vozMasculina;
-                mensaje.pitch = 0.85; // Le bajamos un poquito el tono para que suene más profunda y reflexiva
+                mensaje.pitch = 0.85;
             }
         }
     }
 
     window.speechSynthesis.speak(mensaje);
 }
-            // Este truco obliga al celular a precargar la lista de voces en memoria
+
+// Este truco obliga al celular a precargar la lista de voces en memoria
 if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 }

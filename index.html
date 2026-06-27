@@ -92,6 +92,119 @@
             transform: translateY(-2px);
         }
 
+        /* --- NUEVOS ESTILOS PARA LA PORTADA PREMIUM --- */
+        .btn-carta-diaria {
+            background: linear-gradient(135deg, #4a154b, #6b114d);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .btn-carta-diaria:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .menu-portada {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .opcion-tarjeta {
+            background: rgba(20, 12, 35, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .opcion-tarjeta:hover {
+            border-color: var(--accent);
+            background: rgba(40, 25, 65, 0.8);
+            transform: scale(1.02);
+        }
+
+        .opcion-icono {
+            font-size: 2.2rem;
+            margin-right: 18px;
+        }
+
+        .opcion-info h3 {
+            margin: 0 0 5px 0;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .opcion-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .candado {
+            position: absolute;
+            right: 20px;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .banner-suscripcion {
+            background: linear-gradient(135deg, rgba(35,20,55,0.9), rgba(15,8,30,0.9));
+            border: 2px dashed var(--accent);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .banner-suscripcion h4 {
+            color: var(--accent);
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .banner-suscripcion ul {
+            text-align: left;
+            font-size: 0.85rem;
+            padding-left: 20px;
+            margin: 10px 0 15px 0;
+            color: #e0d5f0;
+        }
+
+        .banner-suscripcion li {
+            margin-bottom: 4px;
+        }
+
+        .btn-suscribirse {
+            background: var(--accent);
+            color: #07030d;
+            border: none;
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* --- FIN NUEVOS ESTILOS --- */
+
         .tarot-table {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -116,7 +229,6 @@
             font-weight: bold;
         }
 
-        /* DISEÑO DE CONTENEDOR DE CARTA EN TRES PARTES */
         .card-container {
             margin: 12px 0;
             display: flex;
@@ -140,10 +252,11 @@
             transition: all 0.5s ease;
         }
 
-        /* Reverso místico por defecto */
         .card-visual.back {
-            background-image: url('https://i.imgur.com/8N7zX7S.png'); /* Imagen de un reverso místico de cortesía */
-        }
+    /* Dejamos que el JavaScript maneje la imagen dinámicamente */
+    background-size: cover;
+    background-position: center;
+}
 
         .card-name {
             margin-top: 6px;
@@ -158,7 +271,6 @@
             line-height: 1.7;
         }
 
-        /* ESTILOS PARA LAS SECCIONES QUE DEVUELVE TU SERVER.JS */
         .reading-section {
             background: rgba(0, 0, 0, 0.2);
             padding: 15px 20px;
@@ -239,17 +351,72 @@
 
 <div class="container">
     <h1>Tarot Sagrado</h1>
-    <div class="subtitle">Sistema de Lectura por Duplas</div>
+    <div class="subtitle">Sistema de Lectura Inteligente</div>
 
-    <div id="screen-selector" class="screen">
-        <h3>Selecciona el eje de tu consulta:</h3>
+    <!-- PANTALLA 1: NUEVA PORTADA PRINCIPAL -->
+    <div id="screen-portada" class="screen">
+        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
+            ✨ Mi Carta Consejo del Día Gratis ✨
+        </button>
+
+        <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
+        <div class="menu-portada">
+            <!-- Estilo Bruja -->
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('morgana')">
+    <div class="opcion-icono">🔮</div>
+    <div class="opcion-info">
+        <h3>Estilo Morgana</h3>
+        <p>Lectura directa, concisa y al hueso. Consejos prácticos y predictivos.</p>
+    </div>
+</div>
+
+            <!-- Estilo Evolutivo -->
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+                <div class="opcion-icono">🧘‍♂️</div>
+                <div class="opcion-info">
+                    <h3>Estilo Filosófico</h3>
+                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+                </div>
+            </div>
+
+            <!-- Modo Para Mazo Físico -->
+            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
+                <div class="opcion-icono">🃏</div>
+                <div class="opcion-info">
+                    <h3>Para Mazo Físico</h3>
+                    <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
+                </div>
+                <div class="candado">🔒</div>
+            </div>
+        </div>
+
+        <!-- Banner de venta local -->
+        <div class="banner-suscripcion">
+            <h4>Pase Místico Premium</h4>
+            <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
+            <ul>
+                <li>Lecturas virtuales y respuestas ilimitadas.</li>
+                <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
+                <li>Navegación fluida sin banners publicitarios.</li>
+            </ul>
+            <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
+                Adquirir Pase Premium
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
+    <div id="screen-selector" class="screen hidden">
+        <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
         <div class="theme-selector">
             <button onclick="iniciarLectura('Amor')">❤️ Amor y Relaciones</button>
             <button onclick="iniciarLectura('Negocios')">💼 Negocios y Dinero</button>
             <button onclick="iniciarLectura('General')">🔮 Vida General</button>
         </div>
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
     </div>
 
+    <!-- PANTALLA 3: MESA DE RESULTADOS -->
     <div id="screen-result" class="screen hidden">
         <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
         
@@ -317,6 +484,22 @@
 
     const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
     let contadorLecturas = 0;
+    let estiloSeleccionado = "filosofico"; // Almacena qué personalidad eligió
+
+function irAlEjeConsulta(estilo) {
+    estiloSeleccionado = estilo;
+    // Si elige morgana, o si viene del mazo físico (que forzaremos a morgana)
+    const nombreEstiloText = estilo === 'morgana' ? 'Estilo Morgana' : 'Estilo Filosófico';
+    document.getElementById('titulo-eje-estilo').innerText = `Modo: ${nombreEstiloText}. Selecciona tu eje:`;
+    
+    document.getElementById('screen-portada').classList.add('hidden');
+    document.getElementById('screen-selector').classList.remove('hidden');
+}
+
+    function volverAPortada() {
+        document.getElementById('screen-selector').classList.add('hidden');
+        document.getElementById('screen-portada').classList.remove('hidden');
+    }
 
     function iniciarLectura(tema) {
         window.speechSynthesis.cancel();
@@ -333,10 +516,15 @@
         document.getElementById('reading-theme-title').innerText = `Lectura de ${tema}`;
         document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
 
-        // Resetear cartas a boca abajo temporalmente
+        // Detectamos qué reverso usar de tu carpeta local según el estilo elegido
+        const imagenReverso = estiloSeleccionado === 'morgana' 
+            ? 'reverso_morgana.jpg' 
+            : 'reverso_filosofico.jpg';
+
+        // Resetear cartas al reverso correspondiente de forma local
         ['a', 'b', 'c', 'd'].forEach(id => {
             const el = document.getElementById(`img-${id}`);
-            el.style.backgroundImage = "url('https://i.imgur.com/8N7zX7S.png')";
+            el.style.backgroundImage = `url('${imagenReverso}')`;
             el.classList.add('back');
             document.getElementById(`name-${id}`).innerText = "Revelando...";
         });
@@ -352,10 +540,11 @@
         const output = document.getElementById('interpretation-text');
 
         try {
+            // Le mandamos al servidor el tema, las cartas y TAMBIÉN el estilo de IA seleccionado
             const response = await fetch(SERVIDOR_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tema, a, b, c, d })
+                body: JSON.stringify({ tema, a, b, c, d, estilo: estiloSeleccionado })
             });
 
             if (!response.ok) throw new Error("Error en el servidor místico.");
@@ -363,7 +552,6 @@
             const data = await response.json();
             output.innerHTML = data.lectura;
             
-            // MOSTRAR CONTENIDO REAL DE LAS CARTAS (Darlas vuelta)
             mostrarCarta('a', a);
             mostrarCarta('b', b);
             mostrarCarta('c', c);
@@ -384,14 +572,12 @@
         nameElement.innerText = nombreCarta;
         imgElement.classList.remove('back');
 
-        // Convierte el nombre de la carta a minúsculas, saca los acentos y cambia espacios por guiones bajos
         const nombreArchivo = nombreCarta
             .toLowerCase()
             .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "") // Esto elimina tildes por si se escapa alguna
+            .replace(/[\u0300-\u036f]/g, "") 
             .replace(/ /g, "_");
 
-        // Le dice a la app que busque la imagen en tu carpeta de GitHub
         imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
     }
 
@@ -424,7 +610,17 @@
     function volverInicio() {
         window.speechSynthesis.cancel();
         document.getElementById('screen-result').classList.add('hidden');
-        document.getElementById('screen-selector').classList.remove('hidden');
+        // Vuelve a la portada mística original
+        document.getElementById('screen-portada').classList.remove('hidden');
+    }
+
+    // Funciones del Gancho Diario y Premium
+    function tirarCartaDiaria() {
+        alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
+    }
+
+    function abrirMensajePremium() {
+        alert("🃏 El modo 'Para Mazo Físico' es una característica Premium. Podés adquirir tu pase en el recuadro dorado.");
     }
 </script>
 

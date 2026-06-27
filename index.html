@@ -205,34 +205,45 @@
 
         /* --- FIN NUEVOS ESTILOS --- */
         
-/* Estilo místico para resaltar las Predicciones */
-.reading-section:nth-of-type(3) {
-    background: rgba(147, 51, 234, 0.08); /* Un fondo violeta sutil y mágico */
-    border-left: 4px solid #9333ea;       /* Una línea violeta intensa al costado */
-    padding: 15px;
-    border-radius: 0 8px 8px 0;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 0 10px rgba(147, 51, 234, 0.1);
-}
+/* 🔮 Diseño base elegante para todas las secciones de la lectura */
+        .reading-section {
+            background: rgba(20, 12, 35, 0.6) !important;
+            border: 1px solid rgba(255, 215, 0, 0.15) !important;
+            padding: 18px !important;
+            border-radius: 12px !important;
+            margin-top: 15px !important;
+            margin-bottom: 15px !important;
+            transition: all 0.3s ease;
+        }
 
-/* Botón especial para escuchar las predicciones */
-.btn-audio-predicciones {
-    background-color: #9333ea;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    margin: 5px;
-    font-weight: bold;
-    transition: background 0.3s;
-}
+        /* 🌟 Resalte místico automático cuando el navegador encuentra las Predicciones */
+        .reading-section:has(h3:contains("Predicciones")), 
+        .reading-section:nth-of-type(3) {
+            background: rgba(147, 51, 234, 0.12) !important; /* Fondo violeta mágico */
+            border: 1px solid rgba(147, 51, 234, 0.4) !important;
+            border-left: 6px solid #a855f7 !important;       /* Línea violeta intensa al costado */
+            box-shadow: 0 0 15px rgba(147, 51, 234, 0.2) !important;
+        }
 
-.btn-audio-predicciones:hover {
-    background-color: #7c3aed;
-}
+        /* Botón especial para escuchar las predicciones */
+        .btn-audio-predicciones {
+            background: linear-gradient(135deg, #9333ea, #6b21a8);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 8px 4px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-audio-predicciones:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.5);
+        }
         .tarot-table {
             display: grid;
             grid-template-columns: 1fr 1fr;

@@ -582,30 +582,72 @@ function irAlEjeConsulta(estilo) {
     }
 
     function reproducirVoz(tipo) {
-        window.speechSynthesis.cancel();
-        let textoALeer = "";
+    window.speechSynthesis.cancel();
+    let textoALeer = "";
 
-        if (tipo === 'todo') {
-            textoALeer = document.getElementById('interpretation-text').innerText;
-        } else if (tipo === 'conclusion') {
-            const elementoConclusion = document.getElementById('conclusion');
-            if (elementoConclusion) {
-                textoALeer = elementoConclusion.innerText;
-            } else {
-                const parrafos = document.getElementById('interpretation-text').getElementsByTagName('p');
-                if (parrafos.length > 0) textoALeer = parrafos[parrafos.length - 1].innerText;
+    if (tipo === 'todo') {
+        textoALeer = document.getElementById('interpretation-text').innerText;
+    } else if (tipo === 'conclusion') {
+        const elementoConclusion = document.getElementById('conclusion');
+        if (elementoConclusion) {
+            textoALeer = elementoConclusion.innerText;
+        } else {
+            const parrafos = document.getElementById('interpretation-text').getElementsByTagName('p');
+            if (parrafos.length > 0) textoALeer = parrafos[parrafos.length - 1].innerText;
+        }
+    }
+
+    if (!textoALeer.trim()) return;
+
+    const mensaje = new SpeechSynthesisUtterance(textoALeer);
+    mensaje.lang = 'es-ES';
+    mensaje.rate = 0.88; 
+    mensaje.pitch = 0.95; 
+
+    // 🎙️ CAMBIO DE VOZ SEGÚN EL ESTILO (Morgana o Filósofo)
+    const voces = window.speechSynthesis.getVoices();
+    // Filtramos solo las voces que hablen español ('es')
+    const vocesEspanol = voces.filter(v => v.lang.startsWith('es'));
+
+    if (vocesEspanol.length > 0) {
+        if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') {
+            // Buscamos una voz femenina para Morgana
+            // Los celulares suelen incluir la palabra 'female', 'google' (la de mujer), 'microsoft', etc.
+            const vozFemenina = vocesEspanol.find(v => 
+                v.name.toLowerCase().includes('female') || 
+                v.name.toLowerCase().includes('mujer') || 
+                v.name.toLowerCase().includes('sabina') || 
+                v.name.toLowerCase().includes('helena') || 
+                v.name.toLowerCase().includes('zira') ||
+                v.name.toLowerCase().includes('google') // La voz por defecto de Google suele ser femenina
+            );
+            
+            // Si la encuentra, se la asigna a Morgana
+            if (vozFemenina) {
+                mensaje.voice = vozFemenina;
+                mensaje.pitch = 1.05; // Le subimos un pelín el tono para que suene más femenina
+            }
+        } else {
+            // Estilo Filosófico: Buscamos una voz masculina o dejamos la del sistema
+            const vozMasculina = vocesEspanol.find(v => 
+                v.name.toLowerCase().includes('male') || 
+                v.name.toLowerCase().includes('hombre') || 
+                v.name.toLowerCase().includes('pablo') || 
+                v.name.toLowerCase().includes('julio')
+            );
+            if (vozMasculina) {
+                mensaje.voice = vozMasculina;
+                mensaje.pitch = 0.85; // Le bajamos un poquito el tono para que suene más profunda y reflexiva
             }
         }
-
-        if (!textoALeer.trim()) return;
-
-        const mensaje = new SpeechSynthesisUtterance(textoALeer);
-        mensaje.lang = 'es-ES';
-        mensaje.rate = 0.88; 
-        mensaje.pitch = 0.95; 
-
-        window.speechSynthesis.speak(mensaje);
     }
+
+    window.speechSynthesis.speak(mensaje);
+}
+            // Este truco obliga al celular a precargar la lista de voces en memoria
+if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
 
     function volverInicio() {
         window.speechSynthesis.cancel();

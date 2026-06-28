@@ -657,9 +657,9 @@ function irAlEjeConsulta(estilo) {
     mensaje.rate = 0.90; 
 
     // 🔥 DETECTOR ULTRA-PRECISO DE VOCES PARA CELULARES
+    // Reemplazalo por esto (filtrado estricto de español):
     const voces = window.speechSynthesis.getVoices();
-    const vocesEspanol = voces.filter(v => v.lang.startsWith('es') || v.lang.startsWith('en'));
-
+    const vocesEspanol = voces.filter(v => v.lang.startsWith('es'));
     if (vocesEspanol.length > 0) {
         if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') {
             const vozFemenina = vocesEspanol.find(v => 

@@ -393,23 +393,21 @@
     <div class="subtitle">Sistema de Lectura Inteligente</div>
 
     <!-- PANTALLA 1: NUEVA PORTADA PRINCIPAL -->
-    <div id="screen-portada" class="screen">
+   <div id="screen-portada" class="screen">
         <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
             ✨ Mi Carta Consejo del Día Gratis ✨
         </button>
 
         <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
         <div class="menu-portada">
-            <!-- Estilo Bruja -->
-            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('morgana')">
-    <div class="opcion-icono">🔮</div>
-    <div class="opcion-info">
-        <h3>Estilo Morgana</h3>
-        <p>Lectura directa, concisa y al hueso. Consejos prácticos y predictivos.</p>
-    </div>
-</div>
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+                <div class="opcion-icono">🔮</div>
+                <div class="opcion-info">
+                    <h3>Estilo Mágico</h3>
+                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+                </div>
+            </div>
 
-            <!-- Estilo Evolutivo -->
             <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
                 <div class="opcion-icono">🧘‍♂️</div>
                 <div class="opcion-info">
@@ -418,7 +416,6 @@
                 </div>
             </div>
 
-            <!-- Modo Para Mazo Físico -->
             <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
                 <div class="opcion-icono">🃏</div>
                 <div class="opcion-info">

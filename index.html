@@ -653,31 +653,41 @@ function irAlEjeConsulta(estilo) {
     if (!textoALeer.trim()) return;
 
     const mensaje = new SpeechSynthesisUtterance(textoALeer);
+    
+    // Forzamos el lenguaje a español de España/Latinoamérica estricto para evitar acentos raros
     mensaje.lang = 'es-ES';
-    mensaje.rate = 0.90; 
+    mensaje.rate = 0.92; 
 
-    // 🔥 DETECTOR ULTRA-PRECISO DE VOCES PARA CELULARES
-    // Reemplazalo por esto (filtrado estricto de español):
     const voces = window.speechSynthesis.getVoices();
-    const vocesEspanol = voces.filter(v => v.lang.startsWith('es'));
+    // Filtramos solo voces que tengan "es" en su idioma pero ignoramos configuraciones bugeadas de Chrome
+    const vocesEspanol = voces.filter(v => v.lang.toLowerCase().startsWith('es'));
+
     if (vocesEspanol.length > 0) {
         if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') {
-            const vozFemenina = vocesEspanol.find(v => 
-                v.name.toLowerCase().includes('female') || 
-                v.name.toLowerCase().includes('mujer') || 
-                v.name.toLowerCase().includes('sabina') || 
+            // 🚫 FILTRO ANTI-YANKIE: Prioriza voces nativas de Windows/iOS que hablan perfecto español
+            const vozFemeninaPerfecta = vocesEspanol.find(v => 
                 v.name.toLowerCase().includes('helena') || 
-                v.name.toLowerCase().includes('zira') || 
+                v.name.toLowerCase().includes('sabina') || 
+                v.name.toLowerCase().includes('laura') || 
+                v.name.toLowerCase().includes('lucia') || 
                 v.name.toLowerCase().includes('monica') || 
-                v.name.toLowerCase().includes('paulina') || 
-                v.name.toLowerCase().includes('google')
+                v.name.toLowerCase().includes('paulina')
             );
             
-            if (vozFemenina) {
-                mensaje.voice = vozFemenina;
+            if (vozFemeninaPerfecta) {
+                mensaje.voice = vozFemeninaPerfecta;
+            } else {
+                // Si no encuentra las anteriores, busca cualquiera de mujer pero que NO sea la de Google tradicional si está rota
+                const cualquierOtraFemenina = vocesEspanol.find(v => 
+                    v.name.toLowerCase().includes('female') || 
+                    v.name.toLowerCase().includes('mujer') ||
+                    v.name.toLowerCase().includes('zira')
+                );
+                if (cualquierOtraFemenina) mensaje.voice = cualquierOtraFemenina;
             }
-            mensaje.pitch = 1.20; // Agudiza la voz en celulares caprichosos
+            mensaje.pitch = 1.15; // Le da el toque femenino final
         } else {
+            // Estilo Filosófico
             const vozMasculina = vocesEspanol.find(v => 
                 v.name.toLowerCase().includes('male') || 
                 v.name.toLowerCase().includes('hombre') || 
@@ -685,13 +695,11 @@ function irAlEjeConsulta(estilo) {
                 v.name.toLowerCase().includes('julio') ||
                 v.name.toLowerCase().includes('jorge')
             );
-            if (vozMasculina) {
-                mensaje.voice = vozMasculina;
-            }
-            mensaje.pitch = 0.82; // Hace la voz más profunda
+            if (vozMasculina) mensaje.voice = vozMasculina;
+            mensaje.pitch = 0.85; 
         }
     } else {
-        mensaje.pitch = (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') ? 1.20 : 0.82;
+        mensaje.pitch = (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') ? 1.15 : 0.85;
     }
 
     window.speechSynthesis.speak(mensaje);

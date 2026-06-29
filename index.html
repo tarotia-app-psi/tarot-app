@@ -411,107 +411,148 @@
     <h1>Tarot Sagrado</h1>
     <div class="subtitle">Sistema de Lectura Inteligente</div>
 
-    <!-- PANTALLA 1: NUEVA PORTADA PRINCIPAL -->
-   <div id="screen-portada" class="screen">
-        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
-            ✨ Mi Carta Consejo del Día Gratis ✨
+    <!-- PANTALLA 1: PORTADA PRINCIPAL -->
+<div id="screen-portada" class="screen">
+    <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
+        ✨ Mi Carta Consejo del Día Gratis ✨
+    </button>
+
+    <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
+    <div class="menu-portada">
+        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+            <div class="opcion-icono">🔮</div>
+            <div class="opcion-info">
+                <h3>Estilo Mágico</h3>
+                <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+            </div>
+        </div>
+
+        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+            <div class="opcion-icono">🧘‍♂️</div>
+            <div class="opcion-info">
+                <h3>Estilo Filosófico</h3>
+                <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+            </div>
+        </div>
+
+        <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
+            <div class="opcion-icono">🃏</div>
+            <div class="opcion-info">
+                <h3>Para Mazo Físico</h3>
+                <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner de venta local -->
+    <div class="banner-suscripcion">
+        <h4>Pase Místico Premium</h4>
+        <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
+        <ul>
+            <li>Lecturas virtuales y respuestas ilimitadas.</li>
+            <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
+            <li>Navegación fluida sin banners publicitarios.</li>
+        </ul>
+        <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
+            Adquirir Pase Premium
         </button>
+    </div>
+</div>
 
-        <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
-        <div class="menu-portada">
-            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
-                <div class="opcion-icono">🔮</div>
-                <div class="opcion-info">
-                    <h3>Estilo Mágico</h3>
-                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
-                </div>
-            </div>
+<!-- 🃏 NUEVA PANTALLA: CARGA DE MAZO FÍSICO (2 DUPLAS) -->
+<div id="screen-fisico" class="screen" style="display: none;">
+    <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
+    <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
+        Mezclá tu mazo de 78 cartas, sacá dos duplas y cargalas a continuación:
+    </p>
 
-            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
-                <div class="opcion-icono">🧘‍♂️</div>
-                <div class="opcion-info">
-                    <h3>Estilo Filosófico</h3>
-                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
-                </div>
-            </div>
-
-            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
-                <div class="opcion-icono">🃏</div>
-                <div class="opcion-info">
-                    <h3>Para Mazo Físico</h3>
-                    <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
-                </div>
-                <div class="candado">🔒</div>
-            </div>
+    <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(255,215,0,0.1);">
+        <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+            🌓 Dupla 1: Situación Actual y Pasado
+        </h4>
+        <div style="margin-bottom: 10px;">
+            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 1 (Presente):</label>
+            <select id="fisico-carta1" class="select-carta-fisica"></select>
         </div>
-
-        <!-- Banner de venta local -->
-        <div class="banner-suscripcion">
-            <h4>Pase Místico Premium</h4>
-            <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
-            <ul>
-                <li>Lecturas virtuales y respuestas ilimitadas.</li>
-                <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
-                <li>Navegación fluida sin banners publicitarios.</li>
-            </ul>
-            <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
-                Adquirir Pase Premium
-            </button>
+        <div>
+            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 2 (Pasado):</label>
+            <select id="fisico-carta2" class="select-carta-fisica"></select>
         </div>
     </div>
 
-    <!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
-    <div id="screen-selector" class="screen hidden">
-        <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
-        <div class="theme-selector">
-            <button onclick="iniciarLectura('Amor')">❤️ Amor y Relaciones</button>
-            <button onclick="iniciarLectura('Negocios')">💼 Negocios y Dinero</button>
-            <button onclick="iniciarLectura('General')">🔮 Vida General</button>
+    <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,215,0,0.1);">
+        <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+            🚀 Dupla 2: Evolución Futura
+        </h4>
+        <div style="margin-bottom: 10px;">
+            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 3 (Futuro):</label>
+            <select id="fisico-carta3" class="select-carta-fisica"></select>
         </div>
-        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
+        <div>
+            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 4 (Resultado):</label>
+            <select id="fisico-carta4" class="select-carta-fisica"></select>
+        </div>
     </div>
 
-    <!-- PANTALLA 3: MESA DE RESULTADOS -->
-    <div id="screen-result" class="screen hidden">
-        <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
+    <button class="btn-carta-diaria" onclick="irAlEjeFisico()" style="background: linear-gradient(135deg, #ffd700, #b8860b); color: #111; font-weight: bold; width: 100%;">
+        Confirmar Cartas y Elegir Eje ✨
+    </button>
+    
+    <button onclick="volverAPortadaDesdeFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
+        Volver a la portada
+    </button>
+</div>
+
+<!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
+<div id="screen-selector" class="screen hidden">
+    <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
+    <div class="theme-selector">
+        <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
+        <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
+        <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
+    </div>
+    <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
+</div>
+
+<!-- PANTALLA 3: MESA DE RESULTADOS -->
+<div id="screen-result" class="screen hidden">
+    <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
+    
+    <div class="tarot-table">
+        <div class="duple-box">
+            <div class="duple-title">Presente y Pasado</div>
+            <div class="card-container">
+                <div id="img-a" class="card-visual back"></div>
+                <div id="name-a" class="card-name"></div>
+            </div>
+            <div class="card-container">
+                <div id="img-b" class="card-visual back"></div>
+                <div id="name-b" class="card-name"></div>
+            </div>
+        </div>
         
-        <div class="tarot-table">
-            <div class="duple-box">
-                <div class="duple-title">Presente y Pasado</div>
-                <div class="card-container">
-                    <div id="img-a" class="card-visual back"></div>
-                    <div id="name-a" class="card-name"></div>
-                </div>
-                <div class="card-container">
-                    <div id="img-b" class="card-visual back"></div>
-                    <div id="name-b" class="card-name"></div>
-                </div>
+        <div class="duple-box">
+            <div class="duple-title">Futuro Cercano</div>
+            <div class="card-container">
+                <div id="img-c" class="card-visual back"></div>
+                <div id="name-c" class="card-name"></div>
             </div>
-            
-            <div class="duple-box">
-                <div class="duple-title">Futuro Cercano</div>
-                <div class="card-container">
-                    <div id="img-c" class="card-visual back"></div>
-                    <div id="name-c" class="card-name"></div>
-                </div>
-                <div class="card-container">
-                    <div id="img-d" class="card-visual back"></div>
-                    <div id="name-d" class="card-name"></div>
-                </div>
+            <div class="card-container">
+                <div id="img-d" class="card-visual back"></div>
+                <div id="name-d" class="card-name"></div>
             </div>
         </div>
-
-        <div id="voice-controls" class="voice-panel hidden">
-            <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
-            <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">
-    🔮 Escuchar Predicciones</button>                                                                            
-        </div>
-
-        <div class="reading-output" id="interpretation-text"></div>
-
-        <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
     </div>
+
+    <div id="voice-controls" class="voice-panel hidden">
+        <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
+        <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
+        <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                
+    </div>
+
+    <div class="reading-output" id="interpretation-text"></div>
+
+    <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
 </div>
 
 <div class="ad-banner-space">
@@ -519,126 +560,224 @@
 </div>
 
 <script>
-    const mazoTarot = [
-        "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador", 
-        "El Papa", "Los Enamorados", "El Carro", "La Fuerza", "El Ermitaño", 
-        "La Rueda de la Fortuna", "La Justicia", "El Colgado", "La Muerte", 
-        "La Templanza", "El Diablo", "La Torre", "La Estrella", "La Luna", 
-        "El Sol", "El Juicio", "El Mundo",
-        "As de Bastos", "2 de Bastos", "3 de Bastos", "4 de Bastos", "5 de Bastos", 
-        "6 de Bastos", "7 de Bastos", "8 de Bastos", "9 de Bastos", "10 de Bastos", 
-        "Sota de Bastos", "Caballero de Bastos", "Reina de Bastos", "Rey de Bastos",
-        "As de Copas", "2 de Copas", "3 de Copas", "4 de Copas", "5 de Copas", 
-        "6 de Copas", "7 de Copas", "8 de Copas", "9 de Copas", "10 de Copas", 
-        "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
-        "As de Espadas", "2 de Espadas", "3 de Espadas", "4 de Espadas", "5 de Espadas", 
-        "6 de Espadas", "7 de Espadas", "8 de Espadas", "9 de Espadas", "10 de Espadas", 
-        "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
-        "As de Oros", "2 de Oros", "3 de Oros", "4 de Oros", "5 de Oros", 
-        "6 de Oros", "7 de Oros", "8 de Oros", "9 de Oros", "10 de Oros", 
-        "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
-    ];
+// El mazo completo de 78 cartas estructurado para tu sistema
+const arcanosCompleto = [
+    "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador", "El Papa", 
+    "Los Enamorados", "El Carro", "La Justicia", "El Ermitaño", "La Rueda de la Fortuna", 
+    "La Fuerza", "El Colgado", "La Muerte", "La Templanza", "El Diablo", "La Torre", 
+    "La Estrella", "La Luna", "El Sol", "El Juicio", "El Mundo",
+    "As de Bastos", "Dos de Bastos", "Tres de Bastos", "Cuatro de Bastos", "Cinco de Bastos", 
+    "Seis de Bastos", "Siete de Bastos", "Ocho de Bastos", "Nueve de Bastos", "Diez de Bastos", 
+    "Sota de Bastos", "Caballero de Bastos", "Reina de Bastos", "Rey de Bastos",
+    "As de Copas", "Dos de Copas", "Tres de Copas", "Cuatro de Copas", "Cinco de Copas", 
+    "Seis de Copas", "Siete de Copas", "Ocho de Copas", "Nueve de Copas", "Diez de Copas", 
+    "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
+    "As de Espadas", "Dos de Espadas", "Tres de Espadas", "Cuatro de Espadas", "Cinco de Espadas", 
+    "Seis de Espadas", "Siete de Espadas", "Ocho de Espadas", "Nueve de Espadas", "Diez de Espadas", 
+    "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
+    "As de Oros", "Dos de Oros", "Tres de Oros", "Cuatro de Oros", "Cinco de Oros", 
+    "Seis de Oros", "Siete de Oros", "Ocho de Oros", "Nueve de Oros", "Diez de Oros", 
+    "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
+];
 
-    const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
-    let contadorLecturas = 0;
-    let estiloSeleccionado = "filosofico"; // Almacena qué personalidad eligió
+const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
+let contadorLecturas = 0;
+let estiloSeleccionado = "filosofico"; 
+let modoFisicoActivo = false; // Bandera para saber de qué pantalla viene el usuario
+let cartasFisicasElegidas = [];
 
 function irAlEjeConsulta(estilo) {
+    modoFisicoActivo = false;
     estiloSeleccionado = estilo;
-    // Si elige morgana, o si viene del mazo físico (que forzaremos a morgana)
-    const nombreEstiloText = estilo === 'morgana' ? 'Estilo Morgana' : 'Estilo Filosófico';
+    const nombreEstiloText = estilo === 'magico' ? 'Estilo Mágico' : 'Estilo Filosófico';
     document.getElementById('titulo-eje-estilo').innerText = `Modo: ${nombreEstiloText}. Selecciona tu eje:`;
     
     document.getElementById('screen-portada').classList.add('hidden');
     document.getElementById('screen-selector').classList.remove('hidden');
 }
 
-    function volverAPortada() {
-        document.getElementById('screen-selector').classList.add('hidden');
-        document.getElementById('screen-portada').classList.remove('hidden');
+function volverAPortada() {
+    document.getElementById('screen-selector').classList.add('hidden');
+    document.getElementById('screen-portada').classList.remove('hidden');
+}
+
+function volverAPortadaDesdeFisico() {
+    document.getElementById('screen-fisico').style.display = 'none';
+    document.getElementById('screen-portada').style.display = 'block';
+}
+
+function abrirMensajePremium() {
+    // Al tocar mazo físico, activamos el modo y abrimos la carga manual
+    modoFisicoActivo = true;
+    document.getElementById('screen-portada').style.display = 'none';
+    document.getElementById('screen-fisico').style.display = 'block';
+    
+    const idsSelects = ['fisico-carta1', 'fisico-carta2', 'fisico-carta3', 'fisico-carta4'];
+    
+    idsSelects.forEach(id => {
+        const select = document.getElementById(id);
+        if (select && select.children.length === 0) {
+            let optDefault = document.createElement('option');
+            optDefault.value = "";
+            optDefault.innerText = "🔍 Selecciona una carta...";
+            optDefault.disabled = true;
+            optDefault.selected = true;
+            select.appendChild(optDefault);
+            
+            const grupos = [
+                { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
+                { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
+                { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
+                { nombre: "⚔️ Palo de Espadas", inicio: 50, fin: 63 },
+                { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
+            ];
+            
+            grupos.forEach(g => {
+                let grupoElemento = document.createElement('optgroup');
+                grupoElemento.label = g.nombre;
+                
+                for (let i = g.inicio; i <= g.fin; i++) {
+                    let opt = document.createElement('option');
+                    opt.value = arcanosCompleto[i]; // Guardamos el string directo de la carta
+                    opt.innerText = arcanosCompleto[i];
+                    grupoElemento.appendChild(opt);
+                }
+                select.appendChild(grupoElemento);
+            });
+        }
+    });
+}
+
+function irAlEjeFisico() {
+    const c1 = document.getElementById('fisico-carta1').value;
+    const c2 = document.getElementById('fisico-carta2').value;
+    const c3 = document.getElementById('fisico-carta3').value;
+    const c4 = document.getElementById('fisico-carta4').value;
+
+    if (!c1 || !c2 || !c3 || !c4) {
+        alert("🧙‍♂️ Por favor, selecciona las 4 cartas de tus duplas antes de continuar.");
+        return;
     }
 
-    function iniciarLectura(tema) {
-        window.speechSynthesis.cancel();
-        document.getElementById('voice-controls').classList.add('hidden');
+    cartasFisicasElegidas = [c1, c2, c3, c4];
+    
+    // Forzamos estilo mágico por defecto para mazo físico, o dejamos que elija luego
+    estiloSeleccionado = 'magico'; 
+    document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
+    
+    document.getElementById('screen-fisico').style.display = 'none';
+    document.getElementById('screen-selector').classList.remove('hidden');
+}
 
-        contadorLecturas++;
-        if (contadorLecturas >= 10) {
-            alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
-            contadorLecturas = 0; 
-        }
+function ejecutarLecturaSegunModo(tema) {
+    if (modoFisicoActivo) {
+        // Ejecuta tirada usando las cartas manuales guardadas
+        iniciarLecturaFisica(tema, cartasFisicasElegidas[0], cartasFisicasElegidas[1], cartasFisicasElegidas[2], cartasFisicasElegidas[3]);
+    } else {
+        // Ejecuta la tirada automática clásica
+        iniciarLectura(tema);
+    }
+}
 
-        document.getElementById('screen-selector').classList.add('hidden');
-        document.getElementById('screen-result').classList.remove('hidden');
-        document.getElementById('reading-theme-title').innerText = `Lectura de ${tema}`;
-        document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
+function iniciarLectura(tema) {
+    window.speechSynthesis.cancel();
+    document.getElementById('voice-controls').classList.add('hidden');
 
-        // Detectamos qué reverso usar de tu carpeta local según el estilo elegido
-        const imagenReverso = estiloSeleccionado === 'morgana' 
-            ? 'reverso_morgana.jpg' 
-            : 'reverso_filosofico.jpg';
+    contadorLecturas++;
+    if (contadorLecturas >= 10) {
+        alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
+        contadorLecturas = 0; 
+    }
 
-        // Resetear cartas al reverso correspondiente de forma local
-        ['a', 'b', 'c', 'd'].forEach(id => {
-            const el = document.getElementById(`img-${id}`);
-            el.style.backgroundImage = `url('${imagenReverso}')`;
-            el.classList.add('back');
-            document.getElementById(`name-${id}`).innerText = "Revelando...";
+    document.getElementById('screen-selector').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
+    document.getElementById('reading-theme-title').innerText = `Lectura de ${tema}`;
+    document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
+
+    const imagenReverso = estiloSeleccionado === 'magico' ? 'reverso_morgana.jpg' : 'reverso_filosofico.jpg';
+
+    ['a', 'b', 'c', 'd'].forEach(id => {
+        const el = document.getElementById(`img-${id}`);
+        el.style.backgroundImage = `url('${imagenReverso}')`;
+        el.classList.add('back');
+        document.getElementById(`name-${id}`).innerText = "Revelando...";
+    });
+
+    // Mazo automático de tu software (Usa arcanosCompleto por seguridad si mazoTarot no está definido arriba)
+    let arrayBase = (typeof mazoTarot !== 'undefined') ? mazoTarot : arcanosCompleto;
+    let mazoMezclado = [...arrayBase].sort(() => 0.5 - Math.random());
+    let cartesElegidas = mazoMezclado.slice(0, 4);
+    let [a, b, c, d] = cartesElegidas;
+
+    llamarAlServidorPropio(tema, a, b, c, d);
+}
+
+function iniciarLecturaFisica(tema, a, b, c, d) {
+    window.speechSynthesis.cancel();
+    document.getElementById('voice-controls').classList.add('hidden');
+
+    document.getElementById('screen-selector').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
+    document.getElementById('reading-theme-title').innerText = `Lectura Física de ${tema}`;
+    document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
+
+    const imagenReverso = estiloSeleccionado === 'magico' ? 'reverso_morgana.jpg' : 'reverso_filosofico.jpg';
+
+    ['a', 'b', 'c', 'd'].forEach(id => {
+        const el = document.getElementById(`img-${id}`);
+        el.style.backgroundImage = `url('${imagenReverso}')`;
+        el.classList.add('back');
+        document.getElementById(`name-${id}`).innerText = "Revelando...";
+    });
+
+    llamarAlServidorPropio(tema, a, b, c, d);
+}
+
+async function llamarAlServidorPropio(tema, a, b, c, d) {
+    const output = document.getElementById('interpretation-text');
+
+    try {
+        const response = await fetch(SERVIDOR_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tema, a, b, c, d, estilo: estiloSeleccionado })
         });
 
-        let mazoMezclado = [...mazoTarot].sort(() => 0.5 - Math.random());
-        let cartesElegidas = mazoMezclado.slice(0, 4);
-        let [a, b, c, d] = cartesElegidas;
+        if (!response.ok) throw new Error("Error en el servidor místico.");
 
-        llamarAlServidorPropio(tema, a, b, c, d);
-    }
-
-    async function llamarAlServidorPropio(tema, a, b, c, d) {
-        const output = document.getElementById('interpretation-text');
-
-        try {
-            // Le mandamos al servidor el tema, las cartas y TAMBIÉN el estilo de IA seleccionado
-            const response = await fetch(SERVIDOR_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ tema, a, b, c, d, estilo: estiloSeleccionado })
-            });
-
-            if (!response.ok) throw new Error("Error en el servidor místico.");
-
-            const data = await response.json();
-            output.innerHTML = data.lectura;
-            
-            mostrarCarta('a', a);
-            mostrarCarta('b', b);
-            mostrarCarta('c', c);
-            mostrarCarta('d', d);
-
-            document.getElementById('voice-controls').classList.remove('hidden');
-
-        } catch (error) {
-            console.error(error);
-            output.innerHTML = `<p style='color: #ff4a4a; text-align:center;'>Ocurrió un error en la conexión cósmica. Reintentá en unos segundos.</p>`;
-        }
-    }
-
-    function mostrarCarta(id, nombreCarta) {
-        const imgElement = document.getElementById(`img-${id}`);
-        const nameElement = document.getElementById(`name-${id}`);
+        const data = await response.json();
+        output.innerHTML = data.lectura;
         
-        nameElement.innerText = nombreCarta;
-        imgElement.classList.remove('back');
+        mostrarCarta('a', a);
+        mostrarCarta('b', b);
+        mostrarCarta('c', c);
+        mostrarCarta('d', d);
 
-        const nombreArchivo = nombreCarta
-            .toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "") 
-            .replace(/ /g, "_");
+        document.getElementById('voice-controls').classList.remove('hidden');
 
-        imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
+    } catch (error) {
+        console.error(error);
+        output.innerHTML = `<p style='color: #ff4a4a; text-align:center;'>Ocurrió un error en la conexión cósmica. Reintentá en unos segundos.</p>`;
     }
+}
 
-    function reproducirVoz(tipo) {
+function mostrarCarta(id, nombreCarta) {
+    const imgElement = document.getElementById(`img-${id}`);
+    const nameElement = document.getElementById(`name-${id}`);
+    
+    nameElement.innerText = nombreCarta;
+    imgElement.classList.remove('back');
+
+    const nombreArchivo = nombreCarta
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/ /g, "_");
+
+    imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
+}
+
+function reproducirVoz(tipo) {
     window.speechSynthesis.cancel();
     let textoALeer = "";
 
@@ -670,18 +809,15 @@ function irAlEjeConsulta(estilo) {
 
     const mensaje = new SpeechSynthesisUtterance(textoALeer);
     
-    // Forzamos el lenguaje a español de España/Latinoamérica estricto para evitar acentos raros
     mensaje.lang = 'es-ES';
     mensaje.rate = 0.92; 
 
-    const voces = window.speechSynthesis.getVoices();
-    // Filtramos solo voces que tengan "es" en su idioma pero ignoramos configuraciones bugeadas de Chrome
-    const vocesEspanol = voces.filter(v => v.lang.toLowerCase().startsWith('es'));
+    const voices = window.speechSynthesis.getVoices();
+    const voicesEspanol = voices.filter(v => v.lang.toLowerCase().startsWith('es'));
 
-    if (vocesEspanol.length > 0) {
-        if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') {
-            // 🚫 FILTRO ANTI-YANKIE: Prioriza voces nativas de Windows/iOS que hablan perfecto español
-            const vozFemeninaPerfecta = vocesEspanol.find(v => 
+    if (voicesEspanol.length > 0) {
+        if (estiloSeleccionado === 'magico') {
+            const vozFemeninaPerfecta = voicesEspanol.find(v => 
                 v.name.toLowerCase().includes('helena') || 
                 v.name.toLowerCase().includes('sabina') || 
                 v.name.toLowerCase().includes('laura') || 
@@ -693,18 +829,16 @@ function irAlEjeConsulta(estilo) {
             if (vozFemeninaPerfecta) {
                 mensaje.voice = vozFemeninaPerfecta;
             } else {
-                // Si no encuentra las anteriores, busca cualquiera de mujer pero que NO sea la de Google tradicional si está rota
-                const cualquierOtraFemenina = vocesEspanol.find(v => 
+                const cualquierOtraFemenina = voicesEspanol.find(v => 
                     v.name.toLowerCase().includes('female') || 
                     v.name.toLowerCase().includes('mujer') ||
                     v.name.toLowerCase().includes('zira')
                 );
                 if (cualquierOtraFemenina) mensaje.voice = cualquierOtraFemenina;
             }
-            mensaje.pitch = 1.15; // Le da el toque femenino final
+            mensaje.pitch = 1.15; 
         } else {
-            // Estilo Filosófico
-            const vozMasculina = vocesEspanol.find(v => 
+            const vozMasculina = voicesEspanol.find(v => 
                 v.name.toLowerCase().includes('male') || 
                 v.name.toLowerCase().includes('hombre') || 
                 v.name.toLowerCase().includes('pablo') || 
@@ -712,10 +846,10 @@ function irAlEjeConsulta(estilo) {
                 v.name.toLowerCase().includes('jorge')
             );
             if (vozMasculina) mensaje.voice = vozMasculina;
-            mensaje.pitch = 0.85; 
+            text.pitch = 0.85; 
         }
     } else {
-        mensaje.pitch = (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'morgana') ? 1.15 : 0.85;
+        mensaje.pitch = (estiloSeleccionado === 'magico') ? 1.15 : 0.85;
     }
 
     window.speechSynthesis.speak(mensaje);
@@ -725,22 +859,14 @@ if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !=
     speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 }
 window.speechSynthesis.getVoices();
-    function volverInicio() {
-        window.speechSynthesis.cancel();
-        document.getElementById('screen-result').classList.add('hidden');
-        // Vuelve a la portada mística original
-        document.getElementById('screen-portada').classList.remove('hidden');
-    }
 
-    // Funciones del Gancho Diario y Premium
-    function tirarCartaDiaria() {
-        alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
-    }
+function volverInicio() {
+    window.speechSynthesis.cancel();
+    document.getElementById('screen-result').classList.add('hidden');
+    document.getElementById('screen-portada').classList.remove('hidden');
+}
 
-    function abrirMensajePremium() {
-        alert("🃏 El modo 'Para Mazo Físico' es una característica Premium. Podés adquirir tu pase en el recuadro dorado.");
-    }
+function tirarCartaDiaria() {
+    alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
+}
 </script>
-
-</body>
-</html>

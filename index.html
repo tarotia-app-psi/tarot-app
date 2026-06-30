@@ -92,7 +92,6 @@
             transform: translateY(-2px);
         }
 
-      /* --- NUEVOS ESTILOS PARA LA PORTADA PREMIUM --- */
         .btn-carta-diaria {
             background: linear-gradient(135deg, #4a154b, #6b114d);
             border: 2px solid var(--accent);
@@ -156,13 +155,6 @@
             color: var(--muted-text);
         }
 
-        .candado {
-            position: absolute;
-            right: 20px;
-            font-size: 1.2rem;
-            color: var(--accent);
-        }
-
         .banner-suscripcion {
             background: linear-gradient(135deg, rgba(35,20,55,0.9), rgba(15,8,30,0.9));
             border: 2px dashed var(--accent);
@@ -203,7 +195,6 @@
             width: 100%;
         }
 
-        /* 🃏 Estilo adaptado para los selectores del mazo físico */
         .select-carta-fisica {
             width: 100%;
             background: #1a0f2e;
@@ -222,9 +213,6 @@
             box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
         }
 
-        /* --- FIN NUEVOS ESTILOS --- */
-        
-/* 🔮 Diseño base elegante para todas las secciones de la lectura */
         .reading-section {
             background: rgba(20, 12, 35, 0.6) !important;
             border: 1px solid rgba(255, 215, 0, 0.15) !important;
@@ -233,18 +221,24 @@
             margin-top: 15px !important;
             margin-bottom: 15px !important;
             transition: all 0.3s ease;
+            border-left: 4px solid var(--accent) !important;
         }
 
-        /* 🌟 Resalte místico automático cuando el navegador encuentra las Predicciones */
-        .reading-section:has(h3:contains("Predicciones")), 
-        .reading-section:nth-of-type(3) {
-            background: rgba(147, 51, 234, 0.12) !important; /* Fondo violeta mágico */
+        .reading-section h3 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Bloque condicional para resaltar predicciones si usás contenedores específicos */
+        .reading-section.resaltado-místico {
+            background: rgba(147, 51, 234, 0.12) !important;
             border: 1px solid rgba(147, 51, 234, 0.4) !important;
-            border-left: 6px solid #a855f7 !important;       /* Línea violeta intensa al costado */
+            border-left: 6px solid #a855f7 !important;
             box-shadow: 0 0 15px rgba(147, 51, 234, 0.2) !important;
         }
 
-        /* Botón especial para escuchar las predicciones */
         .btn-audio-predicciones {
             background: linear-gradient(135deg, #9333ea, #6b21a8);
             color: white;
@@ -263,6 +257,7 @@
             transform: scale(1.03);
             box-shadow: 0 4px 15px rgba(147, 51, 234, 0.5);
         }
+
         .tarot-table {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -311,10 +306,9 @@
         }
 
         .card-visual.back {
-    /* Dejamos que el JavaScript maneje la imagen dinámicamente */
-    background-size: cover;
-    background-position: center;
-}
+            background-size: cover;
+            background-position: center;
+        }
 
         .card-name {
             margin-top: 6px;
@@ -327,21 +321,6 @@
             text-align: left;
             margin-top: 25px;
             line-height: 1.7;
-        }
-
-        .reading-section {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--accent);
-        }
-
-        .reading-section h3 {
-            color: var(--accent);
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
         }
 
         .voice-panel {
@@ -360,6 +339,7 @@
             padding: 12px;
             border-color: #b3a7c4;
             color: #b3a7c4;
+            background: transparent;
         }
 
         .btn-voice:hover {
@@ -412,147 +392,148 @@
     <div class="subtitle">Sistema de Lectura Inteligente</div>
 
     <!-- PANTALLA 1: PORTADA PRINCIPAL -->
-<div id="screen-portada" class="screen">
-    <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
-        ✨ Mi Carta Consejo del Día Gratis ✨
-    </button>
+    <div id="screen-portada" class="screen">
+        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
+            ✨ Mi Carta Consejo del Día Gratis ✨
+        </button>
 
-    <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
-    <div class="menu-portada">
-        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
-            <div class="opcion-icono">🔮</div>
-            <div class="opcion-info">
-                <h3>Estilo Mágico</h3>
-                <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+        <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
+        <div class="menu-portada">
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+                <div class="opcion-icono">🔮</div>
+                <div class="opcion-info">
+                    <h3>Estilo Mágico</h3>
+                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+                <div class="opcion-icono">🧘‍♂️</div>
+                <div class="opcion-info">
+                    <h3>Estilo Filosófico</h3>
+                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+                </div>
+            </div>
+
+            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
+                <div class="opcion-icono">🃏</div>
+                <div class="opcion-info">
+                    <h3>Para Mazo Físico</h3>
+                    <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
+                </div>
             </div>
         </div>
 
-        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
-            <div class="opcion-icono">🧘‍♂️</div>
-            <div class="opcion-info">
-                <h3>Estilo Filosófico</h3>
-                <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
-            </div>
-        </div>
-
-        <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
-            <div class="opcion-icono">🃏</div>
-            <div class="opcion-info">
-                <h3>Para Mazo Físico</h3>
-                <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
-            </div>
+        <!-- Banner de venta local -->
+        <div class="banner-suscripcion">
+            <h4>Pase Místico Premium</h4>
+            <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
+            <ul>
+                <li>Lecturas virtuales y respuestas ilimitadas.</li>
+                <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
+                <li>Navegación fluida sin banners publicitarios.</li>
+            </ul>
+            <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
+                Adquirir Pase Premium
+            </button>
         </div>
     </div>
 
-    <!-- Banner de venta local -->
-    <div class="banner-suscripcion">
-        <h4>Pase Místico Premium</h4>
-        <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
-        <ul>
-            <li>Lecturas virtuales y respuestas ilimitadas.</li>
-            <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
-            <li>Navegación fluida sin banners publicitarios.</li>
-        </ul>
-        <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
-            Adquirir Pase Premium
+    <!-- 🃏 NUEVA PANTALLA: CARGA DE MAZO FÍSICO (2 DUPLAS) -->
+    <div id="screen-fisico" class="screen" style="display: none;">
+        <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
+        <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
+            Mezclá tu mazo de 78 cartas, sacá dos duplas y cargalas a continuación:
+        </p>
+
+        <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(255,215,0,0.1);">
+            <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+                🌓 Dupla 1: Situación Actual y Pasado
+            </h4>
+            <div style="margin-bottom: 10px;">
+                <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 1 (Presente):</label>
+                <select id="fisico-carta1" class="select-carta-fisica"></select>
+            </div>
+            <div>
+                <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 2 (Pasado):</label>
+                <select id="fisico-carta2" class="select-carta-fisica"></select>
+            </div>
+        </div>
+
+        <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,215,0,0.1);">
+            <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
+                🚀 Dupla 2: Evolución Futura
+            </h4>
+            <div style="margin-bottom: 10px;">
+                <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 3 (Futuro):</label>
+                <select id="fisico-carta3" class="select-carta-fisica"></select>
+            </div>
+            <div>
+                <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 4 (Resultado):</label>
+                <select id="fisico-carta4" class="select-carta-fisica"></select>
+            </div>
+        </div>
+
+        <button class="btn-carta-diaria" onclick="irAlEjeFisico()" style="background: linear-gradient(135deg, #ffd700, #b8860b); color: #111; font-weight: bold; width: 100%;">
+            Confirmar Cartas y Elegir Eje ✨
+        </button>
+        
+        <button onclick="volverAPortadaDesdeFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
+            Volver a la portada
         </button>
     </div>
-</div>
 
-<!-- 🃏 NUEVA PANTALLA: CARGA DE MAZO FÍSICO (2 DUPLAS) -->
-<div id="screen-fisico" class="screen" style="display: none;">
-    <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
-    <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
-        Mezclá tu mazo de 78 cartas, sacá dos duplas y cargalas a continuación:
-    </p>
-
-    <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(255,215,0,0.1);">
-        <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
-            🌓 Dupla 1: Situación Actual y Pasado
-        </h4>
-        <div style="margin-bottom: 10px;">
-            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 1 (Presente):</label>
-            <select id="fisico-carta1" class="select-carta-fisica"></select>
+    <!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
+    <div id="screen-selector" class="screen hidden">
+        <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
+        <div class="theme-selector">
+            <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
+            <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
+            <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
         </div>
-        <div>
-            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 2 (Pasado):</label>
-            <select id="fisico-carta2" class="select-carta-fisica"></select>
-        </div>
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
     </div>
 
-    <div class="dupla-container" style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,215,0,0.1);">
-        <h4 style="color: #a855f7; margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">
-            🚀 Dupla 2: Evolución Futura
-        </h4>
-        <div style="margin-bottom: 10px;">
-            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 3 (Futuro):</label>
-            <select id="fisico-carta3" class="select-carta-fisica"></select>
-        </div>
-        <div>
-            <label style="display:block; font-size: 0.8rem; margin-bottom: 4px;">Carta 4 (Resultado):</label>
-            <select id="fisico-carta4" class="select-carta-fisica"></select>
-        </div>
-    </div>
-
-    <button class="btn-carta-diaria" onclick="irAlEjeFisico()" style="background: linear-gradient(135deg, #ffd700, #b8860b); color: #111; font-weight: bold; width: 100%;">
-        Confirmar Cartas y Elegir Eje ✨
-    </button>
-    
-    <button onclick="volverAPortadaDesdeFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
-        Volver a la portada
-    </button>
-</div>
-
-<!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
-<div id="screen-selector" class="screen hidden">
-    <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
-    <div class="theme-selector">
-        <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
-        <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
-        <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
-    </div>
-    <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
-</div>
-
-<!-- PANTALLA 3: MESA DE RESULTADOS -->
-<div id="screen-result" class="screen hidden">
-    <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
-    
-    <div class="tarot-table">
-        <div class="duple-box">
-            <div class="duple-title">Presente y Pasado</div>
-            <div class="card-container">
-                <div id="img-a" class="card-visual back"></div>
-                <div id="name-a" class="card-name"></div>
-            </div>
-            <div class="card-container">
-                <div id="img-b" class="card-visual back"></div>
-                <div id="name-b" class="card-name"></div>
-            </div>
-        </div>
+    <!-- PANTALLA 3: MESA DE RESULTADOS -->
+    <div id="screen-result" class="screen hidden">
+        <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
         
-        <div class="duple-box">
-            <div class="duple-title">Futuro Cercano</div>
-            <div class="card-container">
-                <div id="img-c" class="card-visual back"></div>
-                <div id="name-c" class="card-name"></div>
+        <div class="tarot-table">
+            <div class="duple-box">
+                <div class="duple-title">Presente y Pasado</div>
+                <div class="card-container">
+                    <div id="img-a" class="card-visual back"></div>
+                    <div id="name-a" class="card-name"></div>
+                </div>
+                <div class="card-container">
+                    <div id="img-b" class="card-visual back"></div>
+                    <div id="name-b" class="card-name"></div>
+                </div>
             </div>
-            <div class="card-container">
-                <div id="img-d" class="card-visual back"></div>
-                <div id="name-d" class="card-name"></div>
+            
+            <div class="duple-box">
+                <div class="duple-title">Futuro Cercano</div>
+                <div class="card-container">
+                    <div id="img-c" class="card-visual back"></div>
+                    <div id="name-c" class="card-name"></div>
+                </div>
+                <div class="card-container">
+                    <div id="img-d" class="card-visual back"></div>
+                    <div id="name-d" class="card-name"></div>
+                </div>
             </div>
         </div>
+
+        <div id="voice-controls" class="voice-panel hidden">
+            <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
+            <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
+            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                
+        </div>
+
+        <div class="reading-output" id="interpretation-text"></div>
+
+        <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
     </div>
-
-    <div id="voice-controls" class="voice-panel hidden">
-        <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
-        <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-        <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                
-    </div>
-
-    <div class="reading-output" id="interpretation-text"></div>
-
-    <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
 </div>
 
 <div class="ad-banner-space">
@@ -583,7 +564,7 @@ const arcanosCompleto = [
 const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
 let contadorLecturas = 0;
 let estiloSeleccionado = "filosofico"; 
-let modoFisicoActivo = false; // Bandera para saber de qué pantalla viene el usuario
+let modoFisicoActivo = false; 
 let cartasFisicasElegidas = [];
 
 function irAlEjeConsulta(estilo) {
@@ -607,7 +588,6 @@ function volverAPortadaDesdeFisico() {
 }
 
 function abrirMensajePremium() {
-    // Al tocar mazo físico, activamos el modo y abrimos la carga manual
     modoFisicoActivo = true;
     document.getElementById('screen-portada').style.display = 'none';
     document.getElementById('screen-fisico').style.display = 'block';
@@ -638,7 +618,7 @@ function abrirMensajePremium() {
                 
                 for (let i = g.inicio; i <= g.fin; i++) {
                     let opt = document.createElement('option');
-                    opt.value = arcanosCompleto[i]; // Guardamos el string directo de la carta
+                    opt.value = arcanosCompleto[i]; 
                     opt.innerText = arcanosCompleto[i];
                     grupoElemento.appendChild(opt);
                 }
@@ -660,8 +640,6 @@ function irAlEjeFisico() {
     }
 
     cartasFisicasElegidas = [c1, c2, c3, c4];
-    
-    // Forzamos estilo mágico por defecto para mazo físico, o dejamos que elija luego
     estiloSeleccionado = 'magico'; 
     document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
     
@@ -671,10 +649,8 @@ function irAlEjeFisico() {
 
 function ejecutarLecturaSegunModo(tema) {
     if (modoFisicoActivo) {
-        // Ejecuta tirada usando las cartas manuales guardadas
         iniciarLecturaFisica(tema, cartasFisicasElegidas[0], cartasFisicasElegidas[1], cartasFisicasElegidas[2], cartasFisicasElegidas[3]);
     } else {
-        // Ejecuta la tirada automática clásica
         iniciarLectura(tema);
     }
 }
@@ -703,9 +679,7 @@ function iniciarLectura(tema) {
         document.getElementById(`name-${id}`).innerText = "Revelando...";
     });
 
-    // Mazo automático de tu software (Usa arcanosCompleto por seguridad si mazoTarot no está definido arriba)
-    let arrayBase = (typeof mazoTarot !== 'undefined') ? mazoTarot : arcanosCompleto;
-    let mazoMezclado = [...arrayBase].sort(() => 0.5 - Math.random());
+    let mazoMezclado = [...arcanosCompleto].sort(() => 0.5 - Math.random());
     let cartesElegidas = mazoMezclado.slice(0, 4);
     let [a, b, c, d] = cartesElegidas;
 
@@ -846,7 +820,7 @@ function reproducirVoz(tipo) {
                 v.name.toLowerCase().includes('jorge')
             );
             if (vozMasculina) mensaje.voice = vozMasculina;
-            text.pitch = 0.85; 
+            mensaje.pitch = 0.85; 
         }
     } else {
         mensaje.pitch = (estiloSeleccionado === 'magico') ? 1.15 : 0.85;
@@ -870,3 +844,5 @@ function tirarCartaDiaria() {
     alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
 }
 </script>
+</body>
+</html>

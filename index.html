@@ -742,7 +742,6 @@ function mostrarCarta(id, nombreCarta) {
     nameElement.innerText = nombreCarta;
     imgElement.classList.remove('back');
 
-    // Convertimos primero todo a minúsculas, removemos acentos y cambiamos espacios por guiones bajos
     const nombreArchivo = nombreCarta
         .toLowerCase()
         .normalize("NFD")
@@ -783,7 +782,6 @@ function reproducirVoz(tipo) {
     if (!textoALeer.trim()) return;
 
     const mensaje = new SpeechSynthesisUtterance(textoALeer);
-    
     mensaje.lang = 'es-ES';
     mensaje.rate = 0.92; 
 
@@ -844,6 +842,3 @@ function volverInicio() {
 function tirarCartaDiaria() {
     alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
 }
-</script>
-</body>
-</html>

@@ -742,6 +742,7 @@ function mostrarCarta(id, nombreCarta) {
     nameElement.innerText = nombreCarta;
     imgElement.classList.remove('back');
 
+    // Convertimos primero todo a minúsculas, removemos acentos y cambiamos espacios por guiones bajos
     const nombreArchivo = nombreCarta
         .toLowerCase()
         .normalize("NFD")

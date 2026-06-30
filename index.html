@@ -676,8 +676,8 @@ function iniciarLectura(tema) {
     window.speechSynthesis.cancel();
     document.getElementById('voice-controls').classList.add('hidden');
 
-    contadorLecturas++;
-    if (contadorLecturas >= 10) {
+    // AQUÍ ESTÁ LA CORRECCIÓN ELEGANTE:
+    if (++contadorLecturas >= 10) {
         alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
         contadorLecturas = 0; 
     }

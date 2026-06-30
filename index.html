@@ -609,6 +609,25 @@ function abrirMensajePremium() {
                 { nombre: "⚔️ Palo de Espadas", inicio: 50, fin: 63 },
                 { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
             ];
+
+            // Iteramos de forma segura por cada grupo de cartas
+            grupos.forEach(g => {
+                let grupoElemento = document.createElement('optgroup');
+                grupoElemento.label = g.nombre;
+                
+                // CORRECCIÓN AQUÍ: i arranca en g.inicio, avanza de a uno (i++) 
+                // y se detiene exactamente al llegar al final del grupo (i <= g.fin)
+                for (let i = g.inicio; i <= g.fin; i++) {
+                    let opt = document.createElement('option');
+                    opt.value = arcanosCompleto[i]; 
+                    opt.innerText = arcanosCompleto[i];
+                    grupoElemento.appendChild(opt);
+                }
+                select.appendChild(grupoElemento);
+            });
+        }
+    });
+}
             
             grupos.forEach(g => {
                 let grupoElemento = document.createElement('optgroup');

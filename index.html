@@ -838,7 +838,52 @@ function volverInicio() {
 }
 
 function tirarCartaDiaria() {
-    alert("✨ Tu energía hoy: ¡Próximamente conectaremos esta función para darte tu carta del día instantánea!");
+    window.speechSynthesis.cancel();
+    // Elegir una carta al azar
+    const indice = Math.floor(Math.random() * arcanosCompleto.length);
+    const cartaDelDia = arcanosCompleto[indice];
+    
+    // Cambiar temporalmente la pantalla de resultados para mostrar la carta guía
+    document.getElementById('screen-portada').classList.add('hidden');
+    document.getElementById('screen-result').classList.remove('hidden');
+    document.getElementById('reading-theme-title').innerText = `✨ Tu Carta Guía de Hoy ✨`;
+    
+    // Ocultar la segunda dupla ya que es solo una carta
+    document.querySelector('.tarot-table').style.display = 'block'; // Pasamos a flujo simple
+    document.getElementById('img-b').parentElement.style.display = 'none';
+    document.querySelector('.duple-box:nth-child(2)').style.display = 'none'; // Oculta bloque futuro
+    document.querySelector('.duple-title').innerText = "Tu Energía";
+
+    // Mostrar la carta
+    mostrarCarta('a', cartaDelDia);
+    
+    // Mensaje predictivo genérico pero místico según el tipo de carta
+    const esArcanoMayor = indice <= 21;
+    let mensajePrediccion = `Hoy te acompaña la energía de <b>${cartaDelDia}</b>. `;
+    if (esArcanoMayor) {
+        mensajePrediccion += `Un arquetipo mayor se manifiesta en tu jornada, indicando que vivirás un momento de gran aprendizaje espiritual o un cambio de perspectiva clave. Escuchá tu intuición.`;
+    } else {
+        mensajePrediccion += `Esta carta de los Arcanos Menores te recuerda enfocarte en los detalles cotidianos de tus proyectos, tus emociones o tus finanzas. Una acción concreta hoy destrabará tu camino.`;
+    }
+    
+    document.getElementById('interpretation-text').innerHTML = `
+        <div class='reading-section resaltado-místico'>
+            <h3>Consejo del Cosmos</h3>
+            <p>${mensajePrediccion}</p>
+        </div>
+    `;
+    
+    // Activar botones de voz para el consejo
+    document.getElementById('voice-controls').classList.remove('hidden');
+    
+    // Modificar el botón de volver para que restaure la mesa original al salir
+    const btnNueva = document.querySelector('#screen-result .back-btn');
+    btnNueva.onclick = function() {
+        document.querySelector('.tarot-table').style.display = 'grid';
+        document.getElementById('img-b').parentElement.style.display = 'flex';
+        document.querySelector('.duple-box:nth-child(2)').style.display = 'block';
+        volverInicio();
+    };
 }
 </script>
 </body>

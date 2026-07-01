@@ -545,17 +545,17 @@ const arcanosCompleto = [
     "Los Enamorados", "El Carro", "La Justicia", "El Ermitaño", "La Rueda de la Fortuna", 
     "La Fuerza", "El Colgado", "La Muerte", "La Templanza", "El Diablo", "La Torre", 
     "La Estrella", "La Luna", "El Sol", "El Juicio", "El Mundo",
-    "As de Bastos", "Dos de Bastos", "Tres de Bastos", "Cuatro de Bastos", "Cinco de Bastos", 
-    "Seis de Bastos", "Siete de Bastos", "Ocho de Bastos", "Nueve de Bastos", "Diez de Bastos", 
+    "As de Bastos", "2 de Bastos", "3 de Bastos", "4 de Bastos", "5 de Bastos", 
+    "6 de Bastos", "7 de Bastos", "8 de Bastos", "9 de Bastos", "10 de Bastos", 
     "Sota de Bastos", "Caballero de Bastos", "Reina de Bastos", "Rey de Bastos",
-    "As de Copas", "Dos de Copas", "Tres de Copas", "Cuatro de Copas", "Cinco de Copas", 
-    "Seis de Copas", "Siete de Copas", "Ocho de Copas", "Nueve de Copas", "Diez de Copas", 
+    "As de Copas", "2 de Copas", "3 de Copas", "4 de Copas", "5 de Copas", 
+    "6 de Copas", "7 de Copas", "8 de Copas", "9 de Copas", "10 de Copas", 
     "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
-    "As de Espadas", "Dos de Espadas", "Tres de Espadas", "Cuatro de Espadas", "Cinco de Espadas", 
-    "Seis de Espadas", "Siete de Espadas", "Ocho de Espadas", "Nueve de Espadas", "Diez de Espadas", 
+    "As de Espadas", "2 de Espadas", "3 de Espadas", "4 de Espadas", "5 de Espadas", 
+    "6 de Espadas", "7 de Espadas", 8 de Espadas", "9 de Espadas", "10 de Espadas", 
     "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
-    "As de Oros", "Dos de Oros", "Tres de Oros", "Cuatro de Oros", "Cinco de Oros", 
-    "Seis de Oros", "Siete de Oros", "Ocho de Oros", "Nueve de Oros", "Diez de Oros", 
+    "As de Oros", "2 de Oros", "3 de Oros", "4 de Oros", "5 de Oros", 
+    "6 de Oros", "7 de Oros", "8 de Oros", "9 de Oros", "10 de Oros", 
     "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
 ];
 
@@ -756,15 +756,18 @@ function mostrarCarta(id, nombreCarta) {
     const imgElement = document.getElementById(`img-${id}`);
     const nameElement = document.getElementById(`name-${id}`);
     
+    // Muestra textualmente lo que dice la lista: "7 de Copas"
     nameElement.innerText = nombreCarta;
     imgElement.classList.remove('back');
 
+    // Convierte "7 de Copas" en "7_de_copas" de forma directa, sin dar vueltas
     const nombreArchivo = nombreCarta
         .toLowerCase()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .replace(/ /g, "_");
+        .replace(/[\u0300-\u036f]/g, "") // Saca acentos por las dudas
+        .replace(/ /g, "_");             // Cambia espacios por guiones bajos
 
+    // Busca directamente: cartas/7_de_copas.jpg
     imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
 }
 

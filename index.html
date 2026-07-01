@@ -526,7 +526,7 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                
+            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                
         </div>
 
         <div class="reading-output" id="interpretation-text"></div>
@@ -552,7 +552,7 @@ const arcanosCompleto = [
     "6 de Copas", "7 de Copas", "8 de Copas", "9 de Copas", "10 de Copas", 
     "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
     "As de Espadas", "2 de Espadas", "3 de Espadas", "4 de Espadas", "5 de Espadas", 
-    "6 de Espadas", "7 de Espadas", 8 de Espadas", "9 de Espadas", "10 de Espadas", 
+    "6 de Espadas", "7 de Espadas", "8 de Espadas", "9 de Espadas", "10 de Espadas", 
     "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
     "As de Oros", "2 de Oros", "3 de Oros", "4 de Oros", "5 de Oros", 
     "6 de Oros", "7 de Oros", "8 de Oros", "9 de Oros", "10 de Oros", 
@@ -585,6 +585,10 @@ function volverAPortadaDesdeFisico() {
     document.getElementById('screen-portada').style.display = 'block';
 }
 
+function tirarCartaDiaria() {
+    alert("🔮 Próximamente: Tu carta consejo diaria.");
+}
+
 function abrirMensajePremium() {
     modoFisicoActivo = true;
     document.getElementById('screen-portada').style.display = 'none';
@@ -610,25 +614,6 @@ function abrirMensajePremium() {
                 { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
             ];
 
-            // Iteramos de forma segura por cada grupo de cartas
-            grupos.forEach(g => {
-                let grupoElemento = document.createElement('optgroup');
-                grupoElemento.label = g.nombre;
-                
-                // CORRECCIÓN AQUÍ: i arranca en g.inicio, avanza de a uno (i++) 
-                // y se detiene exactamente al llegar al final del grupo (i <= g.fin)
-                for (let i = g.inicio; i <= g.fin; i++) {
-                    let opt = document.createElement('option');
-                    opt.value = arcanosCompleto[i]; 
-                    opt.innerText = arcanosCompleto[i];
-                    grupoElemento.appendChild(opt);
-                }
-                select.appendChild(grupoElemento);
-            });
-        }
-    });
-}
-            
             grupos.forEach(g => {
                 let grupoElemento = document.createElement('optgroup');
                 grupoElemento.label = g.nombre;
@@ -676,7 +661,6 @@ function iniciarLectura(tema) {
     window.speechSynthesis.cancel();
     document.getElementById('voice-controls').classList.add('hidden');
 
-    // AQUÍ ESTÁ LA CORRECCIÓN ELEGANTE:
     if (++contadorLecturas >= 10) {
         alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
         contadorLecturas = 0; 
@@ -756,18 +740,15 @@ function mostrarCarta(id, nombreCarta) {
     const imgElement = document.getElementById(`img-${id}`);
     const nameElement = document.getElementById(`name-${id}`);
     
-    // Muestra textualmente lo que dice la lista: "7 de Copas"
     nameElement.innerText = nombreCarta;
     imgElement.classList.remove('back');
 
-    // Convierte "7 de Copas" en "7_de_copas" de forma directa, sin dar vueltas
     const nombreArchivo = nombreCarta
         .toLowerCase()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Saca acentos por las dudas
-        .replace(/ /g, "_");             // Cambia espacios por guiones bajos
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/ /g, "_");             
 
-    // Busca directamente: cartas/7_de_copas.jpg
     imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
 }
 
@@ -857,55 +838,6 @@ function volverInicio() {
     window.speechSynthesis.cancel();
     document.getElementById('screen-result').classList.add('hidden');
     document.getElementById('screen-portada').classList.remove('hidden');
-}
-
-function tirarCartaDiaria() {
-    window.speechSynthesis.cancel();
-    // Elegir una carta al azar
-    const indice = Math.floor(Math.random() * arcanosCompleto.length);
-    const cartaDelDia = arcanosCompleto[indice];
-    
-    // Cambiar temporalmente la pantalla de resultados para mostrar la carta guía
-    document.getElementById('screen-portada').classList.add('hidden');
-    document.getElementById('screen-result').classList.remove('hidden');
-    document.getElementById('reading-theme-title').innerText = `✨ Tu Carta Guía de Hoy ✨`;
-    
-    // Ocultar la segunda dupla ya que es solo una carta
-    document.querySelector('.tarot-table').style.display = 'block'; // Pasamos a flujo simple
-    document.getElementById('img-b').parentElement.style.display = 'none';
-    document.querySelector('.duple-box:nth-child(2)').style.display = 'none'; // Oculta bloque futuro
-    document.querySelector('.duple-title').innerText = "Tu Energía";
-
-    // Mostrar la carta
-    mostrarCarta('a', cartaDelDia);
-    
-    // Mensaje predictivo genérico pero místico según el tipo de carta
-    const esArcanoMayor = indice <= 21;
-    let mensajePrediccion = `Hoy te acompaña la energía de <b>${cartaDelDia}</b>. `;
-    if (esArcanoMayor) {
-        mensajePrediccion += `Un arquetipo mayor se manifiesta en tu jornada, indicando que vivirás un momento de gran aprendizaje espiritual o un cambio de perspectiva clave. Escuchá tu intuición.`;
-    } else {
-        mensajePrediccion += `Esta carta de los Arcanos Menores te recuerda enfocarte en los detalles cotidianos de tus proyectos, tus emociones o tus finanzas. Una acción concreta hoy destrabará tu camino.`;
-    }
-    
-    document.getElementById('interpretation-text').innerHTML = `
-        <div class='reading-section resaltado-místico'>
-            <h3>Consejo del Cosmos</h3>
-            <p>${mensajePrediccion}</p>
-        </div>
-    `;
-    
-    // Activar botones de voz para el consejo
-    document.getElementById('voice-controls').classList.remove('hidden');
-    
-    // Modificar el botón de volver para que restaure la mesa original al salir
-    const btnNueva = document.querySelector('#screen-result .back-btn');
-    btnNueva.onclick = function() {
-        document.querySelector('.tarot-table').style.display = 'grid';
-        document.getElementById('img-b').parentElement.style.display = 'flex';
-        document.querySelector('.duple-box:nth-child(2)').style.display = 'block';
-        volverInicio();
-    };
 }
 </script>
 </body>

@@ -4,385 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarot Duplas Místicas</title>
-    <style>
-        :root {
-            --bg-gradient: radial-gradient(circle at center, #1a0f2e 0%, #07030d 100%);
-            --card-bg: rgba(30, 20, 45, 0.65);
-            --accent: #ffd700;
-            --accent-glow: rgba(255, 215, 0, 0.3);
-            --text-color: #f5f2f9;
-            --muted-text: #b3a7c4;
-            --glass-border: rgba(255, 215, 0, 0.25);
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px 20px 90px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-        }
-
-        h1 {
-            color: var(--accent);
-            font-size: 2.2rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .subtitle {
-            color: var(--muted-text);
-            margin-bottom: 35px;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-        }
-
-        .screen {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            transition: all 0.5s ease;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .theme-selector {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        button {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-color);
-            border: 2px solid var(--accent);
-            padding: 15px 20px;
-            font-size: 1.1rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        button:hover {
-            background: var(--accent);
-            color: #07030d;
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-2px);
-        }
-
-        .btn-carta-diaria {
-            background: linear-gradient(135deg, #4a154b, #6b114d);
-            border: 2px solid var(--accent);
-            color: var(--accent);
-            padding: 15px 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .btn-carta-diaria:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-        }
-
-        .menu-portada {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .opcion-tarjeta {
-            background: rgba(20, 12, 35, 0.7);
-            border: 1px solid rgba(255, 215, 0, 0.25);
-            border-radius: 15px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .opcion-tarjeta:hover {
-            border-color: var(--accent);
-            background: rgba(40, 25, 65, 0.8);
-            transform: scale(1.02);
-        }
-
-        .opcion-icono {
-            font-size: 2.2rem;
-            margin-right: 18px;
-        }
-
-        .opcion-info h3 {
-            margin: 0 0 5px 0;
-            color: #fff;
-            font-size: 1.1rem;
-        }
-
-        .opcion-info p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: var(--muted-text);
-        }
-
-        .banner-suscripcion {
-            background: linear-gradient(135deg, rgba(35,20,55,0.9), rgba(15,8,30,0.9));
-            border: 2px dashed var(--accent);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .banner-suscripcion h4 {
-            color: var(--accent);
-            margin: 0 0 8px 0;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .banner-suscripcion ul {
-            text-align: left;
-            font-size: 0.85rem;
-            padding-left: 20px;
-            margin: 10px 0 15px 0;
-            color: #e0d5f0;
-        }
-
-        .banner-suscripcion li {
-            margin-bottom: 4px;
-        }
-
-        .btn-suscribirse {
-            background: var(--accent);
-            color: #07030d;
-            border: none;
-            padding: 12px 20px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .select-carta-fisica {
-            width: 100%;
-            background: #1a0f2e;
-            color: #fff;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            cursor: pointer;
-            margin-top: 2px;
-        }
-        
-        .select-carta-fisica:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
-        }
-
-        .reading-section {
-            background: rgba(20, 12, 35, 0.6) !important;
-            border: 1px solid rgba(255, 215, 0, 0.15) !important;
-            padding: 18px !important;
-            border-radius: 12px !important;
-            margin-top: 15px !important;
-            margin-bottom: 15px !important;
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--accent) !important;
-        }
-
-        .reading-section h3 {
-            color: var(--accent);
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .reading-section.resaltado-místico {
-            background: rgba(147, 51, 234, 0.12) !important;
-            border: 1px solid rgba(147, 51, 234, 0.4) !important;
-            border-left: 6px solid #a855f7 !important;
-            box-shadow: 0 0 15px rgba(147, 51, 234, 0.2) !important;
-        }
-
-        .btn-audio-predicciones {
-            background: linear-gradient(135deg, #9333ea, #6b21a8);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 18px;
-            font-size: 0.9rem;
-            border-radius: 20px;
-            cursor: pointer;
-            margin: 8px 4px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(147, 51, 234, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-audio-predicciones:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.5);
-        }
-
-        .tarot-table {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .duple-box {
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            padding: 15px;
-            border-radius: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-        }
-
-        .duple-title {
-            color: var(--accent);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .card-container {
-            margin: 12px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .card-visual {
-            width: 100px;
-            height: 160px;
-            background-color: #251a36;
-            border-radius: 8px;
-            border: 2px solid var(--accent);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            transition: all 0.5s ease;
-        }
-
-        .card-visual.back {
-            background-size: cover;
-            background-position: center;
-        }
-
-        .card-name {
-            margin-top: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .reading-output {
-            text-align: left;
-            margin-top: 25px;
-            line-height: 1.7;
-        }
-
-        .voice-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-        }
-
-        .btn-voice {
-            font-size: 0.95rem;
-            padding: 12px;
-            border-color: #b3a7c4;
-            color: #b3a7c4;
-            background: transparent;
-        }
-
-        .btn-voice:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
-        }
-
-        .back-btn {
-            margin-top: 15px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--muted-text);
-            color: var(--muted-text);
-        }
-
-        .back-btn:hover {
-            background: #ff4a4a;
-            border-color: #ff4a4a;
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 74, 74, 0.4);
-        }
-
-        .ad-banner-space {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #050308;
-            border-top: 1px solid rgba(255, 215, 0, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .ad-placeholder-text {
-            color: var(--muted-text);
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-    </style>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+    <link rel="stylesheet" href="./css/estilos.css">
 </head>
 <body>
 
@@ -423,10 +46,13 @@
             </div>
         </div>
 
-        <!-- Banner de venta local -->
+        <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
+            📜 Ver Mis Lecturas Anteriores
+        </button>
+
         <div class="banner-suscripcion">
             <h4>Pase Místico Premium</h4>
-            <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el poder por $3.500 ARS al mes</p>
+            <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el power por $3.500 ARS al mes</p>
             <ul>
                 <li>Lecturas virtuales y respuestas ilimitadas.</li>
                 <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
@@ -438,8 +64,8 @@
         </div>
     </div>
 
-    <!-- 🃏 NUEVA PANTALLA: CARGA DE MAZO FÍSICO (2 DUPLAS) -->
-    <div id="screen-fisico" class="screen" style="display: none;">
+    <!-- PANTALLA: CARGA DE MAZO FÍSICO -->
+    <div id="screen-fisico" class="screen hidden" style="display: none;">
         <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
         <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
             Mezclá tu mazo de 78 cartas, sacá dos duplas y cargalas a continuación:
@@ -477,20 +103,39 @@
             Confirmar Cartas y Elegir Eje ✨
         </button>
         
-        <button onclick="volverAPortadaDesdeFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
+        <button onclick="nuevaConsultaFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
             Volver a la portada
         </button>
     </div>
 
-    <!-- PANTALLA 2: SELECCIÓN DEL EJE (AMOR / NEGOCIOS) -->
+    <!-- PANTALLA 2: SELECCIÓN DEL EJE -->
     <div id="screen-selector" class="screen hidden">
         <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
         <div class="theme-selector">
             <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
             <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
             <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
+            <button onclick="abrirPantallaPregunta()" style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(168,85,247,0.1)); border-color: #a855f7; color: #a855f7;">
+                ✨ Pregunta Específica (Premium)
+            </button>
         </div>
         <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
+    </div>
+
+    <!-- NUEVA PANTALLA PREMIUM: CUADRO DE TEXTO PARA PREGUNTA ESPECÍFICA -->
+    <div id="screen-pregunta" class="screen hidden">
+        <h3 style="color: var(--accent);">🔮 Consulta Específica</h3>
+        <p style="font-size: 0.9rem; color: var(--muted-text); margin-bottom: 20px;">
+            Escribí tu pregunta con la mayor claridad posible para que Tara adapte la lectura a tu situación real:
+        </p>
+        
+        <textarea id="texto-pregunta-usuario" rows="4" placeholder="Ej: ¿Qué debo tener en cuenta sobre la propuesta laboral que me hicieron ayer?..." style="width: 100%; background: #1a0f2e; color: #fff; border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; font-size: 1rem; outline: none; resize: none; box-sizing: border-box; margin-bottom: 20px; font-family: inherit;"></textarea>
+        
+        <button onclick="confirmarPreguntaYEjecutar()" style="background: linear-gradient(135deg, #a855f7, #6b21a8); color: white; border: none; width: 100%;">
+            Lanzar Tirada Mística ✨
+        </button>
+        
+        <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú Principal</button>
     </div>
 
     <!-- PANTALLA 3: MESA DE RESULTADOS -->
@@ -501,11 +146,11 @@
             <div class="duple-box">
                 <div class="duple-title">Presente y Pasado</div>
                 <div class="card-container">
-                    <div id="img-a" class="card-visual back"></div>
+                    <div id="img-a" class="card-visual"></div>
                     <div id="name-a" class="card-name"></div>
                 </div>
                 <div class="card-container">
-                    <div id="img-b" class="card-visual back"></div>
+                    <div id="img-b" class="card-visual"></div>
                     <div id="name-b" class="card-name"></div>
                 </div>
             </div>
@@ -513,11 +158,11 @@
             <div class="duple-box">
                 <div class="duple-title">Futuro Cercano</div>
                 <div class="card-container">
-                    <div id="img-c" class="card-visual back"></div>
+                    <div id="img-c" class="card-visual"></div>
                     <div id="name-c" class="card-name"></div>
                 </div>
                 <div class="card-container">
-                    <div id="img-d" class="card-visual back"></div>
+                    <div id="img-d" class="card-visual"></div>
                     <div id="name-d" class="card-name"></div>
                 </div>
             </div>
@@ -526,319 +171,44 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                
+            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                
         </div>
 
+        <!-- CAJA DE TEXTO PARA LA INTERPRETACIÓN -->
         <div class="reading-output" id="interpretation-text"></div>
 
-        <button class="back-btn" onclick="volverInicio()">Nueva Consulta</button>
+        <!-- NUEVA SECCIÓN PREMIUM: CAJA DE RE-PREGUNTA -->
+        <div id="contenedor-repregunta" class="voice-panel hidden" style="display: flex; flex-direction: column; gap: 10px; padding: 15px; background: rgba(147, 51, 234, 0.05); border: 1px dashed rgba(147, 51, 234, 0.3);">
+            <h4 style="color: #a855f7; margin: 0; font-size: 0.95rem; text-align: left;">✨ ¿Te quedó alguna duda? Preguntale a Tara:</h4>
+            <textarea id="texto-repregunta" rows="2" placeholder="Ej: ¿Qué significa esa Muerte en el futuro si sigo con mi plan?..." style="width: 100%; background: #07030d; color: #fff; border: 1px solid rgba(255, 215, 0, 0.2); padding: 10px; border-radius: 8px; font-size: 0.95rem; outline: none; resize: none; box-sizing: border-box; font-family: inherit;"></textarea>
+            <button id="btn-enviar-repregunta" onclick="enviarRepreguntaServidor()" style="background: linear-gradient(135deg, #a855f7, #6b21a8); color: white; border: none; padding: 10px; font-size: 0.95rem; border-radius: 8px; width: 100%;">
+                Enviar Re-pregunta Premium 🔮
+            </button>
+        </div>
+
+        <button class="back-btn" onclick="volverInicio()" style="margin-top: 25px;">Nueva Consulta</button>
     </div>
-</div>
+
+    <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
+    <div id="screen-historial" class="screen hidden">
+        <h3 style="color: var(--accent); margin-top: 0;">📜 Historial de Lecturas</h3>
+        <p style="font-size: 0.85rem; color: var(--muted-text); margin-bottom: 20px;">
+            Aquí se guardan tus últimas consultas del dispositivo.
+        </p>
+        
+        <div id="lista-historial-contenedor" style="display: flex; flex-direction: column; gap: 15px; text-align: left; max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
+        
+        <button class="back-btn" onclick="volverAPortada()" style="margin-top: 20px;">⬅ Volver al Menú</button>
+    </div>
+
+</div> <!-- FIN DEL CONTAINER PRINCIPAL -->
 
 <div class="ad-banner-space">
     <div class="ad-placeholder-text">[ Espacio reservado para Publicidad Banner ]</div>
 </div>
 
-<script>
-const arcanosCompleto = [
-    "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador", "El Papa", 
-    "Los Enamorados", "El Carro", "La Justicia", "El Ermitaño", "La Rueda de la Fortuna", 
-    "La Fuerza", "El Colgado", "La Muerte", "La Templanza", "El Diablo", "La Torre", 
-    "La Estrella", "La Luna", "El Sol", "El Juicio", "El Mundo",
-    "As de Bastos", "2 de Bastos", "3 de Bastos", "4 de Bastos", "5 de Bastos", 
-    "6 de Bastos", "7 de Bastos", "8 de Bastos", "9 de Bastos", "10 de Bastos", 
-    "Sota de Bastos", "Caballero de Bastos", "Reina de Bastos", "Rey de Bastos",
-    "As de Copas", "2 de Copas", "3 de Copas", "4 de Copas", "5 de Copas", 
-    "6 de Copas", "7 de Copas", "8 de Copas", "9 de Copas", "10 de Copas", 
-    "Sota de Copas", "Caballero de Copas", "Reina de Copas", "Rey de Copas",
-    "As de Espadas", "2 de Espadas", "3 de Espadas", "4 de Espadas", "5 de Espadas", 
-    "6 de Espadas", "7 de Espadas", "8 de Espadas", "9 de Espadas", "10 de Espadas", 
-    "Sota de Espadas", "Caballero de Espadas", "Reina de Espadas", "Rey de Espadas",
-    "As de Oros", "2 de Oros", "3 de Oros", "4 de Oros", "5 de Oros", 
-    "6 de Oros", "7 de Oros", "8 de Oros", "9 de Oros", "10 de Oros", 
-    "Sota de Oros", "Caballero de Oros", "Reina de Oros", "Rey de Oros"
-];
+<script src="./js/arcanos.js"></script>
+<script src="./js/app.js"></script>
 
-const SERVIDOR_URL = "https://tarot-613b.onrender.com/tirada"; 
-let contadorLecturas = 0;
-let estiloSeleccionado = "filosofico"; 
-let modoFisicoActivo = false; 
-let cartasFisicasElegidas = [];
-
-function irAlEjeConsulta(estilo) {
-    modoFisicoActivo = false;
-    estiloSeleccionado = estilo;
-    const nombreEstiloText = estilo === 'magico' ? 'Estilo Mágico' : 'Estilo Filosófico';
-    document.getElementById('titulo-eje-estilo').innerText = `Modo: ${nombreEstiloText}. Selecciona tu eje:`;
-    
-    document.getElementById('screen-portada').classList.add('hidden');
-    document.getElementById('screen-selector').classList.remove('hidden');
-}
-
-function volverAPortada() {
-    document.getElementById('screen-selector').classList.add('hidden');
-    document.getElementById('screen-portada').classList.remove('hidden');
-}
-
-function volverAPortadaDesdeFisico() {
-    document.getElementById('screen-fisico').style.display = 'none';
-    document.getElementById('screen-portada').style.display = 'block';
-}
-
-function tirarCartaDiaria() {
-    alert("🔮 Próximamente: Tu carta consejo diaria.");
-}
-
-function abrirMensajePremium() {
-    modoFisicoActivo = true;
-    document.getElementById('screen-portada').style.display = 'none';
-    document.getElementById('screen-fisico').style.display = 'block';
-    
-    const idsSelects = ['fisico-carta1', 'fisico-carta2', 'fisico-carta3', 'fisico-carta4'];
-    
-    idsSelects.forEach(id => {
-        const select = document.getElementById(id);
-        if (select && select.children.length === 0) {
-            let optDefault = document.createElement('option');
-            optDefault.value = "";
-            optDefault.innerText = "🔍 Selecciona una carta...";
-            optDefault.disabled = true;
-            optDefault.selected = true;
-            select.appendChild(optDefault);
-            
-            const grupos = [
-                { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
-                { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
-                { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
-                { nombre: "⚔️ Palo de Espadas", inicio: 50, fin: 63 },
-                { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
-            ];
-
-            grupos.forEach(g => {
-                let grupoElemento = document.createElement('optgroup');
-                grupoElemento.label = g.nombre;
-                
-                for (let i = g.inicio; i <= g.fin; i++) {
-                    let opt = document.createElement('option');
-                    opt.value = arcanosCompleto[i]; 
-                    opt.innerText = arcanosCompleto[i];
-                    grupoElemento.appendChild(opt);
-                }
-                select.appendChild(grupoElemento);
-            });
-        }
-    });
-}
-
-function irAlEjeFisico() {
-    const c1 = document.getElementById('fisico-carta1').value;
-    const c2 = document.getElementById('fisico-carta2').value;
-    const c3 = document.getElementById('fisico-carta3').value;
-    const c4 = document.getElementById('fisico-carta4').value;
-
-    if (!c1 || !c2 || !c3 || !c4) {
-        alert("🧙‍♂️ Por favor, selecciona las 4 cartas de tus duplas antes de continuar.");
-        return;
-    }
-
-    cartasFisicasElegidas = [c1, c2, c3, c4];
-    estiloSeleccionado = 'magico'; 
-    document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
-    
-    document.getElementById('screen-fisico').style.display = 'none';
-    document.getElementById('screen-selector').classList.remove('hidden');
-}
-
-function ejecutarLecturaSegunModo(tema) {
-    if (modoFisicoActivo) {
-        iniciarLecturaFisica(tema, cartasFisicasElegidas[0], cartasFisicasElegidas[1], cartasFisicasElegidas[2], cartasFisicasElegidas[3]);
-    } else {
-        iniciarLectura(tema);
-    }
-}
-
-function iniciarLectura(tema) {
-    window.speechSynthesis.cancel();
-    document.getElementById('voice-controls').classList.add('hidden');
-
-    if (++contadorLecturas >= 10) {
-        alert("🔮 [ANUNCIO A PANTALLA COMPLETA] Aquí saltará tu publicidad de AdMob en la App.");
-        contadorLecturas = 0; 
-    }
-
-    document.getElementById('screen-selector').classList.add('hidden');
-    document.getElementById('screen-result').classList.remove('hidden');
-    document.getElementById('reading-theme-title').innerText = `Lectura de ${tema}`;
-    document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
-
-    const imagenReverso = estiloSeleccionado === 'magico' ? 'reverso_morgana.jpg' : 'reverso_filosofico.jpg';
-
-    ['a', 'b', 'c', 'd'].forEach(id => {
-        const el = document.getElementById(`img-${id}`);
-        el.style.backgroundImage = `url('${imagenReverso}')`;
-        el.classList.add('back');
-        document.getElementById(`name-${id}`).innerText = "Revelando...";
-    });
-
-    let mazoMezclado = [...arcanosCompleto].sort(() => 0.5 - Math.random());
-    let cartesElegidas = mazoMezclado.slice(0, 4);
-    let [a, b, c, d] = cartesElegidas;
-
-    llamarAlServidorPropio(tema, a, b, c, d);
-}
-
-function iniciarLecturaFisica(tema, a, b, c, d) {
-    window.speechSynthesis.cancel();
-    document.getElementById('voice-controls').classList.add('hidden');
-
-    document.getElementById('screen-selector').classList.add('hidden');
-    document.getElementById('screen-result').classList.remove('hidden');
-    document.getElementById('reading-theme-title').innerText = `Lectura Física de ${tema}`;
-    document.getElementById('interpretation-text').innerHTML = "<p style='color: var(--accent); text-align:center;'>Conectando con los servidores místicos...</p>";
-
-    const imagenReverso = estiloSeleccionado === 'magico' ? 'reverso_morgana.jpg' : 'reverso_filosofico.jpg';
-
-    ['a', 'b', 'c', 'd'].forEach(id => {
-        const el = document.getElementById(`img-${id}`);
-        el.style.backgroundImage = `url('${imagenReverso}')`;
-        el.classList.add('back');
-        document.getElementById(`name-${id}`).innerText = "Revelando...";
-    });
-
-    llamarAlServidorPropio(tema, a, b, c, d);
-}
-
-async function llamarAlServidorPropio(tema, a, b, c, d) {
-    const output = document.getElementById('interpretation-text');
-
-    try {
-        const response = await fetch(SERVIDOR_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tema, a, b, c, d, estilo: estiloSeleccionado })
-        });
-
-        if (!response.ok) throw new Error("Error en el servidor místico.");
-
-        const data = await response.json();
-        output.innerHTML = data.lectura;
-        
-        mostrarCarta('a', a);
-        mostrarCarta('b', b);
-        mostrarCarta('c', c);
-        mostrarCarta('d', d);
-
-        document.getElementById('voice-controls').classList.remove('hidden');
-
-    } catch (error) {
-        console.error(error);
-        output.innerHTML = `<p style='color: #ff4a4a; text-align:center;'>Ocurrió un error en la conexión cósmica. Reintentá en unos segundos.</p>`;
-    }
-}
-
-function mostrarCarta(id, nombreCarta) {
-    const imgElement = document.getElementById(`img-${id}`);
-    const nameElement = document.getElementById(`name-${id}`);
-    
-    nameElement.innerText = nombreCarta;
-    imgElement.classList.remove('back');
-
-    const nombreArchivo = nombreCarta
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .replace(/ /g, "_");             
-
-    imgElement.style.backgroundImage = `url('cartas/${nombreArchivo}.jpg')`;
-}
-
-function reproducirVoz(tipo) {
-    window.speechSynthesis.cancel();
-    let textoALeer = "";
-
-    if (tipo === 'todo') {
-        textoALeer = document.getElementById('interpretation-text').innerText;
-    } else if (tipo === 'conclusion') {
-        const elementoConclusion = document.getElementById('conclusion');
-        if (elementoConclusion) {
-            textoALeer = elementoConclusion.innerText;
-        } else {
-            const parrafos = document.getElementById('interpretation-text').getElementsByTagName('p');
-            if (parrafos.length > 0) textoALeer = parrafos[parrafos.length - 1].innerText;
-        }
-    } else if (tipo === 'predicciones') {
-        const secciones = document.getElementById('interpretation-text').getElementsByClassName('reading-section');
-        for (let sec of secciones) {
-            if (sec.innerText.includes('Predicciones')) {
-                textoALeer = sec.innerText;
-                break;
-            }
-        }
-        if (!textoALeer) {
-            const elementoConclusion = document.getElementById('conclusion');
-            if (elementoConclusion) textoALeer = elementoConclusion.innerText;
-        }
-    }
-
-    if (!textoALeer.trim()) return;
-
-    const mensaje = new SpeechSynthesisUtterance(textoALeer);
-    mensaje.lang = 'es-ES';
-    mensaje.rate = 0.92; 
-
-    const voices = window.speechSynthesis.getVoices();
-    const voicesEspanol = voices.filter(v => v.lang.toLowerCase().startsWith('es'));
-
-    if (voicesEspanol.length > 0) {
-        if (estiloSeleccionado === 'magico') {
-            const vozFemeninaPerfecta = voicesEspanol.find(v => 
-                v.name.toLowerCase().includes('helena') || 
-                v.name.toLowerCase().includes('sabina') || 
-                v.name.toLowerCase().includes('laura') || 
-                v.name.toLowerCase().includes('lucia') || 
-                v.name.toLowerCase().includes('monica') || 
-                v.name.toLowerCase().includes('paulina')
-            );
-            
-            if (vozFemeninaPerfecta) {
-                mensaje.voice = vozFemeninaPerfecta;
-            } else {
-                const cualquierOtraFemenina = voicesEspanol.find(v => 
-                    v.name.toLowerCase().includes('female') || 
-                    v.name.toLowerCase().includes('mujer') ||
-                    v.name.toLowerCase().includes('zira')
-                );
-                if (cualquierOtraFemenina) mensaje.voice = cualquierOtraFemenina;
-            }
-            mensaje.pitch = 1.15; 
-        } else {
-            const vozMasculina = voicesEspanol.find(v => 
-                v.name.toLowerCase().includes('male') || 
-                v.name.toLowerCase().includes('hombre') || 
-                v.name.toLowerCase().includes('pablo') || 
-                v.name.toLowerCase().includes('julio') ||
-                v.name.toLowerCase().includes('jorge')
-            );
-            if (vozMasculina) mensaje.voice = vozMasculina;
-            mensaje.pitch = 0.85; 
-        }
-    } else {
-        mensaje.pitch = (estiloSeleccionado === 'magico') ? 1.15 : 0.85;
-    }
-
-    window.speechSynthesis.speak(mensaje);
-}
-
-if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-}
-window.speechSynthesis.getVoices();
-
-function volverInicio() {
-    window.speechSynthesis.cancel();
-    document.getElementById('screen-result').classList.add('hidden');
-    document.getElementById('screen-portada').classList.remove('hidden');
-}
-</script>
 </body>
 </html>

@@ -370,4 +370,20 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-    
+/* ==========================================
+   CORRECCIÓN PARA IMÁGENES REALES DE CARTAS
+   ========================================== */
+.card-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Hace que la foto se adapte perfecto al rectángulo de 100x160 sin deformarse */
+    display: block;
+}
+
+/* Ajuste opcional: Si querés que en el celular las cartas se vean un poquito más grandes y cómodas */
+@media (max-width: 480px) {
+    .card-visual {
+        width: 120px;
+        height: 190px;
+    }
+}    

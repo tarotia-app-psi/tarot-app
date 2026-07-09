@@ -250,11 +250,15 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-c').innerText = c;
     document.getElementById('name-d').innerText = d;
     
-    document.getElementById('img-a').innerHTML = "🃏";
-    document.getElementById('img-b').innerHTML = "🃏";
-    document.getElementById('img-c').innerHTML = "🃏";
-    document.getElementById('img-d').innerHTML = "🃏";
+    // ==========================================
+// Carga de imágenes reales (Formato compatible)
+// ==========================================
+const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
 
+document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+document.getElementById('img-d').innerHTML = '<img src="' + urlBaseCartas + d.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + d + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     ultimasCartasElegidasContexto = { a, b, c, d };
 
     try {

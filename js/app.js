@@ -1,52 +1,50 @@
 // ==========================================
 // CONFIGURACIÓN GLOBAL Y VARIABLES DE ESTADO
 // ==========================================
-// ========================================================
-// CONTROL DE ACCESO (ADMINISTRABLE DESDE ADMIN.HTML)
-// ========================================================
-// Si existe una simulación en el panel de control, la usa. Si no, por defecto arranca en false.
-// ========================================================
-// MOTOR DE ACCESO Y CUPONES (SINCRO CON ADMIN)
-// ========================================================
 
 // 1. Revisa si el Administrador forzó la vista desde el panel de control
 let esUsuarioPremium = localStorage.getItem('simularPremium') === 'true';
 
-// 2. Lista de códigos Premium válidos que vos controlás (Podés cambiarlos acá cuando quieras)
+// 2. Lista de códigos Premium válidos (Administrables)
 const codigosPremiumValidos = ["ADMIN2026", "PASEMISTICO", "TAROTGRATIS"];
 
-// 3. Revisa si el cliente ya había metido un código válido antes para dejarlo guardado
+// 3. Revisa si el cliente ya tenía un código válido guardado
 if (localStorage.getItem('cuponPremiumActivo') === 'true') {
     esUsuarioPremium = true;
 }
 
-// 4. FUNCIÓN PÚBLICA: Para que el usuario (o vos) canjee el código en la interfaz
-function canjearCodigoPremium(codigoIntroducido) {
-    // Pasamos a mayúsculas para evitar errores si escriben en minúscula
-    const codigoLimpio = codigoIntroducido.trim().toUpperCase(); 
-    
-    if (codigosPremiumValidos.includes(codigoLimpio)) {
-        localStorage.setItem('cuponPremiumActivo', 'true');
-        alert("✨ ¡Código Celestial Aceptado! Has desbloqueado TarotIA Premium.");
-        window.location.reload(); // Recargamos para activar los paneles premium
-        return true;
-    } else {
-        alert("❌ El oráculo no reconoce ese código. Intenta de nuevo.");
-        return false;
-    }
-}
-
-console.log(`[TarotIA] Modo de usuario actual: ${esUsuarioPremium ? 'PREMIUM ✨' : 'GRATIS 🃏'}`);
-
-console.log(`[TarotIA Init] Entorno inicializado. Modo de usuario actual: ${esUsuarioPremium ? 'PREMIUM ✨' : 'GRATIS 🃏'}`);
+// Variables del flujo de la lectura
 let modoFisicoActivo = false;
 let estiloSeleccionado = 'filosofico';
 let cartasFisicasElegidas = [];
 let ultimaLecturaGuardadaContexto = "";
 let ultimasCartasElegidasContexto = { a: "", b: "", c: "", d: "" };
 
-// Endpoint de tu backend en Render (Cambiar por tu URL de Render cuando subas a producción)
+// Endpoint de tu backend en Render
 const API_URL = "https://tarot-613b.onrender.com"; 
+
+// Inicialización de la aplicación al cargar el DOM
+document.addEventListener("DOMContentLoaded", () => {
+    console.log(`[TarotIA] Inicializado. Modo: ${esUsuarioPremium ? 'PREMIUM ✨' : 'GRATIS 🃏'}`);
+    actualizarBadgeMuestrasFisicas();
+});
+
+// ==========================================
+// MOTOR DE ACCESO Y CUPONES
+// ==========================================
+function canjearCodigoPremium(codigoIntroducido) {
+    const codigoLimpio = codigoIntroducido.trim().toUpperCase(); 
+    
+    if (codigosPremiumValidos.includes(codigoLimpio)) {
+        localStorage.setItem('cuponPremiumActivo', 'true');
+        alert("✨ ¡Código Celestial Aceptado! Has desbloqueado TarotIA Premium.");
+        window.location.reload(); 
+        return true;
+    } else {
+        alert("❌ El oráculo no reconoce ese código. Intenta de nuevo.");
+        return false;
+    }
+}
 
 // ==========================================
 // NAVEGACIÓN ENTRE PANTALLAS
@@ -65,48 +63,17 @@ function ocultarTodasLasPantallas() {
 function irAlEjeConsulta(estilo) {
     window.speechSynthesis.cancel();
     estiloSeleccionado = estilo;
-    modoFisicoActivo = false; // Desactivamos el modo físico para lecturas virtuales estándar
+    modoFisicoActivo = false; 
     
-    // Al ser virtual, nos aseguramos de que el botón de pregunta específica esté habilitado
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
-        btnPregunta.style.display = 'block'; // Habilitado en lecturas virtuales
+        btnPregunta.style.display = 'block'; 
     }
 
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
     if (screenSelector) {
         document.getElementById('titulo-eje-estilo').innerText = "Selecciona el eje de tu consulta:";
-        screenSelector.classList.remove('hidden');
-        screenSelector.style.display = 'block';
-    }
-}
-
-// NUEVA FUNCIÓN: Se ejecuta cuando el usuario confirma sus cartas físicas
-function irAlEjeFisico() {
-    window.speechSynthesis.cancel();
-    // Validamos que se hayan cargado las cartas físicas antes de continuar
-    for (let i = 1; i <= 4; i++) {
-        const select = document.getElementById(`fisico-carta${i}`);
-        if (select && select.value === "") {
-            alert("Por favor, selecciona las 4 cartas que salieron en tu mazo físico.");
-            return;
-        }
-    }
-
-    modoFisicoActivo = true; // El mazo físico se activa explícitamente aquí
-
-    // IMPORTANTE: En el Mazo Físico, ocultamos el botón de Pregunta Específica 
-    // para evitar que se pisen los flujos y prevenir bloqueos de lógica.
-    const btnPregunta = document.getElementById('btn-pregunta-especifica');
-    if (btnPregunta) {
-        btnPregunta.style.display = 'none'; 
-    }
-
-    ocultarTodasLasPantallas();
-    const screenSelector = document.getElementById('screen-selector');
-    if (screenSelector) {
-        document.getElementById('titulo-eje-estilo').innerText = "Selecciona el eje para interpretar tu mazo físico:";
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
     }
@@ -124,9 +91,8 @@ function abrirPantallaPregunta() {
 
 function volverAPortada() {
     window.speechSynthesis.cancel();
-    modoFisicoActivo = false; // Al volver a la portada, se limpia el estado físico obligatoriamente
+    modoFisicoActivo = false; 
     
-    // Reseteamos los selects físicos por seguridad
     for (let i = 1; i <= 4; i++) {
         const select = document.getElementById(`fisico-carta${i}`);
         if (select) select.selectedIndex = 0; 
@@ -143,19 +109,21 @@ function volverAPortada() {
 function volverInicio() {
     window.speechSynthesis.cancel();
     modoFisicoActivo = false;
-    // Reseteamos selects físicos por seguridad si existen
     for (let i = 1; i <= 4; i++) {
         const select = document.getElementById(`fisico-carta${i}`);
         if (select) select.selectedIndex = 0; 
     }
     window.location.reload();
 }
+
 // ==========================================
-// FLUJO DE MAZO FÍSICO (PREMIUM)
+// FLUJO DE MAZO FÍSICO (PREMIUM / MUESTRA)
 // ==========================================
-function abrirMensajePremium() {
+
+// Prepara y llena dinámicamente los selectores de cartas
+function inicializarYMostrarPantallaFisica() {
     modoFisicoActivo = true;
-    estiloSeleccionado = 'magico'; // Por defecto hereda el tono místico/directo
+    estiloSeleccionado = 'magico'; // Hereda por defecto el tono directo y predictivo
 
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');
@@ -169,7 +137,7 @@ function abrirMensajePremium() {
     idsSelects.forEach(id => {
         const select = document.getElementById(id);
         if (select) {
-            select.innerHTML = ""; // Limpieza absoluta anti-duplicados
+            select.innerHTML = ""; // Evita duplicaciones al re-entrar
 
             let optDefault = document.createElement('option');
             optDefault.value = "";
@@ -178,7 +146,6 @@ function abrirMensajePremium() {
             optDefault.selected = true;
             select.appendChild(optDefault);
             
-            // Verificamos si existe el array maestro de arcanos en arcanos.js
             if (typeof arcanosCompleto !== 'undefined') {
                 const grupos = [
                     { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
@@ -205,6 +172,7 @@ function abrirMensajePremium() {
     });
 }
 
+// Valida la selección del mazo físico y redirige al selector de ejes
 function irAlEjeFisico() {
     const c1 = document.getElementById('fisico-carta1').value;
     const c2 = document.getElementById('fisico-carta2').value;
@@ -212,12 +180,18 @@ function irAlEjeFisico() {
     const c4 = document.getElementById('fisico-carta4').value;
 
     if (!c1 || !c2 || !c3 || !c4) {
-        alert("🧙‍♂️ Por favor, selecciona las 4 cartas de tus duplas antes de continuar.");
+        alert("🧙‍♂️ Por favor, selecciona las 4 cartas de tus duplas físicas antes de continuar.");
         return;
     }
 
     cartasFisicasElegidas = [c1, c2, c3, c4];
     modoFisicoActivo = true; 
+
+    // Ocultamos Pregunta Específica para evitar colisiones de lógica en el Oráculo físico
+    const btnPregunta = document.getElementById('btn-pregunta-especifica');
+    if (btnPregunta) {
+        btnPregunta.style.display = 'none'; 
+    }
     
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
@@ -228,12 +202,8 @@ function irAlEjeFisico() {
     }
 }
 
-function nuevaConsultaFisico() {
-    volverInicio();
-}
-
 // ==========================================
-// DESPACHO LOGICO DE LECTURAS
+// DESPACHO LÓGICO DE LECTURAS
 // ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
@@ -253,7 +223,7 @@ function confirmarPreguntaYEjecutar() {
 }
 
 // ==========================================
-// NÚCLEO DE LA TIRADA (SINCRO PERFECTA CON SERVER.JS)
+// NÚCLEO DE LA TIRADA
 // ==========================================
 async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     ocultarTodasLasPantallas();
@@ -270,13 +240,18 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     let a, b, c, d;
 
     if (modoFisicoActivo) {
-        // En el flujo físico, cargamos las cartas desde los selectores del DOM al array del contexto
-        cartasFisicasElegidas = [
-            document.getElementById('fisico-carta1').value,
-            document.getElementById('fisico-carta2').value,
-            document.getElementById('fisico-carta3').value,
-            document.getElementById('fisico-carta4').value
-        ];
+        // Obtenemos las cartas seleccionadas
+        const c1 = document.getElementById('fisico-carta1').value;
+        const c2 = document.getElementById('fisico-carta2').value;
+        const c3 = document.getElementById('fisico-carta3').value;
+        const c4 = document.getElementById('fisico-carta4').value;
+
+        // Doble verificación de seguridad anti-nulos
+        if (!c1 || !c2 || !c3 || !c4) {
+            document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ Error: No se seleccionaron las 4 cartas físicas.</p>";
+            return;
+        }
+        cartasFisicasElegidas = [c1, c2, c3, c4];
         [a, b, c, d] = cartasFisicasElegidas;
     } else {
         if (typeof arcanosCompleto === 'undefined') {
@@ -297,12 +272,9 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-c').innerText = c;
     document.getElementById('name-d').innerText = d;
     
-    // ==========================================
-    // Carga de imágenes reales (Formato compatible)
-    // ==========================================
+    // Carga de imágenes reales
     const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
 
-    // Mapeo dinámico y formateo idéntico al tuyo usando replace(/ /g, "_")
     document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
@@ -315,7 +287,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 tema: tema,
-                pregunta: preguntaEspecifica,
+                pregunta: preguntaEspecifica, // Viaja de forma segura como string o null sin romper el backend
                 a: a, b: b, c: c, d: d,
                 estilo: estiloSeleccionado
             })
@@ -327,8 +299,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             document.getElementById('interpretation-text').innerHTML = datos.lectura;
             ultimaLecturaGuardadaContexto = datos.lectura;
 
-            // Ocultamos los controles de reproducción de audio si es Modo Tarotista ('manual'),
-            // ya que los significados técnicos en viñetas no necesitan ser leídos en voz alta.
+            // No mostramos reproductores si el estilo es técnico ('manual')
             if (estiloSeleccionado !== 'manual') {
                 document.getElementById('voice-controls').classList.remove('hidden');
             }
@@ -338,7 +309,6 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
                 document.getElementById('texto-repregunta').value = "";
             }
             
-            // Si usó el Modo Mazo Físico de manera gratuita, descontamos el tiro de muestra con éxito
             if (modoFisicoActivo) {
                 registrarUsoTiradaFisica();
             }
@@ -350,7 +320,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
 
     } catch (err) {
         console.error("Error capturado:", err);
-        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render/Localhost esté corriendo.</p>";
+        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render esté encendido.</p>";
     }
 }
 
@@ -407,7 +377,7 @@ async function enviarRepreguntaServidor() {
 }
 
 // ==========================================
-// MANEJO DE AUDIO (SINTETIZADOR DE VOZ)
+// SINTETIZADOR DE VOZ
 // ==========================================
 function reproducirVoz(tipo) {
     window.speechSynthesis.cancel();
@@ -431,7 +401,7 @@ function reproducirVoz(tipo) {
 }
 
 // ==========================================
-// CARTA DIARIA SIMPLE Y HISTORIAL LOCAL
+// CARTA DIARIA E HISTORIAL
 // ==========================================
 function tirarCartaDiaria() {
     alert("✨ Tu carta del día es El Mundo: Hoy el universo conspira a tu favor. Avanza con seguridad.");
@@ -466,13 +436,11 @@ function abrirHistorial() {
 }
 
 // ========================================================
-// CONTROL DE ACCESOS INTELIGENTES (PREMIUM / FREEMIUM)
+// CONTROL DE ACCESOS INTELIGENTES
 // ========================================================
 
-// Control del Modo Tarotista (100% Premium, antes Modo Manual)
 function verificarAccesoTarotista() {
     if (esUsuarioPremium) {
-        // Al backend le sigue mandando 'manual' para que no rompa tu ruta de Node
         irAlEjeConsulta('manual'); 
     } else {
         const codigo = prompt("✨ El Modo Tarotista es exclusivo de TarotIA Premium.\nPor favor, ingresa tu código de acceso para desbloquearlo:");
@@ -482,36 +450,20 @@ function verificarAccesoTarotista() {
     }
 }
 
-// Control del Mazo Físico: 5 Usos gratis de muestra, luego pide código
 function verificarAccesoFisico() {
     if (esUsuarioPremium) {
-        // Si ya es premium, pasa directo a la carga de cartas físicas
-        ocultarTodasLasPantallas();
-        const screenFisico = document.getElementById('screen-fisico');
-        if (screenFisico) {
-            screenFisico.classList.remove('hidden');
-            screenFisico.style.display = 'block';
-        }
+        inicializarYMostrarPantallaFisica();
         return;
     }
 
-    // Si es usuario estándar, revisamos sus muestras gratis consumidas
     let tiradasFisicasUsadas = parseInt(localStorage.getItem('tiradasFisicasUsadas')) || 0;
     const maxTiradasMuestra = 5;
 
     if (tiradasFisicasUsadas < maxTiradasMuestra) {
         const restantes = maxTiradasMuestra - tiradasFisicasUsadas;
         alert(`🔮 ¡Bienvenido al Mazo Físico! \nTienes acceso de muestra activo. Te quedan ${restantes} de ${maxTiradasMuestra} tiradas gratuitas.`);
-        
-        // Abre la pantalla de carga física
-        ocultarTodasLasPantallas();
-        const screenFisico = document.getElementById('screen-fisico');
-        if (screenFisico) {
-            screenFisico.classList.remove('hidden');
-            screenFisico.style.display = 'block';
-        }
+        inicializarYMostrarPantallaFisica();
     } else {
-        // Excedió el límite gratis de muestra
         const codigo = prompt("❌ Has agotado tus 5 tiradas de muestra para Mazo Físico.\nPara seguir interpretando tus cartas reales sin límites, ingresa tu código Premium:");
         if (codigo) {
             canjearCodigoPremium(codigo);
@@ -519,18 +471,24 @@ function verificarAccesoFisico() {
     }
 }
 
-// Descontar una tirada física de muestra (se llama desde procesarTiradaCompleta)
 function registrarUsoTiradaFisica() {
     if (!esUsuarioPremium && modoFisicoActivo) {
         let tiradasFisicasUsadas = parseInt(localStorage.getItem('tiradasFisicasUsadas')) || 0;
         tiradasFisicasUsadas++;
         localStorage.setItem('tiradasFisicasUsadas', tiradasFisicasUsadas);
-        
-        // Actualizamos el badge de la portada de forma dinámica si está en pantalla
-        const badge = document.getElementById('badge-fisico-muestra');
-        if (badge) {
-            const restantes = 5 - tiradasFisicasUsadas;
-            badge.innerText = restantes > 0 ? `${restantes} Libres` : "Premium";
+        actualizarBadgeMuestrasFisicas();
+    }
+}
+
+function actualizarBadgeMuestrasFisicas() {
+    const badge = document.getElementById('badge-fisico-muestra');
+    if (badge) {
+        if (esUsuarioPremium) {
+            badge.innerText = "Premium ✨";
+        } else {
+            let tiradasFisicasUsadas = parseInt(localStorage.getItem('tiradasFisicasUsadas')) || 0;
+            const restantes = Math.max(0, 5 - tiradasFisicasUsadas);
+            badge.innerText = restantes > 0 ? `${restantes} Libres` : "Agotado 🔒";
         }
     }
 }

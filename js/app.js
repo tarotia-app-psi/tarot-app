@@ -210,9 +210,6 @@ function confirmarPreguntaYEjecutar() {
 }
 
 // ==========================================
-// NÚCLEO DE LA TIRADA (LLAMADA AL SERVIDOR)
-// ==========================================
-// ==========================================
 // NÚCLEO DE LA TIRADA (SINCRO PERFECTA CON SERVER.JS)
 // ==========================================
 async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
@@ -251,18 +248,17 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-d').innerText = d;
     
     // ==========================================
-// Carga de imágenes reales (Formato compatible)
-// ==========================================
-const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
+    // Carga de imágenes reales (Formato compatible)
+    // ==========================================
+    const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
 
-document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-document.getElementById('img-d').innerHTML = '<img src="' + urlBaseCartas + d.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + d + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-d').innerHTML = '<img src="' + urlBaseCartas + d.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + d + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     ultimasCartasElegidasContexto = { a, b, c, d };
 
     try {
-        // Cambiado a "response" para que coincida con la lectura de abajo de forma limpia
         const response = await fetch(`${API_URL}/tirada`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -312,7 +308,6 @@ async function enviarRepreguntaServidor() {
     btn.disabled = true;
     btn.innerText = "Consultando al plano sutil... 🔮";
 
-    // Creamos un contenedor temporal abajo para simular chat o inyectar la respuesta directa de corrido
     const contenedorTexto = document.getElementById('interpretation-text');
 
     try {
@@ -330,19 +325,16 @@ async function enviarRepreguntaServidor() {
         const datos = await response.json();
 
         if (datos.respuesta) {
-            // Inyectamos la aclaración abajo de la lectura original de forma elegante
             contenedorTexto.innerHTML += `
                 <div class="reading-section" style="border-left: 3px solid #ffd700; background: rgba(255,215,0,0.02); padding-top: 15px; margin-top: 20px;">
                     <h3 style="color: #ffd700;">🔮 Respuesta de Tara a tu Duda:</h3>
                     <p>${datos.respuesta}</p>
                 </div>
             `;
-            // Reseteamos caja de texto y botón
             document.getElementById('texto-repregunta').value = "";
             btn.innerText = "Enviar Re-pregunta Premium 🔮";
             btn.disabled = false;
             
-            // Hacemos scroll suave hasta la nueva respuesta
             contenedorTexto.lastElementChild.scrollIntoView({ behavior: 'smooth' });
         } else {
             throw new Error();
@@ -367,7 +359,6 @@ function reproducirVoz(tipo) {
         const conclusionSpan = document.getElementById('conclusion');
         textoA_Leer = conclusionSpan ? conclusionSpan.innerText : "No se encontró el consejo final.";
     } else if (tipo === 'predicciones') {
-        // Busca texto genérico o secciones
         textoA_Leer = document.getElementById('interpretation-text').innerText; 
     }
 
@@ -412,4 +403,20 @@ function abrirHistorial() {
             <p style="margin: 5px 0 0 0; font-size:0.9rem; color:#ccc;">Cartas: ${h.cartas.a}, ${h.cartas.b}, ${h.cartas.c}, ${h.cartas.d}</p>
         </div>
     `).join('');
+}
+
+// ========================================================
+// CONTROL DE ACCESO AL MODO MANUAL (PREMIUM ✨)
+// ========================================================
+function verificarAccesoManual() {
+    if (esUsuarioPremium) {
+        // Si el usuario es Premium, avanza directo a seleccionar el eje
+        irAlEjeConsulta('manual');
+    } else {
+        // Si no es Premium, le pide un código válido para canjearlo en el momento
+        const codigo = prompt("✨ El Modo Manual es exclusivo de TarotIA Premium.\nPor favor, ingresa tu código de acceso para desbloquearlo:");
+        if (codigo) {
+            canjearCodigoPremium(codigo);
+        }
+    }
 }

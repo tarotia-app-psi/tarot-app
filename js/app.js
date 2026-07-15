@@ -65,12 +65,48 @@ function ocultarTodasLasPantallas() {
 function irAlEjeConsulta(estilo) {
     window.speechSynthesis.cancel();
     estiloSeleccionado = estilo;
-    modoFisicoActivo = false;
+    modoFisicoActivo = false; // Desactivamos el modo físico para lecturas virtuales estándar
     
+    // Al ser virtual, nos aseguramos de que el botón de pregunta específica esté habilitado
+    const btnPregunta = document.getElementById('btn-pregunta-especifica');
+    if (btnPregunta) {
+        btnPregunta.style.display = 'block'; // Habilitado en lecturas virtuales
+    }
+
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
     if (screenSelector) {
         document.getElementById('titulo-eje-estilo').innerText = "Selecciona el eje de tu consulta:";
+        screenSelector.classList.remove('hidden');
+        screenSelector.style.display = 'block';
+    }
+}
+
+// NUEVA FUNCIÓN: Se ejecuta cuando el usuario confirma sus cartas físicas
+function irAlEjeFisico() {
+    window.speechSynthesis.cancel();
+    // Validamos que se hayan cargado las cartas físicas antes de continuar
+    for (let i = 1; i <= 4; i++) {
+        const select = document.getElementById(`fisico-carta${i}`);
+        if (select && select.value === "") {
+            alert("Por favor, selecciona las 4 cartas que salieron en tu mazo físico.");
+            return;
+        }
+    }
+
+    modoFisicoActivo = true; // El mazo físico se activa explícitamente aquí
+
+    // IMPORTANTE: En el Mazo Físico, ocultamos el botón de Pregunta Específica 
+    // para evitar que se pisen los flujos y prevenir bloqueos de lógica.
+    const btnPregunta = document.getElementById('btn-pregunta-especifica');
+    if (btnPregunta) {
+        btnPregunta.style.display = 'none'; 
+    }
+
+    ocultarTodasLasPantallas();
+    const screenSelector = document.getElementById('screen-selector');
+    if (screenSelector) {
+        document.getElementById('titulo-eje-estilo').innerText = "Selecciona el eje para interpretar tu mazo físico:";
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
     }
@@ -88,6 +124,14 @@ function abrirPantallaPregunta() {
 
 function volverAPortada() {
     window.speechSynthesis.cancel();
+    modoFisicoActivo = false; // Al volver a la portada, se limpia el estado físico obligatoriamente
+    
+    // Reseteamos los selects físicos por seguridad
+    for (let i = 1; i <= 4; i++) {
+        const select = document.getElementById(`fisico-carta${i}`);
+        if (select) select.selectedIndex = 0; 
+    }
+
     ocultarTodasLasPantallas();
     const portada = document.getElementById('screen-portada');
     if (portada) {
@@ -106,7 +150,6 @@ function volverInicio() {
     }
     window.location.reload();
 }
-
 // ==========================================
 // FLUJO DE MAZO FÍSICO (PREMIUM)
 // ==========================================
@@ -227,6 +270,13 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     let a, b, c, d;
 
     if (modoFisicoActivo) {
+        // En el flujo físico, cargamos las cartas desde los selectores del DOM al array del contexto
+        cartasFisicasElegidas = [
+            document.getElementById('fisico-carta1').value,
+            document.getElementById('fisico-carta2').value,
+            document.getElementById('fisico-carta3').value,
+            document.getElementById('fisico-carta4').value
+        ];
         [a, b, c, d] = cartasFisicasElegidas;
     } else {
         if (typeof arcanosCompleto === 'undefined') {
@@ -252,6 +302,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     // ==========================================
     const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
 
+    // Mapeo dinámico y formateo idéntico al tuyo usando replace(/ /g, "_")
     document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
     document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
@@ -276,11 +327,20 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             document.getElementById('interpretation-text').innerHTML = datos.lectura;
             ultimaLecturaGuardadaContexto = datos.lectura;
 
-            document.getElementById('voice-controls').classList.remove('hidden');
+            // Ocultamos los controles de reproducción de audio si es Modo Tarotista ('manual'),
+            // ya que los significados técnicos en viñetas no necesitan ser leídos en voz alta.
+            if (estiloSeleccionado !== 'manual') {
+                document.getElementById('voice-controls').classList.remove('hidden');
+            }
 
             if (esUsuarioPremium) {
                 document.getElementById('contenedor-repregunta').classList.remove('hidden');
                 document.getElementById('texto-repregunta').value = "";
+            }
+            
+            // Si usó el Modo Mazo Físico de manera gratuita, descontamos el tiro de muestra con éxito
+            if (modoFisicoActivo) {
+                registrarUsoTiradaFisica();
             }
             
             guardarEnHistorialLocal(tema, { a, b, c, d }, datos.lectura);
@@ -406,17 +466,71 @@ function abrirHistorial() {
 }
 
 // ========================================================
-// CONTROL DE ACCESO AL MODO MANUAL (PREMIUM ✨)
+// CONTROL DE ACCESOS INTELIGENTES (PREMIUM / FREEMIUM)
 // ========================================================
-function verificarAccesoManual() {
+
+// Control del Modo Tarotista (100% Premium, antes Modo Manual)
+function verificarAccesoTarotista() {
     if (esUsuarioPremium) {
-        // Si el usuario es Premium, avanza directo a seleccionar el eje
-        irAlEjeConsulta('manual');
+        // Al backend le sigue mandando 'manual' para que no rompa tu ruta de Node
+        irAlEjeConsulta('manual'); 
     } else {
-        // Si no es Premium, le pide un código válido para canjearlo en el momento
-        const codigo = prompt("✨ El Modo Manual es exclusivo de TarotIA Premium.\nPor favor, ingresa tu código de acceso para desbloquearlo:");
+        const codigo = prompt("✨ El Modo Tarotista es exclusivo de TarotIA Premium.\nPor favor, ingresa tu código de acceso para desbloquearlo:");
         if (codigo) {
             canjearCodigoPremium(codigo);
+        }
+    }
+}
+
+// Control del Mazo Físico: 5 Usos gratis de muestra, luego pide código
+function verificarAccesoFisico() {
+    if (esUsuarioPremium) {
+        // Si ya es premium, pasa directo a la carga de cartas físicas
+        ocultarTodasLasPantallas();
+        const screenFisico = document.getElementById('screen-fisico');
+        if (screenFisico) {
+            screenFisico.classList.remove('hidden');
+            screenFisico.style.display = 'block';
+        }
+        return;
+    }
+
+    // Si es usuario estándar, revisamos sus muestras gratis consumidas
+    let tiradasFisicasUsadas = parseInt(localStorage.getItem('tiradasFisicasUsadas')) || 0;
+    const maxTiradasMuestra = 5;
+
+    if (tiradasFisicasUsadas < maxTiradasMuestra) {
+        const restantes = maxTiradasMuestra - tiradasFisicasUsadas;
+        alert(`🔮 ¡Bienvenido al Mazo Físico! \nTienes acceso de muestra activo. Te quedan ${restantes} de ${maxTiradasMuestra} tiradas gratuitas.`);
+        
+        // Abre la pantalla de carga física
+        ocultarTodasLasPantallas();
+        const screenFisico = document.getElementById('screen-fisico');
+        if (screenFisico) {
+            screenFisico.classList.remove('hidden');
+            screenFisico.style.display = 'block';
+        }
+    } else {
+        // Excedió el límite gratis de muestra
+        const codigo = prompt("❌ Has agotado tus 5 tiradas de muestra para Mazo Físico.\nPara seguir interpretando tus cartas reales sin límites, ingresa tu código Premium:");
+        if (codigo) {
+            canjearCodigoPremium(codigo);
+        }
+    }
+}
+
+// Descontar una tirada física de muestra (se llama desde procesarTiradaCompleta)
+function registrarUsoTiradaFisica() {
+    if (!esUsuarioPremium && modoFisicoActivo) {
+        let tiradasFisicasUsadas = parseInt(localStorage.getItem('tiradasFisicasUsadas')) || 0;
+        tiradasFisicasUsadas++;
+        localStorage.setItem('tiradasFisicasUsadas', tiradasFisicasUsadas);
+        
+        // Actualizamos el badge de la portada de forma dinámica si está en pantalla
+        const badge = document.getElementById('badge-fisico-muestra');
+        if (badge) {
+            const restantes = 5 - tiradasFisicasUsadas;
+            badge.innerText = restantes > 0 ? `${restantes} Libres` : "Premium";
         }
     }
 }

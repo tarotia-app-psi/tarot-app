@@ -15,50 +15,49 @@
 
     <!-- PANTALLA 1: PORTADA PRINCIPAL -->
     <div id="screen-portada" class="screen">
-    <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
-        ✨ Mi Carta Consejo del Día Gratis ✨
-    </button>
+        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
+            ✨ Mi Carta Consejo del Día Gratis ✨
+        </button>
 
-    <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
-    <div class="menu-portada">
-        
-        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
-            <div class="opcion-icono">🔮</div>
-            <div class="opcion-info">
-                <h3>Estilo Mágico</h3>
-                <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+        <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
+        <div class="menu-portada">
+            
+            <!-- ESTILO MÁGICO (GRATIS) -->
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+                <div class="opcion-icono">🔮</div>
+                <div class="opcion-info">
+                    <h3>Estilo Mágico</h3>
+                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
+                </div>
+            </div>
+
+            <!-- ESTILO FILOSÓFICO (GRATIS) -->
+            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+                <div class="opcion-icono">🧘‍♂️</div>
+                <div class="opcion-info">
+                    <h3>Estilo Filosófico</h3>
+                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+                </div>
+            </div>
+
+            <!-- MODO TAROTISTA (PREMIUM) -->
+            <div class="opcion-tarjeta" style="border-color: rgba(167, 139, 250, 0.4);" onclick="verificarAccesoTarotista()">
+                <div class="opcion-icono">📖</div>
+                <div class="opcion-info">
+                    <h3>Modo Tarotista <span style="color: #a78bfa; font-size: 0.8rem; font-weight: bold; background: rgba(167, 139, 250, 0.15); padding: 2px 6px; border-radius: 4px; margin-left: 5px;">PREMIUM</span></h3>
+                    <p>Significados técnicos y objetivos de cada dupla por separado para que vos mismo interpretes.</p>
+                </div>
+            </div>
+
+            <!-- PARA MAZO FÍSICO (CON MUESTRA DE 5 TIROS / PREMIUM) -->
+            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="verificarAccesoFisico()">
+                <div class="opcion-icono">🃏</div>
+                <div class="opcion-info">
+                    <h3>Para Mazo Físico <span id="badge-fisico-muestra" style="color: #ffd700; font-size: 0.8rem; font-weight: bold; background: rgba(255,215,0,0.1); padding: 2px 6px; border-radius: 4px; margin-left: 5px;">5 Muestras</span></h3>
+                    <p>Ingresá tus cartas reales y obtené la traducción analítica de la IA.</p>
+                </div>
             </div>
         </div>
-
-        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
-            <div class="opcion-icono">🧘‍♂️</div>
-            <div class="opcion-info">
-                <h3>Estilo Filosófico</h3>
-                <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
-            </div>
-        </div>
-
-        <div class="opcion-tarjeta" style="border-color: rgba(167, 139, 250, 0.4);" onclick="verificarAccesoManual()">
-            <div class="opcion-icono">📖</div>
-            <div class="opcion-info">
-                <h3>Modo Manual <span style="color: #a78bfa; font-size: 0.8rem; font-weight: bold; background: rgba(167, 139, 250, 0.15); padding: 2px 6px; border-radius: 4px; margin-left: 5px;">PREMIUM</span></h3>
-                <p>Significados técnicos y objetivos de cada dupla por separado para que vos mismo interpretes.</p>
-            </div>
-        </div>
-
-        <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
-            <div class="opcion-icono">🃏</div>
-            <div class="opcion-info">
-                <h3>Para Mazo Físico</h3>
-                <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
-            </div>
-        </div>
-    </div>
-
-    <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
-        📜 Ver Mis Lecturas Anteriores
-    </button>
-</div>
 
         <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
             📜 Ver Mis Lecturas Anteriores
@@ -68,8 +67,8 @@
             <h4>Pase Místico Premium</h4>
             <p style="font-size: 0.85rem; margin: 0; color: #b3a7c4;">Desbloqueá todo el power por $3.500 ARS al mes</p>
             <ul>
-                <li>Lecturas virtuales y respuestas ilimitadas.</li>
-                <li>Modo exclusivo <b>"Para Mazo Físico"</b> habilitado.</li>
+                <li>Lecturas virtuales y re-preguntas ilimitadas.</li>
+                <li>Modo <b>"Mazo Físico"</b> y <b>"Modo Tarotista"</b> ilimitados.</li>
                 <li>Navegación fluida sin banners publicitarios.</li>
             </ul>
             <button class="btn-suscribirse" onclick="window.open('TU_LINK_DE_MERCADO_PAGO_AQUÍ', '_blank')">
@@ -117,7 +116,7 @@
             Confirmar Cartas y Elegir Eje ✨
         </button>
         
-        <button onclick="nuevaConsultaFisico()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
+        <button onclick="volverAPortada()" style="background: transparent; color: #aaa; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline; font-size: 0.9rem; display: block; margin-left: auto; margin-right: auto;">
             Volver a la portada
         </button>
     </div>
@@ -129,7 +128,7 @@
             <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
             <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
             <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
-            <button onclick="abrirPantallaPregunta()" style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(168,85,247,0.1)); border-color: #a855f7; color: #a855f7;">
+            <button id="btn-pregunta-especifica" onclick="abrirPantallaPregunta()" style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(168,85,247,0.1)); border-color: #a855f7; color: #a855f7;">
                 ✨ Pregunta Específica (Premium)
             </button>
         </div>
@@ -140,7 +139,7 @@
     <div id="screen-pregunta" class="screen hidden">
         <h3 style="color: var(--accent);">🔮 Consulta Específica</h3>
         <p style="font-size: 0.9rem; color: var(--muted-text); margin-bottom: 20px;">
-            Escribí tu pregunta con la mayor claridad posible para que Tara adapte la lectura a tu situación real:
+            Escribí tu pregunta con la mayor claridad posible para que la IA adapte la lectura a tu situación real:
         </p>
         
         <textarea id="texto-pregunta-usuario" rows="4" placeholder="Ej: ¿Qué debo tener en cuenta sobre la propuesta laboral que me hicieron ayer?..." style="width: 100%; background: #1a0f2e; color: #fff; border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; font-size: 1rem; outline: none; resize: none; box-sizing: border-box; margin-bottom: 20px; font-family: inherit;"></textarea>
@@ -185,7 +184,7 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                
+            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                
         </div>
 
         <!-- CAJA DE TEXTO PARA LA INTERPRETACIÓN -->

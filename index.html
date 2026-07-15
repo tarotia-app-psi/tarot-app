@@ -15,36 +15,50 @@
 
     <!-- PANTALLA 1: PORTADA PRINCIPAL -->
     <div id="screen-portada" class="screen">
-        <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
-            ✨ Mi Carta Consejo del Día Gratis ✨
-        </button>
+    <button class="btn-carta-diaria" onclick="tirarCartaDiaria()">
+        ✨ Mi Carta Consejo del Día Gratis ✨
+    </button>
 
-        <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
-        <div class="menu-portada">
-            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
-                <div class="opcion-icono">🔮</div>
-                <div class="opcion-info">
-                    <h3>Estilo Mágico</h3>
-                    <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
-                </div>
-            </div>
-
-            <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
-                <div class="opcion-icono">🧘‍♂️</div>
-                <div class="opcion-info">
-                    <h3>Estilo Filosófico</h3>
-                    <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
-                </div>
-            </div>
-
-            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
-                <div class="opcion-icono">🃏</div>
-                <div class="opcion-info">
-                    <h3>Para Mazo Físico</h3>
-                    <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
-                </div>
+    <h3 style="margin-bottom: 15px;">Selecciona el estilo de lectura:</h3>
+    <div class="menu-portada">
+        
+        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('magico')">
+            <div class="opcion-icono">🔮</div>
+            <div class="opcion-info">
+                <h3>Estilo Mágico</h3>
+                <p>Lectura directa, mística y al hueso. Consejos prácticos y predictivos.</p>
             </div>
         </div>
+
+        <div class="opcion-tarjeta" onclick="irAlEjeConsulta('filosofico')">
+            <div class="opcion-icono">🧘‍♂️</div>
+            <div class="opcion-info">
+                <h3>Estilo Filosófico</h3>
+                <p>Lectura profunda, psicológica y reflexiva para tu evolución.</p>
+            </div>
+        </div>
+
+        <div class="opcion-tarjeta" style="border-color: rgba(167, 139, 250, 0.4);" onclick="verificarAccesoManual()">
+            <div class="opcion-icono">📖</div>
+            <div class="opcion-info">
+                <h3>Modo Manual <span style="color: #a78bfa; font-size: 0.8rem; font-weight: bold; background: rgba(167, 139, 250, 0.15); padding: 2px 6px; border-radius: 4px; margin-left: 5px;">PREMIUM</span></h3>
+                <p>Significados técnicos y objetivos de cada dupla por separado para que vos mismo interpretes.</p>
+            </div>
+        </div>
+
+        <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="abrirMensajePremium()">
+            <div class="opcion-icono">🃏</div>
+            <div class="opcion-info">
+                <h3>Para Mazo Físico</h3>
+                <p>Ingresá tus cartas reales y obtené la traducción de Tara.</p>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
+        📜 Ver Mis Lecturas Anteriores
+    </button>
+</div>
 
         <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
             📜 Ver Mis Lecturas Anteriores

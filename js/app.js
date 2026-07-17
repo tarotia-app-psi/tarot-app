@@ -389,7 +389,25 @@ function reproducirVoz(tipo) {
         const conclusionSpan = document.getElementById('conclusion');
         textoA_Leer = conclusionSpan ? conclusionSpan.innerText : "No se encontró el consejo final.";
     } else if (tipo === 'predicciones') {
-        textoA_Leer = document.getElementById('interpretation-text').innerText; 
+        // 🔥 BUSQUEDA DINÁMICA: Buscamos el h3 de Predicciones dentro del contenedor
+        const contenedor = document.getElementById('interpretation-text');
+        const encabezados = contenedor ? contenedor.getElementsByTagName('h3') : [];
+        let h3Predicciones = null;
+
+        // Buscamos cuál h3 contiene la palabra "Predicciones"
+        for (let h3 of encabezados) {
+            if (h3.innerText.includes('Predicciones')) {
+                h3Predicciones = h3;
+                break;
+            }
+        }
+
+        if (h3Predicciones && h3Predicciones.nextElementSibling) {
+            // Tomamos el texto del párrafo (<p>) que está justo abajo del h3
+            textoA_Leer = h3Predicciones.nextElementSibling.innerText;
+        } else {
+            textoA_Leer = "No se encontraron las predicciones en esta lectura.";
+        }
     }
 
     if (textoA_Leer) {

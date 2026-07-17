@@ -180,13 +180,10 @@ function inicializarYMostrarPantallaFisica() {
 // =========================================================
 
 function verificarAccesoTarotistaFisico() {
-    // 1. Seteamos el estilo técnico ('manual') para que viaje al backend
+    // Seteamos el estilo técnico ('manual') para que sea idéntico al digital
     estiloSeleccionado = 'manual'; 
-    
-    // 2. Activamos el flag de mazo físico para que use los selectores
     modoFisicoActivo = true; 
 
-    // 3. Reutilizamos la pantalla de carga física existente
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');
     if (screenFisico) {
@@ -194,12 +191,11 @@ function verificarAccesoTarotistaFisico() {
         screenFisico.style.display = 'block';
     }
     
-    // 4. Forzamos a que se llenen los selectores con tus 78 arcanos
+    // Rellenamos los selectores con los 78 arcanos si no se cargaron todavía
     const idsSelects = ['fisico-carta1', 'fisico-carta2', 'fisico-carta3', 'fisico-carta4'];
     idsSelects.forEach(id => {
         const select = document.getElementById(id);
         if (select && select.children.length <= 1) { 
-            // Si el select está vacío, disparamos tu lógica original de llenado
             inicializarYMostrarPantallaFisica();
         }
     });

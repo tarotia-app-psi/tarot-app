@@ -171,7 +171,35 @@ function inicializarYMostrarPantallaFisica() {
         }
     });
 }
+// =========================================================
+// NUEVAS FUNCIONES PARA TAROTISTA CON MAZO FÍSICO
+// =========================================================
 
+function verificarAccesoTarotistaFisico() {
+    // 1. Seteamos el estilo técnico ('manual') para que viaje al backend
+    estiloSeleccionado = 'manual'; 
+    
+    // 2. Activamos el flag de mazo físico para que use los selectores
+    modoFisicoActivo = true; 
+
+    // 3. Reutilizamos la pantalla de carga física existente
+    ocultarTodasLasPantallas();
+    const screenFisico = document.getElementById('screen-fisico');
+    if (screenFisico) {
+        screenFisico.classList.remove('hidden');
+        screenFisico.style.display = 'block';
+    }
+    
+    // 4. Forzamos a que se llenen los selectores con tus 78 arcanos
+    const idsSelects = ['fisico-carta1', 'fisico-carta2', 'fisico-carta3', 'fisico-carta4'];
+    idsSelects.forEach(id => {
+        const select = document.getElementById(id);
+        if (select && select.children.length <= 1) { 
+            // Si el select está vacío, disparamos tu lógica original de llenado
+            inicializarYMostrarPantallaFisica();
+        }
+    });
+}
 // Valida la selección del mazo físico y redirige al selector de ejes
 function irAlEjeFisico() {
     const c1 = document.getElementById('fisico-carta1').value;

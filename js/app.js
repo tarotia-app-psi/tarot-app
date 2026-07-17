@@ -201,6 +201,7 @@ function verificarAccesoTarotistaFisico() {
     });
 }
 // Valida la selección del mazo físico y redirige al selector de ejes
+// Valida la selección del mazo físico y redirige al selector de ejes
 function irAlEjeFisico() {
     const c1 = document.getElementById('fisico-carta1').value;
     const c2 = document.getElementById('fisico-carta2').value;
@@ -224,12 +225,16 @@ function irAlEjeFisico() {
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
     if (screenSelector) {
-        document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
+        // Cambiamos el título del menú de ejes según el modo en el que estemos
+        if (estiloSeleccionado === 'manual') {
+            document.getElementById('titulo-eje-estilo').innerText = "Manual Tarotista: Selecciona el eje de estudio:";
+        } else {
+            document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
+        }
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
     }
 }
-
 // ==========================================
 // DESPACHO LÓGICO DE LECTURAS
 // ==========================================

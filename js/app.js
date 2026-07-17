@@ -123,7 +123,11 @@ function volverInicio() {
 // Prepara y llena dinámicamente los selectores de cartas
 function inicializarYMostrarPantallaFisica() {
     modoFisicoActivo = true;
-    estiloSeleccionado = 'magico'; // Hereda por defecto el tono directo y predictivo
+    
+    // CORRECCIÓN: Solo se pone 'magico' si NO veníamos del modo 'manual' (tarotista)
+    if (estiloSeleccionado !== 'manual') {
+        estiloSeleccionado = 'magico'; 
+    }
 
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');

@@ -87,6 +87,18 @@
 </div>
 
 <script>
+    // Coloca esto en lo primero que se ejecute al cargar la página de admin
+(function() {
+    const claveCorrecta = "TuClaveSuperSecreta123"; // 🔴 Cambia esto por tu contraseña personal
+    
+    // Pedimos la contraseña al usuario mediante una ventana emergente
+    const intentoUsuario = prompt("Acceso Restringido. Introduce la clave de administrador:");
+
+    if (intentoUsuario !== claveCorrecta) {
+        alert("Acceso denegado. Volviendo al inicio.");
+        window.location.href = "index.html"; // Lo redirige a la página principal
+    }
+})();
     document.addEventListener("DOMContentLoaded", () => {
         actualizarBotonEstado();
         cargarListaClientesLocal();

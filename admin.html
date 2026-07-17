@@ -87,26 +87,28 @@
 </div>
 
 <script>
-    // Coloca esto en lo primero que se ejecute al cargar la página de admin
-(function() {
-    const claveCorrecta = "TuClaveSuperSecreta123"; // 🔴 Cambia esto por tu contraseña personal
+    // 1. CONFIGURACIÓN DE SEGURIDAD LOCAL
+    // Cambia esto por la contraseña que quieras usar para entrar a este HTML en tu navegador
+    const CLAVE_ACCESO_HTML = "TuClaveSuperSecreta123"; 
     
-    // Pedimos la contraseña al usuario mediante una ventana emergente
-    const intentoUsuario = prompt("Acceso Restringido. Introduce la clave de administrador:");
+    // Cambia esto por el token exacto que guardaste en la variable de entorno ADMIN_SECRET_KEY en Render
+    const TOKEN_BACKEND = "MiTokenSecreto123"; 
 
-    if (intentoUsuario !== claveCorrecta) {
-        alert("Acceso denegado. Volviendo al inicio.");
-        window.location.href = "index.html"; // Lo redirige a la página principal
-    }
-})();
+    // Auto-ejecutable para bloquear la vista si la contraseña del prompt es incorrecta
+    (function() {
+        const intentoUsuario = prompt("Acceso Restringido. Introduce la clave de administrador:");
+        if (intentoUsuario !== CLAVE_ACCESO_HTML) {
+            alert("Acceso denegado. Volviendo al inicio.");
+            window.location.href = "index.html";
+        }
+    })();
+
     document.addEventListener("DOMContentLoaded", () => {
         actualizarBotonEstado();
-        cargarListaClientesLocal();
-        verificarConexionConRender();
+        cargarListaClientesDesdeServidor(); // 🌟 Ahora llamamos a la base de datos real
     });
 
-    // Detecta automáticamente si estás probando en tu PC o en producción
-   // Detecta automáticamente si estás probando en tu PC o en producción
+    // Detecta automáticamente si estás probando en tu PC o en producción (Render)
     const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:3000' 
         : 'https://tarot-613b.onrender.com';
@@ -130,47 +132,76 @@
         actualizarBotonEstado();
     });
 
-    function verificarConexionConRender() {
-        console.log("[TarotIA Admin] Panel listo. API_URL configurada en:", API_URL);
-    }
+    // 🌟 NUEVA FUNCIÓN CON CONEXIÓN EN VIVO AL BACKEND
+    async function cargarListaClientesDesdeServidor() {
+        const contenedor = document.getElementById('tabla-clientes-contenedor');
+        contenedor.innerHTML = "<p style='color: #94a3b8; font-size: 14px;'>Consultando registros en el plano del servidor...</p>";
 
-    function cargarListaClientesLocal() {
-        const clientesSimulados = [
-            { id: 1, nombre: "Eduardo Marcelo", email: "eduardo@example.com", plan: "Premium", totalTiradas: 14, ultimaConexion: "2026-07-02" },
-            { id: 2, nombre: "Ana Clara", email: "anaclara@gmail.com", plan: "Gratis", totalTiradas: 3, ultimaConexion: "2026-06-28" },
-            { id: 3, nombre: "Juan Pérez", email: "juan.perez@hotmail.com", plan: "Premium", totalTiradas: 28, ultimaConexion: "2026-07-02" },
-            { id: 4, nombre: "María Belén", email: "belen.tarot@live.com.ar", plan: "Gratis", totalTiradas: 1, ultimaConexion: "2026-07-01" }
-        ];
-        
-        let html = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Email</th>
-                        <th>Plan</th>
-                        <th>Tiradas</th>
-                        <th>Última Actividad</th>
-                    </tr>
-                </thead>
-                <tbody>
-        `;
-        
-        clientesSimulados.forEach(c => {
-            const badgeClass = c.plan === 'Premium' ? 'badge-premium' : 'badge-gratis';
-            html += `
-                <tr>
-                    <td><strong>${c.nombre}</strong></td>
-                    <td>${c.email}</td>
-                    <td><span class="badge ${badgeClass}">${c.plan}</span></td>
-                    <td>🔮 ${c.totalTiradas}</td>
-                    <td>${c.ultimaConexion}</td>
-                </tr>
+        try {
+            // Hacemos la petición al endpoint que programamos en el server.js
+            const response = await fetch(`${API_URL}/api/admin/clientes`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-admin-token': TOKEN_BACKEND // Enviamos el pase de seguridad obligatorio
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    throw new Error("El servidor rechazó el token de administración (403 Forbidden). Verifica TOKEN_BACKEND.");
+                }
+                throw new Error(`Error en el servidor: Código ${response.status}`);
+            }
+
+            const data = await response.json();
+            const clientesReales = data.clientes;
+
+            if (!clientesReales || clientesReales.length === 0) {
+                contenedor.innerHTML = "<p style='color: #ef4444;'>No se encontraron clientes registrados en el sistema.</p>";
+                return;
+            }
+
+            // Armamos la tabla de forma dinámica con la respuesta de la API
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Plan</th>
+                            <th>Tiradas</th>
+                            <th>Última Actividad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
-        });
-        
-        html += `</tbody></table>`;
-        document.getElementById('tabla-clientes-contenedor').innerHTML = html;
+            
+            clientesReales.forEach(c => {
+                const badgeClass = c.plan === 'Premium' ? 'badge-premium' : 'badge-gratis';
+                html += `
+                    <tr>
+                        <td><strong>${c.nombre}</strong></td>
+                        <td>${c.email}</td>
+                        <td><span class="badge ${badgeClass}">${c.plan}</span></td>
+                        <td>🔮 ${c.totalTiradas}</td>
+                        <td>${c.ultimaConexion}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `</tbody></table>`;
+            contenedor.innerHTML = html;
+
+        } catch (error) {
+            console.error("❌ Error al conectar con la API de clientes:", error);
+            contenedor.innerHTML = `
+                <div style="background: #7f1d1d; border: 1px solid #f87171; padding: 15px; border-radius: 8px; color: #fca5a5; font-size: 14px;">
+                    <strong>Error de conexión:</strong> ${error.message}<br><br>
+                    <span style="font-size: 12px; color: #fca5a5;">Asegúrate de que tu backend esté corriendo y de que las claves coincidan exactamente.</span>
+                </div>
+            `;
+        }
     }
 </script>
 </body>

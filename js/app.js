@@ -124,7 +124,7 @@ function volverInicio() {
 function inicializarYMostrarPantallaFisica() {
     modoFisicoActivo = true;
     
-    // CORRECCIÓN: Solo se pone 'magico' si NO veníamos del modo 'manual' (tarotista)
+    // CONTROL: Si ya venimos en modo tarotista ('manual'), NO dejes que lo cambie a 'magico'
     if (estiloSeleccionado !== 'manual') {
         estiloSeleccionado = 'magico'; 
     }

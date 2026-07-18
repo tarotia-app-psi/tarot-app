@@ -130,6 +130,7 @@ function volverInicio() {
 // ==========================================
 
 // Prepara y llena dinámicamente los selectores de cartas
+// Prepara y llena dinámicamente los selectores de cartas
 function inicializarYMostrarPantallaFisica() {
     modoFisicoActivo = true;
     
@@ -143,6 +144,12 @@ function inicializarYMostrarPantallaFisica() {
     if (screenFisico) {
         screenFisico.classList.remove('hidden');
         screenFisico.style.display = 'block';
+    }
+    
+    // CONTROL DE EMERGENCIA: Verifica si la baraja existe en la memoria
+    if (typeof arcanosCompleto === 'undefined') {
+        alert("❌ Error crítico: No se encontró la lista de cartas. Asegúrate de que 'arcanos.js' esté cargado en tu HTML antes de 'app.js'.");
+        return;
     }
     
     const idsSelects = ['fisico-carta1', 'fisico-carta2', 'fisico-carta3', 'fisico-carta4'];
@@ -159,28 +166,28 @@ function inicializarYMostrarPantallaFisica() {
             optDefault.selected = true;
             select.appendChild(optDefault);
             
-            if (typeof arcanosCompleto !== 'undefined') {
-                const grupos = [
-                    { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
-                    { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
-                    { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
-                    { nombre: "⚔️ Palo de Espadas", inicio: 50, fin: 63 },
-                    { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
-                ];
+            const grupos = [
+                { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
+                { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
+                { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
+                { nombre: "⚔️ Palo de Espadas", inicio: 50, fin: 63 },
+                { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
+            ];
 
-                grupos.forEach(g => {
-                    let grupoElemento = document.createElement('optgroup');
-                    grupoElemento.label = g.nombre;
-                    
-                    for (let i = g.inicio; i <= g.fin; i++) {
+            grupos.forEach(g => {
+                let grupoElemento = document.createElement('optgroup');
+                grupoElemento.label = g.nombre;
+                
+                for (let i = g.inicio; i <= g.fin; i++) {
+                    if (arcanosCompleto[i]) { // Evita registrar posiciones vacías
                         let opt = document.createElement('option');
                         opt.value = arcanosCompleto[i]; 
                         opt.innerText = arcanosCompleto[i];
                         grupoElemento.appendChild(opt);
                     }
-                    select.appendChild(grupoElemento);
-                });
-            }
+                }
+                select.appendChild(grupoElemento);
+            });
         }
     });
 }

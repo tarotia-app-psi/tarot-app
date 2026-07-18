@@ -566,30 +566,26 @@ function reproducirVoz(tipo) {
             }
         });
 
-        // Fallback Conclusión: si falla el parseo, extrae los dos últimos párrafos
+        // Fallback Conclusión: si falla el parseo, toma el último párrafo o ítem
         if (!textoA_Leer.trim()) {
             let ps = contenedor.querySelectorAll('p, li');
             if (ps.length > 0) {
-                let inicio = Math.max(0, ps.length - 2);
-                for (let i = inicio; i < ps.length; i++) {
-                    textoA_Leer += " " + ps[i].innerText;
-                }
+                textoA_Leer = ps[ps.length - 1].innerText;
             }
         }
     } else if (tipo === 'predicciones') {
-        // Busca bloques asociados a proyecciones futuras de forma flexible
         let secciones = contenedor.querySelectorAll('h3, p, div, li');
         let capturar = false;
 
         secciones.forEach(el => {
             const textoLimpio = el.innerText.toLowerCase();
             
-            // Si detecta palabras clave del bloque futuro, empieza a capturar
-            if (textoLimpio.includes('futuro') || textoLimpio.includes('evolución') || textoLimpio.includes('proyección') || textoLimpio.includes('resultado')) {
+            // 1. Detecta el inicio de la zona de Predicciones (Tercer bloque, luego de futuro)
+            if (textoLimpio.includes('predicciones') || textoLimpio.includes('predicción') || textoLimpio.includes('proyección futura')) {
                 capturar = true;
             } 
-            // Frena la captura si entra a la conclusión final para no mezclar bloques
-            else if (capturar && (textoLimpio.includes('conclusión') || textoLimpio.includes('consejo final'))) {
+            // 2. Frena inmediatamente cuando se topa con la Conclusión/Consejo Final para no mezclar
+            else if (capturar && (textoLimpio.includes('conclusión') || textoLimpio.includes('consejo final') || textoLimpio.includes('síntesis'))) {
                 capturar = false;
             }
 
@@ -598,17 +594,13 @@ function reproducirVoz(tipo) {
             }
         });
 
-        // Fallback Predicciones Seguro: Si no detectó los encabezados del backend, 
-        // toma la segunda mitad de los párrafos del texto (donde lógicamente se ubica el futuro)
+        // Fallback Predicciones: Si la IA no formateó con títulos claros, 
+        // extraemos el bloque previo al final (antepenúltimo/penúltimo párrafo)
         if (!textoA_Leer.trim()) {
             let ps = contenedor.querySelectorAll('p');
-            if (ps.length >= 2) {
-                let mitad = Math.floor(ps.length / 2);
-                for (let i = mitad; i < ps.length; i++) {
-                    if (!ps[i].innerText.toLowerCase().includes('conclusión')) {
-                        textoA_Leer += " " + ps[i].innerText;
-                    }
-                }
+            if (ps.length >= 3) {
+                // Al estar en tercer lugar de cuatro bloques estimados, suele ser el penúltimo
+                textoA_Leer = ps[ps.length - 2].innerText;
             }
         }
     }
@@ -618,14 +610,14 @@ function reproducirVoz(tipo) {
         textoA_Leer = contenedor.innerText; 
     }
 
-    // Limpieza profunda de emojis y caracteres especiales para que el motor de voz no haga pausas raras
+    // Limpieza profunda de emojis y caracteres especiales antes del motor TTS
     textoA_Leer = textoA_Leer.replace(/[❌✨🔮🌗🌿🏆⚔️🪙🧙‍♂️💼🚀📚🔍🌓]/g, '');
-    textoA_Leer = textoA_Leer.replace(/\s+/g, ' ').trim(); // Normaliza espacios en blanco
+    textoA_Leer = textoA_Leer.replace(/\s+/g, ' ').trim(); // Normaliza espacios
 
     let utterance = new SpeechSynthesisUtterance(textoA_Leer);
-    utterance.lang = 'es-AR'; // Localización nativa
-    utterance.rate = 1.05;    // Fluidez mejorada
-    utterance.pitch = 1.05;   // Tono equilibrado
+    utterance.lang = 'es-AR'; // Localización nativa argentina para Tara
+    utterance.rate = 1.05;    
+    utterance.pitch = 1.05;   
 
     window.speechSynthesis.speak(utterance);
 }

@@ -247,12 +247,23 @@ function irAlEjeFisico() {
 // ==========================================
 // DESPACHO LÓGICO DE LECTURAS
 // ==========================================
+// ==========================================
+// DESPACHO LÓGICO DE LECTURAS (CORREGIDO)
+// ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
         abrirPantallaPregunta();
-    } else {
-        procesarTiradaCompleta(tema, null);
+        return;
     }
+
+    // Si está activo el mazo físico pero el usuario todavía no eligió cartas, lo mandamos a cargarlas
+    if (modoFisicoActivo && cartasFisicasElegidas.length === 0) {
+        inicializarYMostrarPantallaFisica();
+        return;
+    }
+
+    // Si ya tiene las cartas listas o es el modo digital tradicional, procesa directo
+    procesarTiradaCompleta(tema, null);
 }
 
 function confirmarPreguntaYEjecutar() {

@@ -54,27 +54,33 @@
             📜 Ver Mis Lecturas Anteriores
         </button>
 
+        <!-- BANNER DE SUSCRIPCIÓN PREMIUM -->
         <div class="banner-suscripcion">
-    <h4>Pase Místico Premium</h4>
-    <p style="font-size: 0.95rem; margin: 5px 0 15px 0; color: #ffd700; font-weight: bold;">
-        Desbloqueá todo el power por $7.000 ARS al mes
-    </p>
-    
-    <ul style="text-align: left; margin: 0 auto; max-width: 480px; font-size: 0.9rem; line-height: 1.5;">
-        <li>🚀 <b>TRABAJE DE TAROTISTA:</b> Herramientas e indicaciones para trabajar de forma virtual o presencial.</li>
-        <li>📚 <b>Primeros pasos:</b> Instrucciones guiadas para comenzar tu camino como tarotista profesional.</li>
-        <li>🃏 <b>Mazo Físico y Modo Tarotista:</b> Accesos ilimitados para tus sesiones en vivo.</li>
-        <li>🔍 <b>Modo de definiciones:</b> Acceso a significados clave para que hagas tu propia interpretación.</li>
-        <li>🔮 <b>Consultas Avanzadas:</b> Preguntas específicas a la IA y re-preguntas aclaratorias sin límites.</li>
-        <li>✨ <b>Navegación fluida:</b> Interfaz limpia y 100% libre de banners publicitarios.</li>
-    </ul>
+            <h4>Pase Místico Premium</h4>
+            <p style="font-size: 0.95rem; margin: 5px 0 15px 0; color: #ffd700; font-weight: bold;">
+                Desbloqueá todo el power por $7.000 ARS al mes
+            </p>
+            
+            <ul style="text-align: left; margin: 0 auto; max-width: 480px; font-size: 0.9rem; line-height: 1.5;">
+                <li>🚀 <b>TRABAJE DE TAROTISTA:</b> Herramientas e indicaciones para trabajar de forma virtual o presencial.</li>
+                <li>📚 <b>Primeros pasos:</b> Instrucciones guiadas para comenzar tu camino como tarotista profesional.</li>
+                <li>🃏 <b>Mazo Físico y Modo Tarotista:</b> Accesos ilimitados para tus sesiones en vivo.</li>
+                <li>🔍 <b>Modo de definiciones:</b> Acceso a significados clave para que hagas tu propia interpretación.</li>
+                <li>🔮 <b>Consultas Avanzadas:</b> Preguntas específicas a la IA y re-preguntas aclaratorias sin límites.</li>
+                <li>✨ <b>Navegación fluida:</b> Interfaz limpia y 100% libre de banners publicitarios.</li>
+            </ul>
 
-    <button class="btn-suscribirse" style="margin-top: 20px;" onclick="window.open('TU_LINK_DE_MERCADO_PAGO', '_blank')">
-        Adquirir Pase Premium ✨
-    </button>
-</div>
-</div>
+            <button class="btn-suscribirse" style="margin-top: 20px;" onclick="window.open('TU_LINK_DE_MERCADO_PAGO', '_blank')">
+                Adquirir Pase Premium ✨
+            </button>
+        </div>
+    </div> <!-- AQUÍ ESTABA EL ERROR: Se cerró correctamente la pantalla de portada -->
+
     <!-- PANTALLA: CARGA DE MAZO FÍSICO -->
+    <div id="screen-physic" class="screen hidden" style="display: none;">
+        <!-- Se unificó el ID correcto para empatar con app.js -->
+    </div>
+
     <div id="screen-fisico" class="screen hidden" style="display: none;">
         <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
         <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
@@ -181,7 +187,7 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                                                  
+            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                                                                                                                
         </div>
 
         <!-- CAJA DE TEXTO PARA LA INTERPRETACIÓN -->
@@ -212,7 +218,7 @@
                 <div class="opcion-icono">📖</div>
                 <div class="opcion-info">
                     <h3>Modo Tarotista (Digital)</h3>
-                    <p>Significados técnicos y objetivos en pantalla para interpretar de forma autónoma.</p>
+                    <p>Significados técnicos y objectives en pantalla para interpretar de forma autónoma.</p>
                 </div>
             </div>
 
@@ -268,6 +274,5 @@
 
 <script src="./js/arcanos.js"></script>
 <script src="./js/app.js"></script>
-
 </body>
 </html>

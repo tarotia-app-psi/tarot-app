@@ -47,7 +47,7 @@ function canjearCodigoPremium(codigoIntroducido) {
 }
 
 // ==========================================
-// NAVEGACIÓN ENTRE PANTALLAS (CORREGIDO)
+// NAVEGACIÓN ENTRE PANTALLAS
 // ==========================================
 function ocultarTodasLasPantallas() {
     const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial', 'screen-modulo-profesional'];
@@ -74,7 +74,8 @@ function irAlEjeConsulta(estilo) {
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
     if (screenSelector) {
-        document.getElementById('titulo-eje-estilo').innerText = "Selecciona el eje de tu consulta:";
+        const tituloEje = document.getElementById('titulo-eje-estilo');
+        if (tituloEje) tituloEje.innerText = "Selecciona el eje de tu consulta:";
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
     }
@@ -86,7 +87,8 @@ function abrirPantallaPregunta() {
     if (screenPregunta) {
         screenPregunta.classList.remove('hidden');
         screenPregunta.style.display = 'block';
-        document.getElementById('texto-pregunta-usuario').value = "";
+        const inputPregunta = document.getElementById('texto-pregunta-usuario');
+        if (inputPregunta) inputPregunta.value = "";
     }
 }
 
@@ -131,12 +133,10 @@ function volverInicio() {
 // ACCESOS DESDE EL MÓDULO PROFESIONAL
 // =========================================================
 
-// 1. Modo Tarotista Digital (Cartas aleatorias, lectura técnica)
 function verificarAccesoTarotista() {
     irAlEjeConsulta('manual');
 }
 
-// 2. Tarotista con Mazo Físico (Cartas manuales, lectura técnica)
 function verificarAccesoTarotistaFisico() {
     estiloSeleccionado = 'manual'; 
     modoFisicoActivo = true; 
@@ -144,7 +144,6 @@ function verificarAccesoTarotistaFisico() {
     inicializarYMostrarPantallaFisica();
 }
 
-// 3. Mazo Físico Predictivo (Cartas manuales, lectura fluida/mágica)
 function verificarAccesoFisico() {
     if (!esUsuarioPremium && obtenerMuestrasFisicasRestantes() <= 0) {
         alert("🧙‍♂️ Has agotado tus 5 muestras gratuitas de mazo físico. Adquiere el Pase Premium para continuar.");
@@ -198,10 +197,12 @@ function inicializarYMostrarPantallaFisica() {
                 grupoElemento.label = g.nombre;
                 
                 for (let i = g.inicio; i <= g.fin; i++) {
-                    let opt = document.createElement('option');
-                    opt.value = arcanosCompleto[i]; 
-                    opt.innerText = arcanosCompleto[i];
-                    grupoElemento.appendChild(opt);
+                    if (arcanosCompleto[i]) {
+                        let opt = document.createElement('option');
+                        opt.value = arcanosCompleto[i]; 
+                        opt.innerText = arcanosCompleto[i];
+                        grupoElemento.appendChild(opt);
+                    }
                 }
                 select.appendChild(grupoElemento);
             });
@@ -210,10 +211,10 @@ function inicializarYMostrarPantallaFisica() {
 }
 
 function irAlEjeFisico() {
-    const c1 = document.getElementById('fisico-carta1').value;
-    const c2 = document.getElementById('fisico-carta2').value;
-    const c3 = document.getElementById('fisico-carta3').value;
-    const c4 = document.getElementById('fisico-carta4').value;
+    const c1 = document.getElementById('fisico-carta1')?.value;
+    const c2 = document.getElementById('fisico-carta2')?.value;
+    const c3 = document.getElementById('fisico-carta3')?.value;
+    const c4 = document.getElementById('fisico-carta4')?.value;
 
     if (!c1 || !c2 || !c3 || !c4) {
         alert("🧙‍♂️ Por favor, selecciona las 4 cartas de tus duplas físicas antes de continuar.");
@@ -230,10 +231,13 @@ function irAlEjeFisico() {
     ocultarTodasLasPantallas();
     const screenSelector = document.getElementById('screen-selector');
     if (screenSelector) {
-        if (estiloSeleccionado === 'manual') {
-            document.getElementById('titulo-eje-estilo').innerText = "Manual Tarotista: Selecciona el eje de estudio:";
-        } else {
-            document.getElementById('titulo-eje-estilo').innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
+        const tituloEje = document.getElementById('titulo-eje-estilo');
+        if (tituloEje) {
+            if (estiloSeleccionado === 'manual') {
+                tituloEje.innerText = "Manual Tarotista: Selecciona el eje de estudio:";
+            } else {
+                tituloEje.innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
+            }
         }
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
@@ -241,7 +245,7 @@ function irAlEjeFisico() {
 }
 
 // ==========================================
-// DESPACHO LÓGICO DE LECTURAS (ARREGLADO)
+// DESPACHO LÓGICO DE LECTURAS
 // ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
@@ -252,7 +256,7 @@ function ejecutarLecturaSegunModo(tema) {
 }
 
 function confirmarPreguntaYEjecutar() {
-    const preguntaTexto = document.getElementById('texto-pregunta-usuario').value.trim();
+    const preguntaTexto = document.getElementById('texto-pregunta-usuario')?.value.trim();
     if (!preguntaTexto) {
         alert("🧙‍♂️ Por favor, escribe tu duda o consulta mística antes de continuar.");
         return;
@@ -266,6 +270,8 @@ function confirmarPreguntaYEjecutar() {
 async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     ocultarTodasLasPantallas();
     const screenResult = document.getElementById('screen-result');
+    if (!screenResult) return;
+    
     screenResult.classList.remove('hidden');
     screenResult.style.display = 'block';
 
@@ -278,10 +284,10 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     let a, b, c, d;
 
     if (modoFisicoActivo) {
-        const c1 = document.getElementById('fisico-carta1').value;
-        const c2 = document.getElementById('fisico-carta2').value;
-        const c3 = document.getElementById('fisico-carta3').value;
-        const c4 = document.getElementById('fisico-carta4').value;
+        const c1 = document.getElementById('fisico-carta1')?.value;
+        const c2 = document.getElementById('fisico-carta2')?.value;
+        const c3 = document.getElementById('fisico-carta3')?.value;
+        const c4 = document.getElementById('fisico-carta4')?.value;
 
         if (!c1 || !c2 || !c3 || !c4) {
             document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ Error: No se seleccionaron las 4 cartas físicas.</p>";
@@ -340,7 +346,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
 
             if (esUsuarioPremium) {
                 document.getElementById('contenedor-repregunta').classList.remove('hidden');
-                document.getElementById('texto-repregunta').value = "";
+                const textRepregunta = document.getElementById('texto-repregunta');
+                if (textRepregunta) textRepregunta.value = "";
             }
             
             if (modoFisicoActivo) {
@@ -349,7 +356,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             
             guardarEnHistorialLocal(tema, { a, b, c, d }, datos.lectura);
         } else {
-            throw new Error("Respuesta vacía de Groq");
+            throw new Error("Respuesta vacía del servidor");
         }
 
     } catch (err) {
@@ -362,13 +369,14 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
 // ENVÍO DE RE-PREGUNTA PREMIUM
 // ==========================================
 async function enviarRepreguntaServidor() {
-    const textoDuda = document.getElementById('texto-repregunta').value.trim();
+    const textoDuda = document.getElementById('texto-repregunta')?.value.trim();
     if (!textoDuda) {
         alert("🧙‍♂️ Escribe tu duda antes de enviársela al oráculo.");
         return;
     }
 
     const btn = document.getElementById('btn-enviar-repregunta');
+    if (!btn) return;
     btn.disabled = true;
     btn.innerText = "Consultando al plano sutil... 🔮";
 
@@ -388,18 +396,28 @@ async function enviarRepreguntaServidor() {
 
         const datos = await response.json();
 
-        if (datos.respuesta) {
-            contenedorTexto.innerHTML += `
-                <div class="reading-section" style="border-left: 3px solid #ffd700; background: rgba(255,215,0,0.02); padding-top: 15px; margin-top: 20px;">
-                    <h3 style="color: #ffd700;">🔮 Respuesta de Tara a tu Duda:</h3>
-                    <p>${datos.respuesta}</p>
-                </div>
+        if (datos.respuesta && contenedorTexto) {
+            const nuevaSeccion = document.createElement('div');
+            nuevaSeccion.className = 'reading-section';
+            nuevaSeccion.style.borderLeft = '3px solid #ffd700';
+            nuevaSeccion.style.background = 'rgba(255,215,0,0.02)';
+            nuevaSeccion.style.paddingTop = '15px';
+            nuevaSeccion.style.marginTop = '20px';
+            
+            nuevaSeccion.innerHTML = `
+                <h3 style="color: #ffd700;">🔮 Respuesta de Tara a tu Duda:</h3>
+                <p>${datos.respuesta}</p>
             `;
-            document.getElementById('texto-repregunta').value = "";
+            
+            contenedorTexto.appendChild(nuevaSeccion);
+            
+            const textRepregunta = document.getElementById('texto-repregunta');
+            if (textRepregunta) textRepregunta.value = "";
+            
             btn.innerText = "Enviar Re-pregunta Premium 🔮";
             btn.disabled = false;
             
-            contenedorTexto.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+            nuevaSeccion.scrollIntoView({ behavior: 'smooth' });
         } else {
             throw new Error();
         }
@@ -432,8 +450,9 @@ function registrarUsoTiradaFisica() {
     }
 }
 
+// Función encargada de refrescar la UI del contador de tiradas físicas
 function actualizarBadgeMuestrasFisicas() {
-    const badge = document.getElementById('badge-fisico-muestra-prof');
+    const badge = document.getElementById('badge-physic-muestra-prof') || document.getElementById('badge-fisico-muestra-prof');
     if (badge) {
         if (esUsuarioPremium) {
             badge.innerText = "Ilimitado ✨";

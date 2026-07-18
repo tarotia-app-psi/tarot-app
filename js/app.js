@@ -450,7 +450,6 @@ function registrarUsoTiradaFisica() {
     }
 }
 
-// Función encargada de refrescar la UI del contador de tiradas físicas
 function actualizarBadgeMuestrasFisicas() {
     const badge = document.getElementById('badge-physic-muestra-prof') || document.getElementById('badge-fisico-muestra-prof');
     if (badge) {
@@ -475,7 +474,7 @@ function guardarEnHistorialLocal(tema, cartas, lecturaHtml) {
             lectura: lecturaHtml
         };
         historial.unshift(nuevaLectura);
-        if (historial.length > 10) historial.pop(); // Guarda solo las últimas 10 lecturas
+        if (historial.length > 10) historial.pop(); 
         localStorage.setItem('tarotHistorialLocal', JSON.stringify(historial));
     } catch (e) {
         console.error("Error guardando historial:", e);
@@ -521,7 +520,6 @@ function cargarLecturaHistorial(lecturaCodificada, tema) {
         document.getElementById('reading-theme-title').innerText = `Historial: Eje ${tema}`;
         document.getElementById('interpretation-text').innerHTML = decodeURIComponent(lecturaCodificada);
         
-        // Ocultar elementos visuales efímeros de la mesa de tirada viva
         document.getElementById('name-a').innerText = "Guardada";
         document.getElementById('name-b').innerText = "Guardada";
         document.getElementById('name-c').innerText = "Guardada";
@@ -553,12 +551,12 @@ function reproducirVoz(tipo) {
     if (tipo === 'todo') {
         textoA_Leer = contenedor.innerText;
     } else if (tipo === 'conclusion') {
-        let secciones = contenedor.querySelectorAll('h3, p, div, li');
+        let elementos = contenedor.querySelectorAll('h3, p, li');
         let banderaEncontrado = false;
         
-        secciones.forEach(el => {
+        elementos.forEach(el => {
             const textoLimpio = el.innerText.toLowerCase();
-            if (textoLimpio.includes('conclusión') || textoLimpio.includes('síntesis') || textoLimpio.includes('resumen') || textoLimpio.includes('consejo final')) {
+            if (el.tagName === 'H3' && (textoLimpio.includes('conclusión') || textoLimpio.includes('síntesis') || textoLimpio.includes('consejo final') || textoLimpio.includes('resumen'))) {
                 banderaEncontrado = true;
             }
             if (banderaEncontrado) {
@@ -566,7 +564,6 @@ function reproducirVoz(tipo) {
             }
         });
 
-        // Fallback Conclusión: si falla el parseo, toma el último párrafo o ítem
         if (!textoA_Leer.trim()) {
             let ps = contenedor.querySelectorAll('p, li');
             if (ps.length > 0) {
@@ -574,48 +571,51 @@ function reproducirVoz(tipo) {
             }
         }
     } else if (tipo === 'predicciones') {
-        let secciones = contenedor.querySelectorAll('h3, p, div, li');
+        let elementos = contenedor.querySelectorAll('h3, p, li');
         let capturar = false;
 
-        secciones.forEach(el => {
+        for (let i = 0; i < elementos.length; i++) {
+            let el = elementos[i];
             const textoLimpio = el.innerText.toLowerCase();
             
-            // 1. Detecta el inicio de la zona de Predicciones (Tercer bloque, luego de futuro)
-            if (textoLimpio.includes('predicciones') || textoLimpio.includes('predicción') || textoLimpio.includes('proyección futura')) {
+            // 1. Si es un título H3 y habla de predicciones/proyecciones, activamos la captura
+            if (el.tagName === 'H3' && (textoLimpio.includes('predicciones') || textoLimpio.includes('predicción') || textoLimpio.includes('proyección'))) {
                 capturar = true;
+                textoA_Leer += " " + el.innerText;
+                continue;
             } 
-            // 2. Frena inmediatamente cuando se topa con la Conclusión/Consejo Final para no mezclar
-            else if (capturar && (textoLimpio.includes('conclusión') || textoLimpio.includes('consejo final') || textoLimpio.includes('síntesis'))) {
+            
+            // 2. Si ya estábamos capturando y nos topamos con el H3 de la Conclusión, frenamos en seco
+            if (capturar && el.tagName === 'H3' && (textoLimpio.includes('conclusión') || textoLimpio.includes('consejo') || textoLimpio.includes('síntesis') || textoLimpio.includes('resumen'))) {
                 capturar = false;
+                break;
             }
 
+            // 3. Acumula el contenido correspondiente al bloque activo
             if (capturar) {
                 textoA_Leer += " " + el.innerText;
             }
-        });
+        }
 
-        // Fallback Predicciones: Si la IA no formateó con títulos claros, 
-        // extraemos el bloque previo al final (antepenúltimo/penúltimo párrafo)
+        // Fallback robusto posicional: si no se encuentran los H3 explícitos del oráculo
         if (!textoA_Leer.trim()) {
             let ps = contenedor.querySelectorAll('p');
             if (ps.length >= 3) {
-                // Al estar en tercer lugar de cuatro bloques estimados, suele ser el penúltimo
                 textoA_Leer = ps[ps.length - 2].innerText;
             }
         }
     }
 
-    // Fallback crítico final si todo lo anterior falló por completo
     if (!textoA_Leer.trim()) {
         textoA_Leer = contenedor.innerText; 
     }
 
-    // Limpieza profunda de emojis y caracteres especiales antes del motor TTS
+    // Limpieza profunda de formato y emojis para evitar baches raros en la locución
     textoA_Leer = textoA_Leer.replace(/[❌✨🔮🌗🌿🏆⚔️🪙🧙‍♂️💼🚀📚🔍🌓]/g, '');
-    textoA_Leer = textoA_Leer.replace(/\s+/g, ' ').trim(); // Normaliza espacios
+    textoA_Leer = textoA_Leer.replace(/\s+/g, ' ').trim(); 
 
     let utterance = new SpeechSynthesisUtterance(textoA_Leer);
-    utterance.lang = 'es-AR'; // Localización nativa argentina para Tara
+    utterance.lang = 'es-AR'; 
     utterance.rate = 1.05;    
     utterance.pitch = 1.05;   
 

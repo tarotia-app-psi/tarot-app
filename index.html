@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-          <!-- 🔥 UNIFICADO: MÓDULO PROFESIONAL (PREMIUM) -->
+            <!-- 🔥 UNIFICADO: MÓDULO PROFESIONAL (PREMIUM) -->
             <div class="opcion-tarjeta" style="border-color: #a78bfa; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(167, 139, 250, 0.01));" onclick="abrirModuloProfesional()">
                 <div class="opcion-icono">💼</div>
                 <div class="opcion-info">
@@ -48,6 +48,7 @@
                     <p>Trabajá de tarotista o estudiá a fondo: herramientas técnicas, lecturas con mazo físico y guías de negocio.</p>
                 </div>
             </div>
+        </div>
 
         <button onclick="abrirHistorial()" style="background: rgba(255, 255, 255, 0.05); border: 1px solid var(--muted-text); color: var(--muted-text); width: 100%; padding: 12px; margin-bottom: 25px; border-radius: 12px; font-size: 0.95rem; cursor: pointer;">
             📜 Ver Mis Lecturas Anteriores
@@ -125,7 +126,7 @@
         <button class="back-btn" onclick="volverAPortada()">⬅ Volver al Menú</button>
     </div>
 
-    <!-- NUEVA PANTALLA PREMIUM: CUADRO DE TEXTO PARA PREGUNTA ESPECÍFICA -->
+    <!-- PANTALLA PREMIUM: CUADRO DE TEXTO PARA PREGUNTA ESPECÍFICA -->
     <div id="screen-pregunta" class="screen hidden">
         <h3 style="color: var(--accent);">🔮 Consulta Específica</h3>
         <p style="font-size: 0.9rem; color: var(--muted-text); margin-bottom: 20px;">
@@ -174,13 +175,13 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button onclick="reproducirVoz('predicciones')" class="btn-audio-predicciones">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                
+            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                                                  
         </div>
 
         <!-- CAJA DE TEXTO PARA LA INTERPRETACIÓN -->
         <div class="reading-output" id="interpretation-text"></div>
 
-        <!-- NUEVA SECCIÓN PREMIUM: CAJA DE RE-PREGUNTA -->
+        <!-- SECCIÓN PREMIUM: CAJA DE RE-PREGUNTA -->
         <div id="contenedor-repregunta" class="voice-panel hidden" style="display: flex; flex-direction: column; gap: 10px; padding: 15px; background: rgba(147, 51, 234, 0.05); border: 1px dashed rgba(147, 51, 234, 0.3);">
             <h4 style="color: #a855f7; margin: 0; font-size: 0.95rem; text-align: left;">✨ ¿Te quedó alguna duda? Preguntale a Tara:</h4>
             <textarea id="texto-repregunta" rows="2" placeholder="Ej: ¿Qué significa esa Muerte en el futuro si sigo con mi plan?..." style="width: 100%; background: #07030d; color: #fff; border: 1px solid rgba(255, 215, 0, 0.2); padding: 10px; border-radius: 8px; font-size: 0.95rem; outline: none; resize: none; box-sizing: border-box; font-family: inherit;"></textarea>
@@ -240,7 +241,8 @@
 
         <button class="back-btn" onclick="volverAPortada()" style="margin-top: 25px; width: 100%;">⬅ Volver al Menú Principal</button>
     </div>
-        <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
+
+    <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
     <div id="screen-historial" class="screen hidden">
         <h3 style="color: var(--accent); margin-top: 0;">📜 Historial de Lecturas</h3>
         <p style="font-size: 0.85rem; color: var(--muted-text); margin-bottom: 20px;">

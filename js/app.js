@@ -46,11 +46,19 @@ function canjearCodigoPremium(codigoIntroducido) {
     }
 }
 
-// ==========================================
-// NAVEGACIÓN ENTRE PANTALLAS (CORREGIDO)
-// ==========================================
+// =========================================================
+// 1. NAVEGACIÓN ENTRE PANTALLAS (SIN PANTALLAS EN BLANCO)
+// =========================================================
 function ocultarTodasLasPantallas() {
-    const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial', 'screen-modulo-profesional'];
+    const screens = [
+        'screen-portada', 
+        'screen-fisico', 
+        'screen-selector', 
+        'screen-pregunta', 
+        'screen-result', 
+        'screen-historial', 
+        'screen-modulo-profesional'
+    ];
     screens.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -61,11 +69,14 @@ function ocultarTodasLasPantallas() {
 }
 
 function irAlEjeConsulta(estilo) {
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    
+    // Configuración de estados de lectura digital limpia
     estiloSeleccionado = estilo;
     modoFisicoActivo = false; 
-    cartasFisicasElegidas = []; // Limpiamos selección previa digital
+    cartasFisicasElegidas = []; 
     
+    // El botón de pregunta específica solo se muestra si venimos de un modo digital premium
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
         btnPregunta.style.display = 'block'; 
@@ -91,9 +102,10 @@ function abrirPantallaPregunta() {
 }
 
 function volverAPortada() {
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     modoFisicoActivo = false; 
     
+    // Limpieza de selects físicos por si se retrocede
     for (let i = 1; i <= 4; i++) {
         const select = document.getElementById(`fisico-carta${i}`);
         if (select) select.selectedIndex = 0; 
@@ -108,7 +120,7 @@ function volverAPortada() {
 }
 
 function abrirModuloProfesional() {
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     ocultarTodasLasPantallas();
     const modProf = document.getElementById('screen-modulo-profesional');
     if (modProf) {
@@ -118,25 +130,22 @@ function abrirModuloProfesional() {
 }
 
 function volverInicio() {
-    window.speechSynthesis.cancel();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     modoFisicoActivo = false;
-    for (let i = 1; i <= 4; i++) {
-        const select = document.getElementById(`fisico-carta${i}`);
-        if (select) select.selectedIndex = 0; 
-    }
-    window.location.reload();
+    window.location.reload(); // Reseteo completo de la mesa para una nueva consulta limpia
 }
 
+
 // =========================================================
-// ACCESOS DESDE EL MÓDULO PROFESIONAL
+// 2. ENLACES Y ACCESOS DEL MÓDULO PROFESIONAL
 // =========================================================
 
-// 1. Modo Tarotista Digital (Cartas aleatorias, lectura técnica)
+// Opción 1: Modo Tarotista (Digital)
 function verificarAccesoTarotista() {
     irAlEjeConsulta('manual');
 }
 
-// 2. Tarotista con Mazo Físico (Cartas manuales, lectura técnica)
+// Opción 2: Tarotista con Mazo Físico
 function verificarAccesoTarotistaFisico() {
     estiloSeleccionado = 'manual'; 
     modoFisicoActivo = true; 
@@ -144,7 +153,7 @@ function verificarAccesoTarotistaFisico() {
     inicializarYMostrarPantallaFisica();
 }
 
-// 3. Mazo Físico Predictivo (Cartas manuales, lectura fluida/mágica)
+// Opción 3: Mazo Físico Predictivo
 function verificarAccesoFisico() {
     estiloSeleccionado = 'magico';
     modoFisicoActivo = true;
@@ -152,9 +161,10 @@ function verificarAccesoFisico() {
     inicializarYMostrarPantallaFisica();
 }
 
-// ==========================================
-// FLUJO DE MAZO FÍSICO
-// ==========================================
+
+// =========================================================
+// 3. FLUJO Y POBLADO DE CARTAS PARA EL MAZO FÍSICO
+// =========================================================
 function inicializarYMostrarPantallaFisica() {
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');
@@ -164,7 +174,7 @@ function inicializarYMostrarPantallaFisica() {
     }
     
     if (typeof arcanosCompleto === 'undefined') {
-        alert("❌ Error: No se encontró la lista de cartas 'arcanosCompleto'.");
+        alert("❌ Error crítico: No se encontró la base de datos 'arcanosCompleto' de arcanos.js.");
         return;
     }
     
@@ -172,7 +182,7 @@ function inicializarYMostrarPantallaFisica() {
     idsSelects.forEach(id => {
         const select = document.getElementById(id);
         if (select) {
-            select.innerHTML = ""; 
+            select.innerHTML = ""; // Limpieza profunda del elemento select
 
             let optDefault = document.createElement('option');
             optDefault.value = "";
@@ -181,7 +191,8 @@ function inicializarYMostrarPantallaFisica() {
             optDefault.selected = true;
             select.appendChild(optDefault);
             
-            const grupos = [
+            // Estructura ordenada de categorías del mazo de Tarot de 78 cartas
+            const deconstruccionMazo = [
                 { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
                 { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
                 { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
@@ -189,17 +200,17 @@ function inicializarYMostrarPantallaFisica() {
                 { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
             ];
 
-            grupos.forEach(g => {
-                let grupoElemento = document.createElement('optgroup');
-                grupoElemento.label = g.nombre;
+            deconstruccionMazo.forEach(grupo => {
+                let grupoOpt = document.createElement('optgroup');
+                grupoOpt.label = grupo.nombre;
                 
-                for (let i = g.inicio; i <= g.fin; i++) {
+                for (let i = grupo.inicio; i <= grupo.fin; i++) {
                     let opt = document.createElement('option');
                     opt.value = arcanosCompleto[i]; 
                     opt.innerText = arcanosCompleto[i];
-                    grupoElemento.appendChild(opt);
+                    grupoOpt.appendChild(opt);
                 }
-                select.appendChild(grupoElemento);
+                select.appendChild(grupoOpt);
             });
         }
     });
@@ -218,6 +229,7 @@ function irAlEjeFisico() {
 
     cartasFisicasElegidas = [c1, c2, c3, c4];
 
+    // Ocultamos la opción de pregunta libre para que no interfiera con el mazo físico cargado
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
         btnPregunta.style.display = 'none'; 
@@ -236,19 +248,20 @@ function irAlEjeFisico() {
     }
 }
 
-// ==========================================
-// DESPACHO LÓGICO DE LECTURAS (ARREGLADO)
-// ==========================================
+
+// =========================================================
+// 4. DESPACHO LÓGICO DE LECTURAS
+// =========================================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
         abrirPantallaPregunta();
         return;
     }
-    // Procesa directamente. Si modoFisicoActivo es true, usará cartasFisicasElegidas.
-    // Si es false (Modo Mágico/Filosófico digital), generará las 4 cartas aleatorias.
+    // Lanza directo a procesar la tirada. 
+    // Si modoFisicoActivo es true, usará las cargadas manualmente. 
+    // Si es false, procesarTiradaCompleta() creará la selección aleatoria digital sin fallar.
     procesarTiradaCompleta(tema, null);
 }
-
 function confirmarPreguntaYEjecutar() {
     const preguntaTexto = document.getElementById('texto-pregunta-usuario').value.trim();
     if (!preguntaTexto) {

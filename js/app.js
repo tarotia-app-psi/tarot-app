@@ -106,6 +106,15 @@ function volverAPortada() {
     }
 }
 
+function abrirModuloProfesional() {
+    window.speechSynthesis.cancel();
+    ocultarTodasLasPantallas();
+    const modProf = document.getElementById('screen-modulo-profesional');
+    if (modProf) {
+        modProf.classList.remove('hidden');
+        modProf.style.display = 'block';
+    }
+}
 function volverInicio() {
     window.speechSynthesis.cancel();
     modoFisicoActivo = false;

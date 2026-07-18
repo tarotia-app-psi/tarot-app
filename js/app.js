@@ -50,7 +50,7 @@ function canjearCodigoPremium(codigoIntroducido) {
 // NAVEGACIÓN ENTRE PANTALLAS
 // ==========================================
 function ocultarTodasLasPantallas() {
-    const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial'];
+    const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial', 'screen-modulo-profesional']; // <-- Agregada acá al final
     screens.forEach(id => {
         const el = document.getElementById(id);
         if (el) {

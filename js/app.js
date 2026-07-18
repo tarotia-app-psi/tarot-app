@@ -159,7 +159,7 @@ function verificarAccesoFisico() {
 // ==========================================
 function adquirirPasePremium() {
     // REEMPLAZA esta URL de ejemplo por tu link real de cobro de Mercado Pago, Stripe, etc.
-    const LINK_DE_PAGO_REAL = "https://link.mercadopago.com.ar/tu_usuario_tarot_premium"; 
+    const LINK_DE_PAGO_REAL = "google.com"; 
 
     if (LINK_DE_PAGO_REAL.includes("tu_usuario_tarot_premium")) {
         // Mensaje preventivo por si te olvidás de cambiar el link en desarrollo

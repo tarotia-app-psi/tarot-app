@@ -46,19 +46,11 @@ function canjearCodigoPremium(codigoIntroducido) {
     }
 }
 
-// =========================================================
-// 1. NAVEGACIÓN ENTRE PANTALLAS (SIN PANTALLAS EN BLANCO)
-// =========================================================
+// ==========================================
+// NAVEGACIÓN ENTRE PANTALLAS (CORREGIDO)
+// ==========================================
 function ocultarTodasLasPantallas() {
-    const screens = [
-        'screen-portada', 
-        'screen-fisico', 
-        'screen-selector', 
-        'screen-pregunta', 
-        'screen-result', 
-        'screen-historial', 
-        'screen-modulo-profesional'
-    ];
+    const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial', 'screen-modulo-profesional'];
     screens.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -70,13 +62,10 @@ function ocultarTodasLasPantallas() {
 
 function irAlEjeConsulta(estilo) {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-    
-    // Configuración de estados de lectura digital limpia
     estiloSeleccionado = estilo;
     modoFisicoActivo = false; 
-    cartasFisicasElegidas = []; 
+    cartasFisicasElegidas = []; // Limpiamos selección previa digital
     
-    // El botón de pregunta específica solo se muestra si venimos de un modo digital premium
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
         btnPregunta.style.display = 'block'; 
@@ -105,7 +94,6 @@ function volverAPortada() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     modoFisicoActivo = false; 
     
-    // Limpieza de selects físicos por si se retrocede
     for (let i = 1; i <= 4; i++) {
         const select = document.getElementById(`fisico-carta${i}`);
         if (select) select.selectedIndex = 0; 
@@ -132,20 +120,23 @@ function abrirModuloProfesional() {
 function volverInicio() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     modoFisicoActivo = false;
-    window.location.reload(); // Reseteo completo de la mesa para una nueva consulta limpia
+    for (let i = 1; i <= 4; i++) {
+        const select = document.getElementById(`fisico-carta${i}`);
+        if (select) select.selectedIndex = 0; 
+    }
+    window.location.reload();
 }
 
-
 // =========================================================
-// 2. ENLACES Y ACCESOS DEL MÓDULO PROFESIONAL
+// ACCESOS DESDE EL MÓDULO PROFESIONAL
 // =========================================================
 
-// Opción 1: Modo Tarotista (Digital)
+// 1. Modo Tarotista Digital (Cartas aleatorias, lectura técnica)
 function verificarAccesoTarotista() {
     irAlEjeConsulta('manual');
 }
 
-// Opción 2: Tarotista con Mazo Físico
+// 2. Tarotista con Mazo Físico (Cartas manuales, lectura técnica)
 function verificarAccesoTarotistaFisico() {
     estiloSeleccionado = 'manual'; 
     modoFisicoActivo = true; 
@@ -153,18 +144,21 @@ function verificarAccesoTarotistaFisico() {
     inicializarYMostrarPantallaFisica();
 }
 
-// Opción 3: Mazo Físico Predictivo
+// 3. Mazo Físico Predictivo (Cartas manuales, lectura fluida/mágica)
 function verificarAccesoFisico() {
+    if (!esUsuarioPremium && obtenerMuestrasFisicasRestantes() <= 0) {
+        alert("🧙‍♂️ Has agotado tus 5 muestras gratuitas de mazo físico. Adquiere el Pase Premium para continuar.");
+        return;
+    }
     estiloSeleccionado = 'magico';
     modoFisicoActivo = true;
     cartasFisicasElegidas = [];
     inicializarYMostrarPantallaFisica();
 }
 
-
-// =========================================================
-// 3. FLUJO Y POBLADO DE CARTAS PARA EL MAZO FÍSICO
-// =========================================================
+// ==========================================
+// FLUJO DE MAZO FÍSICO
+// ==========================================
 function inicializarYMostrarPantallaFisica() {
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');
@@ -174,7 +168,7 @@ function inicializarYMostrarPantallaFisica() {
     }
     
     if (typeof arcanosCompleto === 'undefined') {
-        alert("❌ Error crítico: No se encontró la base de datos 'arcanosCompleto' de arcanos.js.");
+        alert("❌ Error: No se encontró la lista de cartas 'arcanosCompleto'.");
         return;
     }
     
@@ -182,7 +176,7 @@ function inicializarYMostrarPantallaFisica() {
     idsSelects.forEach(id => {
         const select = document.getElementById(id);
         if (select) {
-            select.innerHTML = ""; // Limpieza profunda del elemento select
+            select.innerHTML = ""; 
 
             let optDefault = document.createElement('option');
             optDefault.value = "";
@@ -191,8 +185,7 @@ function inicializarYMostrarPantallaFisica() {
             optDefault.selected = true;
             select.appendChild(optDefault);
             
-            // Estructura ordenada de categorías del mazo de Tarot de 78 cartas
-            const deconstruccionMazo = [
+            const grupos = [
                 { nombre: "✨ Arcanos Mayores", inicio: 0, fin: 21 },
                 { nombre: "🌿 Palo de Bastos", inicio: 22, fin: 35 },
                 { nombre: "🏆 Palo de Copas", inicio: 36, fin: 49 },
@@ -200,17 +193,17 @@ function inicializarYMostrarPantallaFisica() {
                 { nombre: "🪙 Palo de Oros", inicio: 64, fin: 77 }
             ];
 
-            deconstruccionMazo.forEach(grupo => {
-                let grupoOpt = document.createElement('optgroup');
-                grupoOpt.label = grupo.nombre;
+            grupos.forEach(g => {
+                let grupoElemento = document.createElement('optgroup');
+                grupoElemento.label = g.nombre;
                 
-                for (let i = grupo.inicio; i <= grupo.fin; i++) {
+                for (let i = g.inicio; i <= g.fin; i++) {
                     let opt = document.createElement('option');
                     opt.value = arcanosCompleto[i]; 
                     opt.innerText = arcanosCompleto[i];
-                    grupoOpt.appendChild(opt);
+                    grupoElemento.appendChild(opt);
                 }
-                select.appendChild(grupoOpt);
+                select.appendChild(grupoElemento);
             });
         }
     });
@@ -229,7 +222,6 @@ function irAlEjeFisico() {
 
     cartasFisicasElegidas = [c1, c2, c3, c4];
 
-    // Ocultamos la opción de pregunta libre para que no interfiera con el mazo físico cargado
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
         btnPregunta.style.display = 'none'; 
@@ -248,20 +240,17 @@ function irAlEjeFisico() {
     }
 }
 
-
-// =========================================================
-// 4. DESPACHO LÓGICO DE LECTURAS
-// =========================================================
+// ==========================================
+// DESPACHO LÓGICO DE LECTURAS (ARREGLADO)
+// ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
         abrirPantallaPregunta();
         return;
     }
-    // Lanza directo a procesar la tirada. 
-    // Si modoFisicoActivo es true, usará las cargadas manualmente. 
-    // Si es false, procesarTiradaCompleta() creará la selección aleatoria digital sin fallar.
     procesarTiradaCompleta(tema, null);
 }
+
 function confirmarPreguntaYEjecutar() {
     const preguntaTexto = document.getElementById('texto-pregunta-usuario').value.trim();
     if (!preguntaTexto) {
@@ -289,13 +278,11 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     let a, b, c, d;
 
     if (modoFisicoActivo) {
-        // Obtenemos las cartas seleccionadas
         const c1 = document.getElementById('fisico-carta1').value;
         const c2 = document.getElementById('fisico-carta2').value;
         const c3 = document.getElementById('fisico-carta3').value;
         const c4 = document.getElementById('fisico-carta4').value;
 
-        // Doble verificación de seguridad anti-nulos
         if (!c1 || !c2 || !c3 || !c4) {
             document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ Error: No se seleccionaron las 4 cartas físicas.</p>";
             return;
@@ -321,7 +308,6 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-c').innerText = c;
     document.getElementById('name-d').innerText = d;
     
-    // Carga de imágenes reales
     const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
 
     document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
@@ -336,7 +322,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 tema: tema,
-                pregunta: preguntaEspecifica, // Viaja de forma segura como string o null sin romper el backend
+                pregunta: preguntaEspecifica, 
                 a: a, b: b, c: c, d: d,
                 estilo: estiloSeleccionado
             })
@@ -348,7 +334,6 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             document.getElementById('interpretation-text').innerHTML = datos.lectura;
             ultimaLecturaGuardadaContexto = datos.lectura;
 
-            // No mostramos reproductores si el estilo es técnico ('manual')
             if (estiloSeleccionado !== 'manual') {
                 document.getElementById('voice-controls').classList.remove('hidden');
             }
@@ -425,46 +410,177 @@ async function enviarRepreguntaServidor() {
     }
 }
 
+// =========================================================
+// GESTIÓN DE MUESTRAS FÍSICAS Y HISTORIAL LOCAL
+// =========================================================
+function obtenerMuestrasFisicasRestantes() {
+    let muestras = localStorage.getItem('muestrasFisicasTarot');
+    if (muestras === null) {
+        localStorage.setItem('muestrasFisicasTarot', '5');
+        return 5;
+    }
+    return parseInt(muestras, 10);
+}
+
+function registrarUsoTiradaFisica() {
+    if (esUsuarioPremium) return;
+    let actuales = obtenerMuestrasFisicasRestantes();
+    if (actuales > 0) {
+        actuales--;
+        localStorage.setItem('muestrasFisicasTarot', actuales.toString());
+        actualizarBadgeMuestrasFisicas();
+    }
+}
+
+function actualizarBadgeMuestrasFisicas() {
+    const badge = document.getElementById('badge-fisico-muestra-prof');
+    if (badge) {
+        if (esUsuarioPremium) {
+            badge.innerText = "Ilimitado ✨";
+            badge.style.borderColor = "#a78bfa";
+        } else {
+            const restantes = obtenerMuestrasFisicasRestantes();
+            badge.innerText = `${restantes} Muestras`;
+        }
+    }
+}
+
+function guardarEnHistorialLocal(tema, cartas, lecturaHtml) {
+    try {
+        let historial = JSON.parse(localStorage.getItem('tarotHistorialLocal')) || [];
+        const nuevaLectura = {
+            id: Date.now(),
+            fecha: new Date().toLocaleDateString('es-AR'),
+            tema: tema,
+            cartas: cartas,
+            lectura: lecturaHtml
+        };
+        historial.unshift(nuevaLectura);
+        if (historial.length > 10) historial.pop(); // Guarda solo las últimas 10 lecturas
+        localStorage.setItem('tarotHistorialLocal', JSON.stringify(historial));
+    } catch (e) {
+        console.error("Error guardando historial:", e);
+    }
+}
+
+function abrirHistorial() {
+    ocultarTodasLasPantallas();
+    const screenHistorial = document.getElementById('screen-historial');
+    const contenedor = document.getElementById('lista-historial-contenedor');
+    
+    if (screenHistorial && contenedor) {
+        contenedor.innerHTML = "";
+        let historial = JSON.parse(localStorage.getItem('tarotHistorialLocal')) || [];
+        
+        if (historial.length === 0) {
+            contenedor.innerHTML = "<p style='color:var(--muted-text); text-align:center;'>No posees lecturas guardadas en este dispositivo.</p>";
+        } else {
+            historial.forEach(item => {
+                const bloque = document.createElement('div');
+                bloque.className = 'history-item';
+                bloque.style.cssText = "background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid rgba(255,255,255,0.05); margin-bottom:10px;";
+                bloque.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.85rem; color:#a855f7;">
+                        <span>📅 ${item.fecha}</span>
+                        <span>🔮 Eje: ${item.tema}</span>
+                    </div>
+                    <p style="font-size:0.9rem; margin: 0 0 10px 0; color:#ffd700;">🃏 ${item.cartas.a} • ${item.cartas.b} • ${item.cartas.c} • ${item.cartas.d}</p>
+                    <button onclick="cargarLecturaHistorial('${encodeURIComponent(item.lectura)}', '${item.tema}')" style="background:rgba(168,85,247,0.1); border:1px solid #a855f7; color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Revisar Interpretación</button>
+                `;
+                contenedor.appendChild(bloque);
+            });
+        }
+        screenHistorial.classList.remove('hidden');
+        screenHistorial.style.display = 'block';
+    }
+}
+
+function cargarLecturaHistorial(lecturaCodificada, tema) {
+    ocultarTodasLasPantallas();
+    const screenResult = document.getElementById('screen-result');
+    if (screenResult) {
+        document.getElementById('reading-theme-title').innerText = `Historial: Eje ${tema}`;
+        document.getElementById('interpretation-text').innerHTML = decodeURIComponent(lecturaCodificada);
+        
+        // Ocultar elementos visuales efímeros de la mesa de tirada viva
+        document.getElementById('name-a').innerText = "Guardada";
+        document.getElementById('name-b').innerText = "Guardada";
+        document.getElementById('name-c').innerText = "Guardada";
+        document.getElementById('name-d').innerText = "Guardada";
+        
+        document.getElementById('voice-controls').classList.add('hidden');
+        document.getElementById('contenedor-repregunta').classList.add('hidden');
+        
+        screenResult.classList.remove('hidden');
+        screenResult.style.display = 'block';
+    }
+}
+
 // ==========================================
 // SINTETIZADOR DE VOZ
 // ==========================================
 function reproducirVoz(tipo) {
+    if (!window.speechSynthesis) {
+        alert("Tu navegador no soporta síntesis de voz.");
+        return;
+    }
     window.speechSynthesis.cancel();
+    
+    let contenedor = document.getElementById('interpretation-text');
+    if (!contenedor) return;
+
     let textoA_Leer = "";
 
     if (tipo === 'todo') {
-        textoA_Leer = document.getElementById('interpretation-text').innerText;
+        textoA_Leer = contenedor.innerText;
     } else if (tipo === 'conclusion') {
-        const conclusionSpan = document.getElementById('conclusion');
-        textoA_Leer = conclusionSpan ? conclusionSpan.innerText : "No se encontró el consejo final.";
-    } else if (tipo === 'predicciones') {
-        // 🔥 BUSQUEDA DINÁMICA: Buscamos el h3 de Predicciones dentro del contenedor
-        const contenedor = document.getElementById('interpretation-text');
-        const encabezados = contenedor ? contenedor.getElementsByTagName('h3') : [];
-        let h3Predicciones = null;
-
-        // Buscamos cuál h3 contiene la palabra "Predicciones"
-        for (let h3 of encabezados) {
-            if (h3.innerText.includes('Predicciones')) {
-                h3Predicciones = h3;
-                break;
+        // Busca h3 o secciones que contengan la conclusión típica de la IA
+        let secciones = contenedor.querySelectorAll('h3, p, div');
+        let banderaEncontrado = false;
+        secciones.forEach(el => {
+            if (el.innerText.toLowerCase().includes('conclusión') || el.innerText.toLowerCase().includes('síntesis')) {
+                banderaEncontrado = true;
+            }
+            if (banderaEncontrado) {
+                textoA_Leer += " " + el.innerText;
+            }
+        });
+        // Si no detecta una etiqueta explícita de conclusión, lee los últimos párrafos
+        if (!textoA_Leer) {
+            let ps = contenedor.querySelectorAll('p');
+            if (ps.length > 0) {
+                textoA_Leer = ps[ps.length - 1].innerText;
             }
         }
-
-        if (h3Predicciones && h3Predicciones.nextElementSibling) {
-            // Tomamos el texto del párrafo (<p>) que está justo abajo del h3
-            textoA_Leer = h3Predicciones.nextElementSibling.innerText;
-        } else {
-            textoA_Leer = "No se encontraron las predicciones en esta lectura.";
-        }
+    } else if (tipo === 'predicciones') {
+        // Lee los bloques asociados a proyecciones futuras
+        let secciones = contenedor.querySelectorAll('h3, p');
+        let capturar = false;
+        secciones.forEach(el => {
+            if (el.innerText.toLowerCase().includes('futuro') || el.innerText.toLowerCase().includes('evolución')) {
+                capturar = true;
+            } else if (el.tagName === 'H3' && capturar) {
+                capturar = false; // Frena al encontrarse el siguiente bloque técnico
+            }
+            if (capturar) {
+                textoA_Leer += " " + el.innerText;
+            }
+        });
     }
 
-    if (textoA_Leer) {
-        const utterance = new SpeechSynthesisUtterance(textoA_Leer);
-        utterance.lang = 'es-ES';
-        utterance.rate = 0.95;
-        window.speechSynthesis.speak(utterance);
+    if (!textoA_Leer.trim()) {
+        textoA_Leer = contenedor.innerText; // Fallback completo si el parseo falla
     }
+
+    // Limpieza básica de caracteres residuales antes de mandar al motor TTS
+    textoA_Leer = textoA_Leer.replace(/[❌✨🔮🌗🌿🏆⚔️🪙🧙‍♂️]/g, '');
+
+    let utterance = new SpeechSynthesisUtterance(textoA_Leer);
+    utterance.lang = 'es-AR'; // Localización Argentina por defecto para Tara
+    utterance.rate = 1.0;
+    utterance.pitch = 1.1; // Tono sutilmente celestial
+
+    window.speechSynthesis.speak(utterance);
 }
 
 // ==========================================

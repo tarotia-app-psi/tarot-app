@@ -276,7 +276,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     screenResult.style.display = 'block';
 
     document.getElementById('reading-theme-title').innerText = `Consultando Oráculo: Eje ${tema}`;
-    document.getElementById('interpretation-text').innerHTML = "<p class='loading-cosmico'>✨ Conectando con los planos superiores de Tara... Interpretando arquetipos...</p>";
+    document.getElementById('interpretation-text').innerHTML = "<p class='loading-cosmico'>✨ Conectando con los planos superiores del Tarot... Interpretando arquetipos...</p>";
     
     document.getElementById('voice-controls').classList.add('hidden');
     document.getElementById('contenedor-repregunta').classList.add('hidden');

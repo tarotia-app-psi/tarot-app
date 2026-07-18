@@ -192,7 +192,55 @@
         <button class="back-btn" onclick="volverInicio()" style="margin-top: 25px;">Nueva Consulta</button>
     </div>
 
-    <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
+    <!-- PANTALLA NUEVA: SUB-MENÚ MÓDULO PROFESIONAL -->
+    <div id="screen-modulo-profesional" class="screen hidden" style="display: none;">
+        <h2 style="color: #a78bfa; margin-bottom: 5px;">💼 Módulo Profesional</h2>
+        <p style="font-size: 0.95rem; color: #ccc; margin-bottom: 25px;">
+            Utilizá el poder de la IA para dar consultas a tus propios clientes, estudiar estructuras o potenciar tu negocio:
+        </p>
+
+        <div class="menu-portada">
+            <!-- 1. MODO TAROTISTA DIGITAL -->
+            <div class="opcion-tarjeta" style="border-color: rgba(167, 139, 250, 0.4);" onclick="verificarAccesoTarotista()">
+                <div class="opcion-icono">📖</div>
+                <div class="opcion-info">
+                    <h3>Modo Tarotista (Digital)</h3>
+                    <p>Significados técnicos y objetivos en pantalla para interpretar de forma autónoma.</p>
+                </div>
+            </div>
+
+            <!-- 2. TAROTISTA CON MAZO FÍSICO -->
+            <div class="opcion-tarjeta" style="border-color: rgba(167, 139, 250, 0.5);" onclick="verificarAccesoTarotistaFisico()">
+                <div class="opcion-icono">📖🃏</div>
+                <div class="opcion-info">
+                    <h3>Tarotista con Mazo Físico</h3>
+                    <p>Tirá tus cartas reales y obtené el desglose analítico y estructural de las duplas.</p>
+                </div>
+            </div>
+
+            <!-- 3. PARA MAZO FÍSICO TRADICIONAL -->
+            <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="verificarAccesoFisico()">
+                <div class="opcion-icono">🃏</div>
+                <div class="opcion-info">
+                    <h3>Mazo Físico Predictivo <span id="badge-fisico-muestra-prof" style="color: #ffd700; font-size: 0.75rem; font-weight: bold; background: rgba(255,215,0,0.1); padding: 1px 4px; border-radius: 4px;">5 Muestras</span></h3>
+                    <p>Ingresá las cartas de tus clientes y obtené la traducción fluida de la IA.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 💡 SECCIÓN EDUCATIVA / GUÍA DE NEGOCIO -->
+        <div class="banner-suscripcion" style="background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(167, 139, 250, 0.3); margin-top: 25px;">
+            <h4 style="color: #ffd700; margin-top: 0;">💡 ¿Cómo usar este módulo para ganar dinero?</h4>
+            <p style="font-size: 0.85rem; color: #b3a7c4; text-align: left; line-height: 1.4; margin-bottom: 0;">
+                <b>Paso 1:</b> Atendé a tu cliente de forma presencial o virtual. <br>
+                <b>Paso 2:</b> Usá el modo <i>"Mazo Físico Predictivo"</i> para que la IA redacte la lectura por vos en segundos. <br>
+                <b>Paso 3:</b> Si el cliente te hace repreguntas difíciles, usá el botón de la IA para responderle con precisión profesional al instante. ¡Cobrá por tus lecturas y recuperá tu pase premium en el primer día!
+            </p>
+        </div>
+
+        <button class="back-btn" onclick="volverAPortada()" style="margin-top: 25px; width: 100%;">⬅ Volver al Menú Principal</button>
+    </div>
+        <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
     <div id="screen-historial" class="screen hidden">
         <h3 style="color: var(--accent); margin-top: 0;">📜 Historial de Lecturas</h3>
         <p style="font-size: 0.85rem; color: var(--muted-text); margin-bottom: 20px;">

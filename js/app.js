@@ -553,51 +553,79 @@ function reproducirVoz(tipo) {
     if (tipo === 'todo') {
         textoA_Leer = contenedor.innerText;
     } else if (tipo === 'conclusion') {
-        // Busca h3 o secciones que contengan la conclusión típica de la IA
-        let secciones = contenedor.querySelectorAll('h3, p, div');
+        let secciones = contenedor.querySelectorAll('h3, p, div, li');
         let banderaEncontrado = false;
+        
         secciones.forEach(el => {
-            if (el.innerText.toLowerCase().includes('conclusión') || el.innerText.toLowerCase().includes('síntesis')) {
+            const textoLimpio = el.innerText.toLowerCase();
+            if (textoLimpio.includes('conclusión') || textoLimpio.includes('síntesis') || textoLimpio.includes('resumen') || textoLimpio.includes('consejo final')) {
                 banderaEncontrado = true;
             }
             if (banderaEncontrado) {
                 textoA_Leer += " " + el.innerText;
             }
         });
-        // Si no detecta una etiqueta explícita de conclusión, lee los últimos párrafos
-        if (!textoA_Leer) {
-            let ps = contenedor.querySelectorAll('p');
+
+        // Fallback Conclusión: si falla el parseo, extrae los dos últimos párrafos
+        if (!textoA_Leer.trim()) {
+            let ps = contenedor.querySelectorAll('p, li');
             if (ps.length > 0) {
-                textoA_Leer = ps[ps.length - 1].innerText;
+                let inicio = Math.max(0, ps.length - 2);
+                for (let i = inicio; i < ps.length; i++) {
+                    textoA_Leer += " " + ps[i].innerText;
+                }
             }
         }
     } else if (tipo === 'predicciones') {
-        // Lee los bloques asociados a proyecciones futuras
-        let secciones = contenedor.querySelectorAll('h3, p');
+        // Busca bloques asociados a proyecciones futuras de forma flexible
+        let secciones = contenedor.querySelectorAll('h3, p, div, li');
         let capturar = false;
+
         secciones.forEach(el => {
-            if (el.innerText.toLowerCase().includes('futuro') || el.innerText.toLowerCase().includes('evolución')) {
+            const textoLimpio = el.innerText.toLowerCase();
+            
+            // Si detecta palabras clave del bloque futuro, empieza a capturar
+            if (textoLimpio.includes('futuro') || textoLimpio.includes('evolución') || textoLimpio.includes('proyección') || textoLimpio.includes('resultado')) {
                 capturar = true;
-            } else if (el.tagName === 'H3' && capturar) {
-                capturar = false; // Frena al encontrarse el siguiente bloque técnico
+            } 
+            // Frena la captura si entra a la conclusión final para no mezclar bloques
+            else if (capturar && (textoLimpio.includes('conclusión') || textoLimpio.includes('consejo final'))) {
+                capturar = false;
             }
+
             if (capturar) {
                 textoA_Leer += " " + el.innerText;
             }
         });
+
+        // Fallback Predicciones Seguro: Si no detectó los encabezados del backend, 
+        // toma la segunda mitad de los párrafos del texto (donde lógicamente se ubica el futuro)
+        if (!textoA_Leer.trim()) {
+            let ps = contenedor.querySelectorAll('p');
+            if (ps.length >= 2) {
+                let mitad = Math.floor(ps.length / 2);
+                for (let i = mitad; i < ps.length; i++) {
+                    if (!ps[i].innerText.toLowerCase().includes('conclusión')) {
+                        textoA_Leer += " " + ps[i].innerText;
+                    }
+                }
+            }
+        }
     }
 
+    // Fallback crítico final si todo lo anterior falló por completo
     if (!textoA_Leer.trim()) {
-        textoA_Leer = contenedor.innerText; // Fallback completo si el parseo falla
+        textoA_Leer = contenedor.innerText; 
     }
 
-    // Limpieza básica de caracteres residuales antes de mandar al motor TTS
-    textoA_Leer = textoA_Leer.replace(/[❌✨🔮🌗🌿🏆⚔️🪙🧙‍♂️]/g, '');
+    // Limpieza profunda de emojis y caracteres especiales para que el motor de voz no haga pausas raras
+    textoA_Leer = textoA_Leer.replace(/[❌✨🔮🌗🌿🏆⚔️🪙🧙‍♂️💼🚀📚🔍🌓]/g, '');
+    textoA_Leer = textoA_Leer.replace(/\s+/g, ' ').trim(); // Normaliza espacios en blanco
 
     let utterance = new SpeechSynthesisUtterance(textoA_Leer);
-    utterance.lang = 'es-AR'; // Localización Argentina por defecto para Tara
-    utterance.rate = 1.0;
-    utterance.pitch = 1.1; // Tono sutilmente celestial
+    utterance.lang = 'es-AR'; // Localización nativa
+    utterance.rate = 1.05;    // Fluidez mejorada
+    utterance.pitch = 1.05;   // Tono equilibrado
 
     window.speechSynthesis.speak(utterance);
 }

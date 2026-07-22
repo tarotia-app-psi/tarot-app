@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <!-- 🔥 UNIFICADO: MÓDULO PROFESIONAL (PREMIUM) -->
+            <!-- MÓDULO PROFESIONAL (PREMIUM) -->
             <div class="opcion-tarjeta" style="border-color: #a78bfa; background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(167, 139, 250, 0.01));" onclick="abrirModuloProfesional()">
                 <div class="opcion-icono">💼</div>
                 <div class="opcion-info">
@@ -74,13 +74,9 @@
                 Adquirir Pase Premium ✨
             </button>
         </div>
-    </div> <!-- AQUÍ ESTABA EL ERROR: Se cerró correctamente la pantalla de portada -->
-
-    <!-- PANTALLA: CARGA DE MAZO FÍSICO -->
-    <div id="screen-physic" class="screen hidden" style="display: none;">
-        <!-- Se unificó el ID correcto para empatar con app.js -->
     </div>
 
+    <!-- PANTALLA: CARGA DE MAZO FÍSICO -->
     <div id="screen-fisico" class="screen hidden" style="display: none;">
         <h2 style="color: #ffd700; margin-bottom: 5px;">🔮 Mazo Físico</h2>
         <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">
@@ -125,7 +121,7 @@
     </div>
 
     <!-- PANTALLA 2: SELECCIÓN DEL EJE -->
-    <div id="screen-selector" class="screen hidden">
+    <div id="screen-selector" class="screen hidden" style="display: none;">
         <h3 id="titulo-eje-estilo">Selecciona el eje de tu consulta:</h3>
         <div class="theme-selector">
             <button onclick="ejecutarLecturaSegunModo('Amor')">❤️ Amor y Relaciones</button>
@@ -139,7 +135,7 @@
     </div>
 
     <!-- PANTALLA PREMIUM: CUADRO DE TEXTO PARA PREGUNTA ESPECÍFICA -->
-    <div id="screen-pregunta" class="screen hidden">
+    <div id="screen-pregunta" class="screen hidden" style="display: none;">
         <h3 style="color: var(--accent);">🔮 Consulta Específica</h3>
         <p style="font-size: 0.9rem; color: var(--muted-text); margin-bottom: 20px;">
             Escribí tu pregunta con la mayor claridad posible para que la IA adapte la lectura a tu situación real:
@@ -155,7 +151,7 @@
     </div>
 
     <!-- PANTALLA 3: MESA DE RESULTADOS -->
-    <div id="screen-result" class="screen hidden">
+    <div id="screen-result" class="screen hidden" style="display: none;">
         <h3 id="reading-theme-title" style="color: var(--accent); margin-top:0;"></h3>
         
         <div class="tarot-table">
@@ -187,7 +183,7 @@
         <div id="voice-controls" class="voice-panel hidden">
             <button class="btn-voice" onclick="reproducirVoz('todo')">🔊 Leer Todo</button>
             <button class="btn-voice" onclick="reproducirVoz('conclusion')">✨ Solo Conclusión</button>
-            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>                                                                                                                                                                                                                                                                                                                                
+            <button class="btn-audio-predicciones" onclick="reproducirVoz('predicciones')">🔮 Escuchar Predicciones</button>
         </div>
 
         <!-- CAJA DE TEXTO PARA LA INTERPRETACIÓN -->
@@ -205,7 +201,7 @@
         <button class="back-btn" onclick="volverInicio()" style="margin-top: 25px;">Nueva Consulta</button>
     </div>
 
-    <!-- PANTALLA NUEVA: SUB-MENÚ MÓDULO PROFESIONAL -->
+    <!-- PANTALLA: SUB-MENÚ MÓDULO PROFESIONAL -->
     <div id="screen-modulo-profesional" class="screen hidden" style="display: none;">
         <h2 style="color: #a78bfa; margin-bottom: 5px;">💼 Módulo Profesional</h2>
         <p style="font-size: 0.95rem; color: #ccc; margin-bottom: 25px;">
@@ -218,7 +214,7 @@
                 <div class="opcion-icono">📖</div>
                 <div class="opcion-info">
                     <h3>Modo Tarotista (Digital)</h3>
-                    <p>Significados técnicos y objectives en pantalla para interpretar de forma autónoma.</p>
+                    <p>Significados técnicos y objetivos en pantalla para interpretar de forma autónoma.</p>
                 </div>
             </div>
 
@@ -230,53 +226,7 @@
                     <p>Tirá tus cartas reales y obtené el desglose analítico y estructural de las duplas.</p>
                 </div>
             </div>
-<!-- PANTALLA / MODAL: GUÍA DE LECTURA DE TAROT -->
-<div id="screen-guia-lectura" class="hidden screen-container" style="display: none;">
-    <div class="guia-card" style="max-width: 600px; margin: 20px auto; padding: 20px; background: rgba(20, 15, 35, 0.95); border: 1px solid #a855f7; border-radius: 12px; color: #fff;">
-        <h2 style="color: #ffd700; text-align: center; margin-bottom: 20px;">
-            ✨ Guía Fundamental de Lectura de Tarot
-        </h2>
-        
-        <div class="guia-contenido" style="line-height: 1.6; color: #e2e8f0; font-size: 0.95rem;">
-            <p>
-                Este programa le brinda la posibilidad de tener un inicio en la lectura del tarot, la cual se basa en el principio de la <strong>sincronicidad del universo</strong>; también en que el universo quiere decirnos algo y en mostrar que tu alma está conectada a un todo, pudiendo transmitir o conseguir información para ti o para otra persona.
-            </p>
 
-            <blockquote style="border-left: 3px solid #a855f7; margin: 15px 0; background: rgba(168,85,247,0.1); padding: 10px; border-radius: 4px;">
-                <strong>El Sistema de Lectura por Duplas:</strong><br>
-                Le da una gran riqueza a los resultados por sobre otros sistemas. Cada dupla puede brindar un significado particular. Por ejemplo: si tuviéramos la dupla del <em>2 de Espadas</em> con <em>El Sol</em>, podemos interpretar simbólicamente que una persona atada o contenida se libera.
-            </blockquote>
-
-            <p>
-                En esta app, tenemos la <strong>Primer Dupla</strong>, que nos indica la <em>situación actual</em> de la persona, y la <strong>Dupla 2</strong>, que nos muestra <em>cómo desembocará la situación</em>.
-            </p>
-
-            <p>
-                En caso de que el tarot indique un resultado negativo, nos permite avisar al consultante que debe cambiar de dirección y energía.
-            </p>
-
-            <p>
-                💡 <em>Recomendación:</em> Es interesante usar los métodos de la app para tirar una pareja de duplas, y luego, si se quiere, otro par de duplas aclaratorias.
-            </p>
-
-            <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
-
-            <p>
-                🌌 Cada vez que estemos por consultar al tarot, debemos tener el deseo en nuestro interior de que el universo y las cartas nos indiquen la respuesta.
-            </p>
-
-            <p>
-                🃏 Si se usa un mazo físico, se debe barajar bien confiando en la sincronicidad del universo. Aunque sería más avanzado tocar las cartas y sentir en nuestro interior cuáles serían las correctas.
-            </p>
-        </div>
-
-        <div style="text-align: center; margin-top: 25px;">
-            <button onclick="volverAlModuloProfesional()" style="background: #a855f7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-                ⬅ Volver al Módulo Profesional
-            </button>
-        </div>
-    </div>
-</div>
             <!-- 3. PARA MAZO FÍSICO TRADICIONAL -->
             <div class="opcion-tarjeta" style="border-color: rgba(255,215,0,0.3);" onclick="verificarAccesoFisico()">
                 <div class="opcion-icono">🃏</div>
@@ -286,12 +236,13 @@
                 </div>
             </div>
         </div>
-             <!-- Botón para la guía de lectura -->
-            <button onclick="abrirGuiaLectura()" class="btn-profesional btn-guia-mística">
-             📖 Guía: ¿Cómo se lee el Tarot?
-      </button>
+
+        <!-- Botón para la guía de lectura -->
+        <button onclick="abrirGuiaLectura()" class="btn-profesional btn-guia-mistica" style="margin-top: 15px; width: 100%;">
+            📖 Guía: ¿Cómo se lee el Tarot?
+        </button>
         
-        <!-- 💡 SECCIÓN EDUCATIVA / GUÍA DE NEGOCIO -->
+        <!-- SECCIÓN EDUCATIVA / GUÍA DE NEGOCIO -->
         <div class="banner-suscripcion" style="background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(167, 139, 250, 0.3); margin-top: 25px;">
             <h4 style="color: #ffd700; margin-top: 0;">💡 ¿Cómo usar este módulo para ganar dinero?</h4>
             <p style="font-size: 0.85rem; color: #b3a7c4; text-align: left; line-height: 1.4; margin-bottom: 0;">
@@ -304,8 +255,56 @@
         <button class="back-btn" onclick="volverAPortada()" style="margin-top: 25px; width: 100%;">⬅ Volver al Menú Principal</button>
     </div>
 
+    <!-- PANTALLA: GUÍA DE LECTURA DE TAROT -->
+    <div id="screen-guia-lectura" class="screen hidden" style="display: none;">
+        <div class="guia-card" style="max-width: 600px; margin: 20px auto; padding: 20px; background: rgba(20, 15, 35, 0.95); border: 1px solid #a855f7; border-radius: 12px; color: #fff;">
+            <h2 style="color: #ffd700; text-align: center; margin-bottom: 20px;">
+                ✨ Guía Fundamental de Lectura de Tarot
+            </h2>
+            
+            <div class="guia-contenido" style="line-height: 1.6; color: #e2e8f0; font-size: 0.95rem;">
+                <p>
+                    Este programa le brinda la posibilidad de tener un inicio en la lectura del tarot, la cual se basa en el principio de la <strong>sincronicidad del universo</strong>; también en que el universo quiere decirnos algo y en mostrar que tu alma está conectada a un todo, pudiendo transmitir o conseguir información para ti o para otra persona.
+                </p>
+
+                <blockquote style="border-left: 3px solid #a855f7; margin: 15px 0; background: rgba(168,85,247,0.1); padding: 10px; border-radius: 4px;">
+                    <strong>El Sistema de Lectura por Duplas:</strong><br>
+                    Le da una gran riqueza a los resultados por sobre otros sistemas. Cada dupla puede brindar un significado particular. Por ejemplo: si tuviéramos la dupla del <em>2 de Espadas</em> con <em>El Sol</em>, podemos interpretar simbólicamente que una persona atada o contenida se libera.
+                </blockquote>
+
+                <p>
+                    En esta app, tenemos la <strong>Primer Dupla</strong>, que nos indica la <em>situación actual</em> de la persona, y la <strong>Dupla 2</strong>, que nos muestra <em>cómo desembocará la situación</em>.
+                </p>
+
+                <p>
+                    En caso de que el tarot indique un resultado negativo, nos permite avisar al consultante que debe cambiar de dirección y energía.
+                </p>
+
+                <p>
+                    💡 <em>Recomendación:</em> Es interesante usar los métodos de la app para tirar una pareja de duplas, y luego, si se quiere, otro par de duplas aclaratorias.
+                </p>
+
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+
+                <p>
+                    🌌 Cada vez que estemos por consultar al tarot, debemos tener el deseo en nuestro interior de que el universo y las cartas nos indiquen la respuesta.
+                </p>
+
+                <p>
+                    🃏 Si se usa un mazo físico, se debe barajar bien confiando en la sincronicidad del universo. Aunque sería más avanzado tocar las cartas y sentir en nuestro interior cuáles serían las correctas.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <button onclick="volverAlModuloProfesional()" style="background: #a855f7; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    ⬅ Volver al Módulo Profesional
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- PANTALLA 4: HISTORIAL DE LECTURAS -->
-    <div id="screen-historial" class="screen hidden">
+    <div id="screen-historial" class="screen hidden" style="display: none;">
         <h3 style="color: var(--accent); margin-top: 0;">📜 Historial de Lecturas</h3>
         <p style="font-size: 0.85rem; color: var(--muted-text); margin-bottom: 20px;">
             Aquí se guardan tus últimas consultas del dispositivo.

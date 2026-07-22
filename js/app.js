@@ -691,7 +691,28 @@ function irAlEjeFisico() {
         screenSelector.style.display = 'block';
     }
 }
+// ==========================================
+// PANTALLA GUÍA DE LECTURA DE TAROT
+// ==========================================
+function abrirGuiaLectura() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    ocultarTodasLasPantallas();
+    
+    const screenGuia = document.getElementById('screen-guia-lectura');
+    if (screenGuia) {
+        screenGuia.classList.remove('hidden');
+        screenGuia.style.display = 'block';
+    }
+}
 
+function volverAlModuloProfesional() {
+    ocultarTodasLasPantallas();
+    const modProf = document.getElementById('screen-modulo-profesional');
+    if (modProf) {
+        modProf.classList.remove('hidden');
+        modProf.style.display = 'block';
+    }
+}
 // ==========================================
 // DESPACHO LÓGICO DE LECTURAS
 // ==========================================

@@ -607,6 +607,17 @@ function reproducirVoz(tipo) {
 // FLUJO DE MAZO FÍSICO
 // ==========================================
 function inicializarYMostrarPantallaFisica() {
+    if (!esUsuarioPremium) {
+        const restantes = obtenerMuestrasFisicasRestantes();
+        if (restantes <= 0) {
+            alert("🔮 Has alcanzado el límite de lecturas con Mazo Físico del modo gratuito.\n\nDesbloquea Tarotia Premium para realizar tiradas de mazo físico ilimitadas y re-preguntar al oráculo.");
+            if (typeof abrirModalSuscripcion === 'function') {
+                abrirModalSuscripcion();
+            }
+            return;
+        }
+    }
+
     ocultarTodasLasPantallas();
     const screenFisico = document.getElementById('screen-fisico');
     if (screenFisico) {
@@ -656,6 +667,8 @@ function inicializarYMostrarPantallaFisica() {
             });
         }
     });
+
+    actualizarBadgeMuestrasFisicas();
 }
 
 function irAlEjeFisico() {
@@ -691,6 +704,7 @@ function irAlEjeFisico() {
         screenSelector.style.display = 'block';
     }
 }
+
 // ==========================================
 // PANTALLA GUÍA DE LECTURA DE TAROT
 // ==========================================
@@ -713,9 +727,6 @@ function volverAlModuloProfesional() {
         modProf.style.display = 'block';
     }
 }
-// ==========================================
-// DESPACHO LÓGICO DE LECTURAS
-// ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
         abrirPantallaPregunta();

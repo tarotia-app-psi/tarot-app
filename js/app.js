@@ -50,7 +50,15 @@ function canjearCodigoPremium(codigoIntroducido) {
 // NAVEGACIÓN ENTRE PANTALLAS
 // ==========================================
 function ocultarTodasLasPantallas() {
-    const screens = ['screen-portada', 'screen-fisico', 'screen-selector', 'screen-pregunta', 'screen-result', 'screen-historial', 'screen-modulo-profesional'];
+    const screens = [
+        'screen-portada', 
+        'screen-fisico', 
+        'screen-selector', 
+        'screen-pregunta', 
+        'screen-result', 
+        'screen-historial', 
+        'screen-modulo-profesional'
+    ];
     screens.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -64,7 +72,7 @@ function irAlEjeConsulta(estilo) {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     estiloSeleccionado = estilo;
     modoFisicoActivo = false; 
-    cartasFisicasElegidas = []; // Limpiamos selección previa digital
+    cartasFisicasElegidas = []; 
     
     const btnPregunta = document.getElementById('btn-pregunta-especifica');
     if (btnPregunta) {
@@ -129,9 +137,9 @@ function volverInicio() {
     window.location.reload();
 }
 
-// =========================================================
+// ==========================================
 // ACCESOS DESDE EL MÓDULO PROFESIONAL
-// =========================================================
+// ==========================================
 
 function verificarAccesoTarotista() {
     irAlEjeConsulta('manual');
@@ -154,23 +162,20 @@ function verificarAccesoFisico() {
     cartasFisicasElegidas = [];
     inicializarYMostrarPantallaFisica();
 }
+
 // ==========================================
-// CONTROLADOR DE ADQUISICIÓN PREMIUM (PASARELA)
+// CONTROLADOR DE ADQUISICIÓN PREMIUM
 // ==========================================
 function adquirirPasePremium() {
-    // REEMPLAZA esta URL de ejemplo por tu link real de cobro de Mercado Pago, Stripe, etc.
     const LINK_DE_PAGO_REAL = "google.com"; 
 
     if (LINK_DE_PAGO_REAL.includes("tu_usuario_tarot_premium")) {
-        // Mensaje preventivo por si te olvidás de cambiar el link en desarrollo
         alert("🧙‍♂️ ¡El portal místico de pagos se está configurando!\n\nSi estás probando el sistema, podés introducir un código válido (como ADMIN2026, PASEMISTICO o TAROTGRATIS) en el casillero de cupones para forzar el modo Premium gratis.");
     } else {
-        // Redirecciona al usuario de forma segura a la pasarela de pagos en una pestaña externa
         window.open(LINK_DE_PAGO_REAL, '_blank');
     }
 }
 
-// Inicializador secundario para atajar clics nativos en enlaces de producción
 document.addEventListener("DOMContentLoaded", () => {
     const btnPremium = document.getElementById('btn-adquirir-premium') 
                     || document.getElementById('btn-premium') 
@@ -178,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnPremium) {
         btnPremium.addEventListener('click', (e) => {
-            // Evitamos que intente buscar una página relativa rota (como premium.html)
             e.preventDefault(); 
             adquirirPasePremium();
         });
@@ -186,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ==========================================
-// FLUJO INTERNO DE PANTALLA FISICA
+// FLUJO INTERNO DE PANTALLA FÍSICA
 // ==========================================
 function inicializarYMostrarPantallaFisica() {
     ocultarTodasLasPantallas();
@@ -220,11 +224,9 @@ function irAlEjeFisico() {
     if (screenSelector) {
         const tituloEje = document.getElementById('titulo-eje-estilo');
         if (tituloEje) {
-            if (estiloSeleccionado === 'manual') {
-                tituloEje.innerText = "Manual Tarotista: Selecciona el eje de estudio:";
-            } else {
-                tituloEje.innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
-            }
+            tituloEje.innerText = (estiloSeleccionado === 'manual') 
+                ? "Manual Tarotista: Selecciona el eje de estudio:" 
+                : "Mazo Físico: Selecciona el eje de tu consulta:";
         }
         screenSelector.classList.remove('hidden');
         screenSelector.style.display = 'block';
@@ -265,8 +267,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('reading-theme-title').innerText = `Consultando Oráculo: Eje ${tema}`;
     document.getElementById('interpretation-text').innerHTML = "<p class='loading-cosmico'>✨ Conectando con los planos superiores del Tarot... Interpretando arquetipos...</p>";
     
-    document.getElementById('voice-controls').classList.add('hidden');
-    document.getElementById('contenedor-repregunta').classList.add('hidden');
+    document.getElementById('voice-controls')?.classList.add('hidden');
+    document.getElementById('contenedor-repregunta')?.classList.add('hidden');
 
     let a, b, c, d;
 
@@ -283,8 +285,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
         cartasFisicasElegidas = [c1, c2, c3, c4];
         [a, b, c, d] = cartasFisicasElegidas;
     } else {
-        if (typeof arcanosCompleto === 'undefined') {
-            document.getElementById('interpretation-text').innerHTML = "Error: Mazo de arcanos no cargado en arcanos.js";
+        if (typeof arcanosCompleto === 'undefined' || !Array.isArray(arcanosCompleto)) {
+            document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444;'>Error: Mazo de arcanos no cargado en arcanos.js</p>";
             return;
         }
         let baraja = [...arcanosCompleto];
@@ -302,11 +304,13 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-d').innerText = d;
     
     const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
+    const formatearNombre = (nombre) => nombre.toLowerCase().trim().replace(/ /g, "_");
 
-    document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-d').innerHTML = '<img src="' + urlBaseCartas + d.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + d + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-a').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(a)}.jpg" alt="${a}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-b').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(b)}.jpg" alt="${b}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-c').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(c)}.jpg" alt="${c}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-d').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(d)}.jpg" alt="${d}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    
     ultimasCartasElegidasContexto = { a, b, c, d };
 
     try {
@@ -321,6 +325,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             })
         });
 
+        if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
+
         const datos = await response.json();
 
         if (datos.lectura) {
@@ -328,11 +334,11 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             ultimaLecturaGuardadaContexto = datos.lectura;
 
             if (estiloSeleccionado !== 'manual') {
-                document.getElementById('voice-controls').classList.remove('hidden');
+                document.getElementById('voice-controls')?.classList.remove('hidden');
             }
 
             if (esUsuarioPremium) {
-                document.getElementById('contenedor-repregunta').classList.remove('hidden');
+                document.getElementById('contenedor-repregunta')?.classList.remove('hidden');
                 const textRepregunta = document.getElementById('texto-repregunta');
                 if (textRepregunta) textRepregunta.value = "";
             }
@@ -348,7 +354,7 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
 
     } catch (err) {
         console.error("Error capturado:", err);
-        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render esté encendido.</p>";
+        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render esté encendido.</p>";
     }
 }
 
@@ -381,6 +387,8 @@ async function enviarRepreguntaServidor() {
             })
         });
 
+        if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
+
         const datos = await response.json();
 
         if (datos.respuesta && contenedorTexto) {
@@ -401,15 +409,14 @@ async function enviarRepreguntaServidor() {
             const textRepregunta = document.getElementById('texto-repregunta');
             if (textRepregunta) textRepregunta.value = "";
             
-            btn.innerText = "Enviar Re-pregunta Premium 🔮";
-            btn.disabled = false;
-            
             nuevaSeccion.scrollIntoView({ behavior: 'smooth' });
         } else {
-            throw new Error();
+            throw new Error("Sin respuesta en el payload JSON");
         }
     } catch (error) {
+        console.error("Error en re-pregunta:", error);
         alert("Hubo un corte en los planos sutiles. Intenta de nuevo.");
+    } finally {
         btn.innerText = "Enviar Re-pregunta Premium 🔮";
         btn.disabled = false;
     }
@@ -490,7 +497,7 @@ function abrirHistorial() {
                         <span>🔮 Eje: ${item.tema}</span>
                     </div>
                     <p style="font-size:0.9rem; margin: 0 0 10px 0; color:#ffd700;">🃏 ${item.cartas.a} • ${item.cartas.b} • ${item.cartas.c} • ${item.cartas.d}</p>
-                    <button onclick="cargarLecturaHistorial('${encodeURIComponent(item.lectura)}', '${item.tema}')" style="background:rgba(168,85,247,0.1); border:1px solid #a855f7; color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Revisar Interpretación</button>
+                    <button onclick="cargarLecturaHistorial(${item.id})" style="background:rgba(168,85,247,0.1); border:1px solid #a855f7; color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Revisar Interpretación</button>
                 `;
                 contenedor.appendChild(bloque);
             });
@@ -500,20 +507,28 @@ function abrirHistorial() {
     }
 }
 
-function cargarLecturaHistorial(lecturaCodificada, tema) {
+function cargarLecturaHistorial(idItem) {
+    let historial = JSON.parse(localStorage.getItem('tarotHistorialLocal')) || [];
+    const item = historial.find(element => element.id === idItem);
+
+    if (!item) {
+        alert("No se encontró la lectura seleccionada.");
+        return;
+    }
+
     ocultarTodasLasPantallas();
     const screenResult = document.getElementById('screen-result');
     if (screenResult) {
-        document.getElementById('reading-theme-title').innerText = `Historial: Eje ${tema}`;
-        document.getElementById('interpretation-text').innerHTML = decodeURIComponent(lecturaCodificada);
+        document.getElementById('reading-theme-title').innerText = `Historial: Eje ${item.tema}`;
+        document.getElementById('interpretation-text').innerHTML = item.lectura;
         
-        document.getElementById('name-a').innerText = "Guardada";
-        document.getElementById('name-b').innerText = "Guardada";
-        document.getElementById('name-c').innerText = "Guardada";
-        document.getElementById('name-d').innerText = "Guardada";
+        document.getElementById('name-a').innerText = item.cartas.a || "Guardada";
+        document.getElementById('name-b').innerText = item.cartas.b || "Guardada";
+        document.getElementById('name-c').innerText = item.cartas.c || "Guardada";
+        document.getElementById('name-d').innerText = item.cartas.d || "Guardada";
         
-        document.getElementById('voice-controls').classList.add('hidden');
-        document.getElementById('contenedor-repregunta').classList.add('hidden');
+        document.getElementById('voice-controls')?.classList.add('hidden');
+        document.getElementById('contenedor-repregunta')?.classList.add('hidden');
         
         screenResult.classList.remove('hidden');
         screenResult.style.display = 'block';
@@ -625,7 +640,7 @@ function inicializarYMostrarPantallaFisica() {
         screenFisico.style.display = 'block';
     }
     
-    if (typeof arcanosCompleto === 'undefined') {
+    if (typeof arcanosCompleto === 'undefined' || !Array.isArray(arcanosCompleto)) {
         alert("❌ Error: No se encontró la lista de cartas 'arcanosCompleto'.");
         return;
     }
@@ -668,7 +683,9 @@ function inicializarYMostrarPantallaFisica() {
         }
     });
 
-    actualizarBadgeMuestrasFisicas();
+    if (typeof actualizarBadgeMuestrasFisicas === 'function') {
+        actualizarBadgeMuestrasFisicas();
+    }
 }
 
 function irAlEjeFisico() {
@@ -688,8 +705,25 @@ function irAlEjeFisico() {
     if (btnPregunta) {
         btnPregunta.style.display = 'none'; 
     }
-    
- function ocultarTodasLasPantallas() {
+
+    ocultarTodasLasPantallas();
+    const screenSelector = document.getElementById('screen-selector');
+    if (screenSelector) {
+        const tituloEje = document.getElementById('titulo-eje-estilo');
+        if (tituloEje) {
+            tituloEje.innerText = (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado === 'manual') 
+                ? "Manual Tarotista: Selecciona el eje de estudio:" 
+                : "Mazo Físico: Selecciona el eje de tu consulta:";
+        }
+        screenSelector.classList.remove('hidden');
+        screenSelector.style.display = 'block';
+    }
+}
+
+// ==========================================
+// GESTIÓN DE VISTAS Y GUÍA
+// ==========================================
+function ocultarTodasLasPantallas() {
     const screens = [
         'screen-portada', 
         'screen-fisico', 
@@ -698,7 +732,7 @@ function irAlEjeFisico() {
         'screen-result', 
         'screen-historial', 
         'screen-modulo-profesional',
-        'screen-guia-lectura' // <-- Necesario para limpiar la pantalla correctamente
+        'screen-guia-lectura'
     ];
     
     screens.forEach(id => {
@@ -710,9 +744,6 @@ function irAlEjeFisico() {
     });
 }
 
-// ==========================================
-// PANTALLA GUÍA DE LECTURA DE TAROT
-// ==========================================
 function abrirGuiaLectura() {
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     ocultarTodasLasPantallas();
@@ -732,6 +763,10 @@ function volverAlModuloProfesional() {
         modProf.style.display = 'block';
     }
 }
+
+// ==========================================
+// EJECUCIÓN Y PROCESAMIENTO DE LECTURAS
+// ==========================================
 function ejecutarLecturaSegunModo(tema) {
     if (tema === 'Pregunta Específica') {
         abrirPantallaPregunta();
@@ -763,12 +798,12 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('reading-theme-title').innerText = `Consultando Oráculo: Eje ${tema}`;
     document.getElementById('interpretation-text').innerHTML = "<p class='loading-cosmico'>✨ Conectando con los planos superiores del Tarot... Interpretando arquetipos...</p>";
     
-    document.getElementById('voice-controls').classList.add('hidden');
-    document.getElementById('contenedor-repregunta').classList.add('hidden');
+    document.getElementById('voice-controls')?.classList.add('hidden');
+    document.getElementById('contenedor-repregunta')?.classList.add('hidden');
 
     let a, b, c, d;
 
-    if (modoFisicoActivo) {
+    if (typeof modoFisicoActivo !== 'undefined' && modoFisicoActivo) {
         const c1 = document.getElementById('fisico-carta1')?.value;
         const c2 = document.getElementById('fisico-carta2')?.value;
         const c3 = document.getElementById('fisico-carta3')?.value;
@@ -781,8 +816,8 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
         cartasFisicasElegidas = [c1, c2, c3, c4];
         [a, b, c, d] = cartasFisicasElegidas;
     } else {
-        if (typeof arcanosCompleto === 'undefined') {
-            document.getElementById('interpretation-text').innerHTML = "Error: Mazo de arcanos no cargado en arcanos.js";
+        if (typeof arcanosCompleto === 'undefined' || !Array.isArray(arcanosCompleto)) {
+            document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>Error: Mazo de arcanos no cargado en arcanos.js</p>";
             return;
         }
         let baraja = [...arcanosCompleto];
@@ -800,11 +835,13 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
     document.getElementById('name-d').innerText = d;
     
     const urlBaseCartas = "https://tarotia-app-psi.github.io/tarot-app/cartas/";
+    const formatearNombre = (nombre) => nombre.toLowerCase().trim().replace(/ /g, "_");
 
-    document.getElementById('img-a').innerHTML = '<img src="' + urlBaseCartas + a.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + a + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-b').innerHTML = '<img src="' + urlBaseCartas + b.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + b + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-c').innerHTML = '<img src="' + urlBaseCartas + c.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + c + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
-    document.getElementById('img-d').innerHTML = '<img src="' + urlBaseCartas + d.toLowerCase().replace(/ /g, "_") + '.jpg" alt="' + d + '" class="img-carta-tarot" onerror="this.src=\'reverso_filosofico.jpg\'">';
+    document.getElementById('img-a').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(a)}.jpg" alt="${a}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-b').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(b)}.jpg" alt="${b}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-c').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(c)}.jpg" alt="${c}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    document.getElementById('img-d').innerHTML = `<img src="${urlBaseCartas}${formatearNombre(d)}.jpg" alt="${d}" class="img-carta-tarot" onerror="this.src='reverso_filosofico.jpg'">`;
+    
     ultimasCartasElegidasContexto = { a, b, c, d };
 
     try {
@@ -815,9 +852,11 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
                 tema: tema,
                 pregunta: preguntaEspecifica, 
                 a: a, b: b, c: c, d: d,
-                estilo: estiloSeleccionado
+                estilo: typeof estiloSeleccionado !== 'undefined' ? estiloSeleccionado : 'magico'
             })
         });
+
+        if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
 
         const datos = await response.json();
 
@@ -825,28 +864,30 @@ async function procesarTiradaCompleta(tema, preguntaEspecifica = null) {
             document.getElementById('interpretation-text').innerHTML = datos.lectura;
             ultimaLecturaGuardadaContexto = datos.lectura;
 
-            if (estiloSeleccionado !== 'manual') {
-                document.getElementById('voice-controls').classList.remove('hidden');
+            if (typeof estiloSeleccionado !== 'undefined' && estiloSeleccionado !== 'manual') {
+                document.getElementById('voice-controls')?.classList.remove('hidden');
             }
 
-            if (esUsuarioPremium) {
-                document.getElementById('contenedor-repregunta').classList.remove('hidden');
+            if (typeof esUsuarioPremium !== 'undefined' && esUsuarioPremium) {
+                document.getElementById('contenedor-repregunta')?.classList.remove('hidden');
                 const textRepregunta = document.getElementById('texto-repregunta');
                 if (textRepregunta) textRepregunta.value = "";
             }
             
-            if (modoFisicoActivo) {
-                registrarUsoTiradaFisica();
+            if (typeof modoFisicoActivo !== 'undefined' && modoFisicoActivo) {
+                if (typeof registrarUsoTiradaFisica === 'function') registrarUsoTiradaFisica();
             }
             
-            guardarEnHistorialLocal(tema, { a, b, c, d }, datos.lectura);
+            if (typeof guardarEnHistorialLocal === 'function') {
+                guardarEnHistorialLocal(tema, { a, b, c, d }, datos.lectura);
+            }
         } else {
             throw new Error("Respuesta vacía del servidor");
         }
 
     } catch (err) {
         console.error("Error capturado:", err);
-        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render esté encendido.</p>";
+        document.getElementById('interpretation-text').innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ La tormenta magnética interrumpió la conexión espiritual. Por favor, verifica que tu servidor de Render esté encendido.</p>";
     }
 }
 
@@ -862,6 +903,7 @@ async function enviarRepreguntaServidor() {
 
     const btn = document.getElementById('btn-enviar-repregunta');
     if (!btn) return;
+    
     btn.disabled = true;
     btn.innerText = "Consultando al plano sutil... 🔮";
 
@@ -872,12 +914,14 @@ async function enviarRepreguntaServidor() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                cartas: ultimasCartasElegidasContexto,
-                lecturaAnterior: ultimaLecturaGuardadaContexto,
+                cartas: typeof ultimasCartasElegidasContexto !== 'undefined' ? ultimasCartasElegidasContexto : null,
+                lecturaAnterior: typeof ultimaLecturaGuardadaContexto !== 'undefined' ? ultimaLecturaGuardadaContexto : '',
                 repregunta: textoDuda,
-                estilo: estiloSeleccionado
+                estilo: typeof estiloSeleccionado !== 'undefined' ? estiloSeleccionado : 'magico'
             })
         });
+
+        if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
 
         const datos = await response.json();
 
@@ -899,17 +943,18 @@ async function enviarRepreguntaServidor() {
             const textRepregunta = document.getElementById('texto-repregunta');
             if (textRepregunta) textRepregunta.value = "";
             
-            btn.innerText = "Enviar Re-pregunta Premium 🔮";
-            btn.disabled = false;
-            
             nuevaSeccion.scrollIntoView({ behavior: 'smooth' });
         } else {
-            throw new Error();
+            throw new Error("Respuesta inválida del oráculo");
         }
     } catch (error) {
+        console.error("Error en re-pregunta:", error);
         alert("Hubo un corte en los planos sutiles. Intenta de nuevo.");
-        btn.innerText = "Enviar Re-pregunta Premium 🔮";
-        btn.disabled = false;
+    } finally {
+        if (btn) {
+            btn.innerText = "Enviar Re-pregunta Premium 🔮";
+            btn.disabled = false;
+        }
     }
 }
 
@@ -922,11 +967,11 @@ function obtenerMuestrasFisicasRestantes() {
         localStorage.setItem('muestrasFisicasTarot', '5');
         return 5;
     }
-    return parseInt(muestras, 10);
+    return parseInt(muestras, 10) || 0;
 }
 
 function registrarUsoTiradaFisica() {
-    if (esUsuarioPremium) return;
+    if (typeof esUsuarioPremium !== 'undefined' && esUsuarioPremium) return;
     let actuales = obtenerMuestrasFisicasRestantes();
     if (actuales > 0) {
         actuales--;
@@ -938,7 +983,7 @@ function registrarUsoTiradaFisica() {
 function actualizarBadgeMuestrasFisicas() {
     const badge = document.getElementById('badge-physic-muestra-prof') || document.getElementById('badge-fisico-muestra-prof');
     if (badge) {
-        if (esUsuarioPremium) {
+        if (typeof esUsuarioPremium !== 'undefined' && esUsuarioPremium) {
             badge.innerText = "Ilimitado ✨";
             badge.style.borderColor = "#a78bfa";
         } else {
@@ -967,7 +1012,9 @@ function guardarEnHistorialLocal(tema, cartas, lecturaHtml) {
 }
 
 function abrirHistorial() {
-    ocultarTodasLasPantallas();
+    if (typeof ocultarTodasLasPantallas === 'function') {
+        ocultarTodasLasPantallas();
+    }
     const screenHistorial = document.getElementById('screen-historial');
     const contenedor = document.getElementById('lista-historial-contenedor');
     
@@ -976,7 +1023,7 @@ function abrirHistorial() {
         let historial = JSON.parse(localStorage.getItem('tarotHistorialLocal')) || [];
         
         if (historial.length === 0) {
-            contenedor.innerHTML = "<p style='color:var(--muted-text); text-align:center;'>No posees lecturas guardadas en este dispositivo.</p>";
+            contenedor.innerHTML = "<p style='color:var(--muted-text, #888); text-align:center;'>No posees lecturas guardadas en este dispositivo.</p>";
         } else {
             historial.forEach(item => {
                 const bloque = document.createElement('div');
@@ -987,7 +1034,7 @@ function abrirHistorial() {
                         <span>📅 ${item.fecha}</span>
                         <span>🔮 Eje: ${item.tema}</span>
                     </div>
-                    <p style="font-size:0.9rem; margin: 0 0 10px 0; color:#ffd700;">🃏 ${item.cartas.a} • ${item.cartas.b} • ${item.cartas.c} • ${item.cartas.d}</p>
+                    <p style="font-size:0.9rem; margin: 0 0 10px 0; color:#ffd700;">🃏 ${item.cartas?.a || ''} • ${item.cartas?.b || ''} • ${item.cartas?.c || ''} • ${item.cartas?.d || ''}</p>
                     <button onclick="cargarLecturaHistorial('${encodeURIComponent(item.lectura)}', '${item.tema}')" style="background:rgba(168,85,247,0.1); border:1px solid #a855f7; color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Revisar Interpretación</button>
                 `;
                 contenedor.appendChild(bloque);
@@ -999,19 +1046,30 @@ function abrirHistorial() {
 }
 
 function cargarLecturaHistorial(lecturaCodificada, tema) {
-    ocultarTodasLasPantallas();
+    if (typeof ocultarTodasLasPantallas === 'function') {
+        ocultarTodasLasPantallas();
+    }
     const screenResult = document.getElementById('screen-result');
     if (screenResult) {
-        document.getElementById('reading-theme-title').innerText = `Historial: Eje ${tema}`;
-        document.getElementById('interpretation-text').innerHTML = decodeURIComponent(lecturaCodificada);
+        const titleEl = document.getElementById('reading-theme-title');
+        const textEl = document.getElementById('interpretation-text');
         
-        document.getElementById('name-a').innerText = "Guardada";
-        document.getElementById('name-b').innerText = "Guardada";
-        document.getElementById('name-c').innerText = "Guardada";
-        document.getElementById('name-d').innerText = "Guardada";
+        if (titleEl) titleEl.innerText = `Historial: Eje ${tema}`;
         
-        document.getElementById('voice-controls').classList.add('hidden');
-        document.getElementById('contenedor-repregunta').classList.add('hidden');
+        try {
+            if (textEl) textEl.innerHTML = decodeURIComponent(lecturaCodificada);
+        } catch (err) {
+            console.error("Error al decodificar la lectura guardada:", err);
+            if (textEl) textEl.innerHTML = "<p style='color:#ef4444;'>❌ Error al cargar esta lectura del historial.</p>";
+        }
+        
+        ['name-a', 'name-b', 'name-c', 'name-d'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = "Guardada";
+        });
+        
+        document.getElementById('voice-controls')?.classList.add('hidden');
+        document.getElementById('contenedor-repregunta')?.classList.add('hidden');
         
         screenResult.classList.remove('hidden');
         screenResult.style.display = 'block';

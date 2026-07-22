@@ -689,20 +689,25 @@ function irAlEjeFisico() {
         btnPregunta.style.display = 'none'; 
     }
     
-    ocultarTodasLasPantallas();
-    const screenSelector = document.getElementById('screen-selector');
-    if (screenSelector) {
-        const tituloEje = document.getElementById('titulo-eje-estilo');
-        if (tituloEje) {
-            if (estiloSeleccionado === 'manual') {
-                tituloEje.innerText = "Manual Tarotista: Selecciona el eje de estudio:";
-            } else {
-                tituloEje.innerText = "Mazo Físico: Selecciona el eje de tu consulta:";
-            }
+ function ocultarTodasLasPantallas() {
+    const screens = [
+        'screen-portada', 
+        'screen-fisico', 
+        'screen-selector', 
+        'screen-pregunta', 
+        'screen-result', 
+        'screen-historial', 
+        'screen-modulo-profesional',
+        'screen-guia-lectura' // <-- Necesario para limpiar la pantalla correctamente
+    ];
+    
+    screens.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add('hidden');
+            el.style.display = 'none';
         }
-        screenSelector.classList.remove('hidden');
-        screenSelector.style.display = 'block';
-    }
+    });
 }
 
 // ==========================================

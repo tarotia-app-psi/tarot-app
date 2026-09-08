@@ -716,23 +716,29 @@
 <script src="js/app.js?v=9"></script>
 
 <!-- NAVEGACIÓN INLINE v9 - Flujo corregido y limpio -->
+<!-- NAVEGACIÓN Y LÓGICA INLINE CORREGIDA Y SEGURA -->
 <script>
-window.preguntaCustomSeleccionada = "";
+// Usamos el AppState global definido en config.js para evitar variables sueltas
+window.AppState = window.AppState || {
+    modoFisicoActivo: false,
+    submodoFisicoActual: null,
+    cartasFisicoSeleccionadas: null,
+    estiloSeleccionado: 'magico',
+    preguntaCustom: '',
+    textoDupla1: '',
+    textoDupla2: ''
+};
 
-// Navegación robusta con fallback
+// Navegación robusta
 window.mostrarPantalla = function(id) {
     console.log('[nav] mostrarPantalla →', id);
-
-    // Detener voz
     if (window.speechSynthesis) window.speechSynthesis.cancel();
 
-    // Ocultar todas
     document.querySelectorAll('.screen').forEach(p => {
         p.style.display = 'none';
         p.classList.add('hidden');
     });
 
-    // Mostrar la solicitada
     const d = document.getElementById(id);
     if (d) {
         d.style.display = 'block';
@@ -742,7 +748,9 @@ window.mostrarPantalla = function(id) {
         window.scrollTo(0, 0);
     } else {
         console.error('[nav] No existe el elemento:', id);
-        alert('Error interno: pantalla ' + id + ' no encontrada. Recargá la página.');
+        if (typeof window.mostrarNotificacion === 'function') {
+            window.mostrarNotificacion('Error interno: pantalla no encontrada.', 'error');
+        }
     }
 
     if (id === 'screen-result') {
@@ -754,113 +762,116 @@ window.mostrarPantalla = function(id) {
     }
 };
 
-window.seleccionarEstiloAutomatico = function(estilo) {
-    if (typeof window.verificarAccesoEstilo === 'function') {
-        window.verificarAccesoEstilo(estilo);
-    } else {
-        window.estiloSeleccionado = estilo;
-        window.modoFisicoActivo = false;
-        window.preguntaCustomSeleccionada = "";
-        window.mostrarPantalla('screen-selector');
-    }
+window.abrirModuloProfesional = function() { 
+    window.mostrarPantalla('screen-modulo-profesional'); 
 };
 
-window.abrirModuloProfesional = function(){ window.mostrarPantalla('screen-modulo-profesional'); };
-
-window.abrirSeleccionFisico = async function(submodo){
-    if (typeof verificarAccesoFisico === 'function') {
-        await verificarAccesoFisico(submodo);
+window.abrirSeleccionFisico = async function(submodo) {
+    if (typeof window.verificarAccesoFisico === 'function') {
+        await window.verificarAccesoFisico(submodo);
     } else {
-        console.warn("[nav] access.js no cargó, abriendo sin verificar");
-        window.modoFisicoActivo=true; window.submodoFisicoActual=submodo;
-        localStorage.setItem('tarotia_submodo_fisico',submodo);
-        window.cartasFisicoSeleccionadas=null; window.preguntaCustomSeleccionada="";
-        if(typeof window.cargarSelectoresFisicos==='function') window.cargarSelectoresFisicos();
+        window.AppState.modoFisicoActivo = true; 
+        window.AppState.submodoFisicoActual = submodo;
+        window.safeStorage.setItem('tarotia_submodo_fisico', submodo);
+        window.AppState.cartasFisicoSeleccionadas = null; 
+        window.AppState.preguntaCustom = "";
+        if (typeof window.cargarSelectoresFisicos === 'function') window.cargarSelectoresFisicos();
         window.mostrarPantalla('screen-fisico');
     }
 };
 
-window.irAlEjeFisico = function(){
-    const c1=document.getElementById('fisico-carta1')?.value;
-    const c2=document.getElementById('fisico-carta2')?.value;
-    const c3=document.getElementById('fisico-carta3')?.value;
-    const c4=document.getElementById('fisico-carta4')?.value;
-    if(!c1||!c2||!c3||!c4){alert("⚠️ Seleccioná las 4 cartas.");return;}
-    if(new Set([c1,c2,c3,c4]).size!==4){alert("⚠️ No repetir cartas.");return;}
-    window.cartasFisicoSeleccionadas=[c1,c2,c3,c4];
-    const submodo=window.submodoFisicoActual||localStorage.getItem('tarotia_submodo_fisico');
-    if(submodo==='tarotista_fisico'){
+window.irAlEjeFisico = function() {
+    const c1 = document.getElementById('fisico-carta1')?.value;
+    const c2 = document.getElementById('fisico-carta2')?.value;
+    const c3 = document.getElementById('fisico-carta3')?.value;
+    const c4 = document.getElementById('fisico-carta4')?.value;
+    
+    if (!c1 || !c2 || !c3 || !c4) {
+        if (typeof window.mostrarNotificacion === 'function') window.mostrarNotificacion("⚠️ Seleccioná las 4 cartas.", "error");
+        return;
+    }
+    if (new Set([c1, c2, c3, c4]).size !== 4) {
+        if (typeof window.mostrarNotificacion === 'function') window.mostrarNotificacion("⚠️ No se pueden repetir cartas.", "error");
+        return;
+    }
+    
+    window.AppState.cartasFisicoSeleccionadas = [c1, c2, c3, c4];
+    const submodo = window.AppState.submodoFisicoActual || window.safeStorage.getItem('tarotia_submodo_fisico');
+    
+    if (submodo === 'tarotista_fisico') {
         window.mostrarPantalla('screen-result');
-        setTimeout(()=>{ if(typeof window.procesarTiradaEstructural==='function') window.procesarTiradaEstructural(); },150);
+        setTimeout(() => { 
+            if (typeof window.procesarTiradaEstructural === 'function') window.procesarTiradaEstructural(); 
+        }, 150);
         return;
     }
     window.mostrarPantalla('screen-selector');
 };
 
-window.abrirPantallaPregunta=function(){document.getElementById('texto-pregunta-usuario').value="";window.mostrarPantalla('screen-pregunta');};
-window.confirmarPreguntaYEjecutar=function(){
-    window.preguntaCustomSeleccionada=document.getElementById('texto-pregunta-usuario').value.trim();
-    if(!window.preguntaCustomSeleccionada){alert("⚠️ Escribí tu pregunta.");return;}
-    window.ejecutarLecturaSegunModo('Pregunta Específica');
+window.abrirPantallaPregunta = function() {
+    document.getElementById('texto-pregunta-usuario').value = "";
+    window.mostrarPantalla('screen-pregunta');
 };
-window.ejecutarLecturaSegunModo = function(tema) {
-    console.log("[nav] ejecutarLecturaSegunModo - tema:", tema, "modoFisico:", window.modoFisicoActivo);
-    if (window.modoFisicoActivo && !window.cartasFisicoSeleccionadas) {
-        console.warn("[nav] Modo físico activo pero sin cartas. Generando automáticas...");
-        window.modoFisicoActivo = false;
+
+window.confirmarPreguntaYEjecutar = function() {
+    window.AppState.preguntaCustom = document.getElementById('texto-pregunta-usuario').value.trim();
+    if (!window.AppState.preguntaCustom) {
+        if (typeof window.mostrarNotificacion === 'function') window.mostrarNotificacion("⚠️ Escribí tu pregunta.", "error");
+        return;
     }
+    if (typeof window.ejecutarLecturaSegunModo === 'function') {
+        window.ejecutarLecturaSegunModo('Pregunta Específica');
+    }
+};
+
+window.ejecutarLecturaSegunModo = function(tema) {
+    console.log("[nav] ejecutarLecturaSegunModo - tema:", tema, "modoFisico:", window.AppState.modoFisicoActivo);
+    
+    if (window.AppState.modoFisicoActivo && !window.AppState.cartasFisicoSeleccionadas) {
+        console.warn("[nav] Modo físico activo pero sin cartas. Generando automáticas...");
+        window.AppState.modoFisicoActivo = false;
+    }
+    
     if (typeof window.procesarTiradaCompleta === 'function') {
-        window.procesarTiradaCompleta(tema, window.preguntaCustomSeleccionada || "");
+        window.procesarTiradaCompleta(tema, window.AppState.preguntaCustom || "");
     } else {
         console.error("[nav] procesarTiradaCompleta no está definida");
-        alert("⚠️ Error: La función de tirada no está disponible. Recarga la página.");
+        if (typeof window.mostrarNotificacion === 'function') {
+            window.mostrarNotificacion("⚠️ Error: Función de tirada no disponible. Recarga.", "error");
+        }
     }
 };
-window.volverAPortada=function(){
-    window.modoFisicoActivo=false;window.submodoFisicoActual=null;
-    window.cartasFisicoSeleccionadas=null;window.preguntaCustomSeleccionada="";
-    localStorage.removeItem('tarotia_submodo_fisico');window.mostrarPantalla('screen-portada');
+
+window.volverAPortada = function() {
+    window.AppState.modoFisicoActivo = false;
+    window.AppState.submodoFisicoActual = null;
+    window.AppState.cartasFisicoSeleccionadas = null;
+    window.AppState.preguntaCustom = "";
+    window.safeStorage.removeItem('tarotia_submodo_fisico');
+    window.mostrarPantalla('screen-portada');
 };
-window.volverInicio=function(){window.volverAPortada();};
-window.abrirGuiaLectura=function(){window.mostrarPantalla('screen-guia-lectura');};
-window.volverAlModuloProfesional=function(){window.mostrarPantalla('screen-modulo-profesional');};
-window.abrirHistorial=function(){
-    if(typeof window.cargarHistorial==='function')window.cargarHistorial();
+
+window.volverInicio = function() { window.volverAPortada(); };
+window.abrirGuiaLectura = function() { window.mostrarPantalla('screen-guia-lectura'); };
+window.volverAlModuloProfesional = function() { window.mostrarPantalla('screen-modulo-profesional'); };
+
+window.abrirHistorial = function() {
+    if (typeof window.cargarHistorial === 'function') window.cargarHistorial();
     window.mostrarPantalla('screen-historial');
 };
 
-// ==========================================
-// FUNCIÓN PARA ENTRAR AL TAROT COMPLETO
-// ==========================================
-
 window.entrarAppCompleta = function() {
     console.log("[nav] Entrar al Tarot Completo");
-
-    const token = window.obtenerToken ? window.obtenerToken() : null;
+    const token = typeof window.obtenerToken === 'function' ? window.obtenerToken() : null;
 
     if (token) {
         window.mostrarPantalla('screen-portada');
-        if (typeof window.actualizarBadgeGlobal === 'function') {
-            window.actualizarBadgeGlobal();
-        }
-        if (typeof window.actualizarContadorMuestras === 'function') {
-            window.actualizarContadorMuestras();
-        }
+        if (typeof window.actualizarBadgeGlobal === 'function') window.actualizarBadgeGlobal();
+        if (typeof window.actualizarContadorMuestras === 'function') window.actualizarContadorMuestras();
     } else {
         window.mostrarPantalla('screen-auth');
     }
 };   
-
-window.verificarPagoAutomaticoPorEmail = async function() {
-    const email = prompt("📧 Ingresá el correo con el que realizaste el pago:");
-    if (!email || !email.includes('@')) {
-        alert("⚠️ Por favor, ingresa un correo válido.");
-        return;
-    }
-    localStorage.setItem('tarotia_email_usuario', email.trim().toLowerCase());
-    alert("🔍 Verificando registro para: " + email + "\nSi completaste el pago, en breve se sincronizará el acceso.");
-    window.mostrarPantalla('screen-portada');
-};
 
 // Detener voz al cerrar/cambiar pestaña
 window.addEventListener('beforeunload', function() {
@@ -870,38 +881,23 @@ document.addEventListener('visibilitychange', function() {
     if (document.hidden && window.speechSynthesis) window.speechSynthesis.cancel();
 });
 
+// ==========================================
+// CANJE DE CÓDIGOS (SEGURO, SIN HARDCODEO)
+// ==========================================
 window.ingresarCodigoAcceso = function() {
     const codigo = prompt("🔑 Ingresá tu código de acceso:");
     if (codigo && codigo.trim()) {
-        if (typeof canjearCodigoPremium === 'function') {
-            canjearCodigoPremium(codigo.trim());
+        if (typeof window.canjearCodigoPremium === 'function') {
+            window.canjearCodigoPremium(codigo.trim());
         } else {
-            const codigoLimpio = codigo.trim().toUpperCase();
-            const CODIGOS_VALIDOS = ['ADMIN2026', 'PASEMISTICO', 'TAROTGRATIS'];
-            if (CODIGOS_VALIDOS.includes(codigoLimpio)) {
-                window.esUsuarioPremium = true;
-                try {
-                    localStorage.setItem('simularPremium', 'true');
-                    localStorage.setItem('tarotia_plan_premium', 'true');
-                } catch (e) {}
-                alert('✨ ¡Código premium activado con éxito! Ahora tenés acceso ilimitado.');
-                if (typeof actualizarBadgeGlobal === 'function') actualizarBadgeGlobal();
-                window.mostrarPantalla('screen-portada');
-            } else {
-                alert('❌ Código inválido o expirado.');
+            if (typeof window.mostrarNotificacion === 'function') {
+                window.mostrarNotificacion("⚠️ Sistema de códigos no disponible. Recarga la página.", "error");
             }
         }
     }
 };
 
-// ==========================================
-// CONECTOR VISUAL ENTRE DUPLAS
-// ==========================================
-window.agregarConectorDuplas = function() {
-    console.log("[nav] Conector de duplas renderizado");
-};
-
-console.log("✅ Navegación inline v9 limpia cargada");
+console.log("✅ Navegación inline segura y limpia cargada");
 </script>
 </body>
 </html>

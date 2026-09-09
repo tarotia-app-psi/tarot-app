@@ -426,13 +426,22 @@
 
         <h3 style="margin-bottom: 15px; color: var(--muted-text); font-size: 1rem; font-weight: normal;">¿Cómo querés consultar hoy?</h3>
 
-        <div class="menu-portada">
+                <div class="menu-portada">
+            <!-- NUEVO ESTILO: SECUENCIAL / CARTA POR CARTA -->
+            <div class="opcion-tarjeta" style="border-color: rgba(56, 189, 248, 0.4);" onclick="verificarAccesoEstilo('secuencial')">
+                <div class="opcion-icono">📜</div>
+                <div class="opcion-info">
+                    <h3>Estilo Secuencial (4 Pasos)</h3>
+                    <p>Lectura clásica y clara: Estado actual, influencia, actitud futura y resultado final, carta por carta.</p>
+                </div>
+            </div>
+
             <!-- ESTILO MÁGICO -->
             <div class="opcion-tarjeta" onclick="verificarAccesoEstilo('magico')">
                 <div class="opcion-icono">🔮</div>
                 <div class="opcion-info">
                     <h3>Estilo Mágico</h3>
-                    <p>Lectura directa, mística y predictiva. Ideal para preguntas puntuales.</p>
+                    <p>Lectura directa, mística y predictiva por duplas. Ideal para preguntas puntuales.</p>
                 </div>
             </div>
 
@@ -441,7 +450,7 @@
                 <div class="opcion-icono">🧘‍♂️</div>
                 <div class="opcion-info">
                     <h3>Estilo Filosófico</h3>
-                    <p>Lectura profunda, psicológica y evolutiva. Para reflexionar.</p>
+                    <p>Lectura profunda, psicológica y evolutiva por duplas. Para reflexionar.</p>
                 </div>
             </div>
 

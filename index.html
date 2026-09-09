@@ -520,12 +520,16 @@
     </div>
 
     <!-- ========== SELECCIÓN DEL EJE / TEMA ========== -->
+        <!-- ========== SELECCIÓN DEL EJE / TEMA ========== -->
     <div id="screen-selector" class="screen hidden">
         <h3>Selecciona el eje de tu consulta:</h3>
         <div class="theme-selector">
-            <button onclick="ejecutarLecturaSegunModo('Amor')">💖 Amor y Relaciones</button>
-            <button onclick="ejecutarLecturaSegunModo('Negocios')">💼 Negocios y Dinero</button>
-            <button onclick="ejecutarLecturaSegunModo('General')">🔮 Vida General</button>
+            <!-- NUEVOS BOTONES DE AMOR DIVIDIDOS -->
+            <button onclick="ejecutarLecturaSegunModo('Pareja Actual o Situación')">💖 Pareja Actual / Situación</button>
+            <button onclick="ejecutarLecturaSegunModo('Posibilidad de Nueva Pareja')">✨ Posibilidad de Nueva Pareja</button>
+            
+            <button onclick="ejecutarLecturaSegunModo('Negocios y Dinero')">💼 Negocios y Dinero</button>
+            <button onclick="ejecutarLecturaSegunModo('Vida General')">🔮 Vida General</button>
             <button id="btn-pregunta-especifica" onclick="abrirPantallaPregunta()" style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(168,85,247,0.1)); border-color: #a855f7; color: #a855f7;">
                 ✨ Pregunta Específica (Custom)
             </button>
